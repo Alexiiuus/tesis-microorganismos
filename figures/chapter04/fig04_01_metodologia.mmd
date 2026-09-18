@@ -1,0 +1,30 @@
+flowchart LR
+    A[Videos microscópicos] --> B[Detección de microorganismos]
+    B --> C[Seguimiento temporal]
+    C --> D[Reconstrucción de trayectorias]
+    D --> E[Cálculo de métricas]
+    E --> F[Clasificación de patrones]
+
+    subgraph DES[Desarrollo del sistema]
+        B
+        C
+        D
+        E
+        F
+    end
+
+    D --> G[Comparación con trayectorias de Tracker]
+    E --> H[Comparación de métricas]
+    G --> I[Evaluación experimental]
+    H --> I
+
+    subgraph EVA[Evaluación]
+        G
+        H
+        I
+    end
+
+    J[Configuración de ejecución] --> K[Trazabilidad y reproducibilidad]
+    L[Modelo utilizado] --> K
+    M[Video procesado] --> K
+    I --> K

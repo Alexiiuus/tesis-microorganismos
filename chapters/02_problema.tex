@@ -1,0 +1,423 @@
+\chapter{Planteamiento del problema de investigación}
+
+Este capítulo delimita el problema de investigación desde una perspectiva computacional y cuantitativa. Para ello, se definen las unidades de análisis y las magnitudes observadas, se formulan las preguntas y los objetivos del trabajo, y se presentan su justificación y alcance. La investigación se centra en evaluar una herramienta automática para obtener mediciones del movimiento a partir de videos microscópicos, sin abordar directamente la interpretación física o biológica de los resultados.
+
+\section{Delimitación del problema}
+
+La presente tesis se desarrolla en el contexto de la investigación del Grupo de Física de la Atmósfera sobre el movimiento de microorganismos acuáticos bajo diferentes condiciones térmicas. Sin embargo, el trabajo se aborda desde una perspectiva principalmente computacional y no busca explicar las causas físicas o biológicas del movimiento observado.
+
+El problema surge del procedimiento utilizado actualmente para obtener información cuantitativa a partir de los videos microscópicos. La reconstrucción de las trayectorias se realiza mediante un seguimiento manual con Tracker, lo que requiere que un operador registre la posición de cada microorganismo a lo largo de numerosos cuadros. Cuando se analizan varios individuos, muestras o condiciones experimentales, el tiempo necesario para completar esta tarea limita la cantidad de datos que pueden procesarse.
+
+A partir de esta situación, el estudio se delimita al desarrollo y evaluación de una herramienta de visión por computadora capaz de procesar videos microscópicos previamente adquiridos. La herramienta debe detectar los microorganismos visibles, asociar las detecciones correspondientes a un mismo individuo a lo largo del tiempo, reconstruir sus trayectorias y obtener métricas cuantitativas de movimiento.
+
+La temperatura se considera una condición experimental asociada con cada video y puede utilizarse para agrupar o comparar posteriormente las mediciones obtenidas. No obstante, la herramienta no determina por sí misma los efectos de la temperatura ni establece relaciones causales entre esta variable y el comportamiento de los microorganismos.
+
+La evaluación se realizará sobre los videos experimentales proporcionados por el Grupo de Física de la Atmósfera. Por lo tanto, los resultados dependerán de las características de estas grabaciones, como la resolución, la frecuencia de cuadros, la iluminación, el contraste y el tamaño aparente de los microorganismos. No se pretende garantizar la aplicación directa del sistema a cualquier especie, microscopio o condición de adquisición.
+
+En este contexto, el problema de investigación consiste en la ausencia de un flujo automático, adaptado y evaluado para los videos experimentales del grupo, que permita detectar y seguir múltiples microorganismos, reconstruir sus trayectorias y obtener mediciones cuantitativas de manera sistemática.
+
+\section{Unidad de análisis}
+
+En este trabajo se distinguen tres niveles relacionados de análisis: el microorganismo observado, la trayectoria reconstruida y el video experimental.
+
+\subsection{Unidad primaria de análisis}
+
+La unidad primaria de análisis es cada microorganismo acuático identificado y seguido dentro de un video microscópico. Desde el punto de vista computacional, cada microorganismo se representa mediante un identificador de seguimiento, denominado track ID, que permite asociar las detecciones obtenidas en distintos cuadros y considerarlas como observaciones de un mismo individuo.
+
+Esta identificación es de carácter visual y operativo. El sistema reconoce objetos compatibles con las clases incluidas en los datos de entrenamiento, pero no realiza una identificación taxonómica ni determina propiedades biológicas de los microorganismos. Además, la correspondencia entre un identificador computacional y un individuo real depende de la calidad de la detección y del seguimiento.
+
+\subsection{Unidad secundaria de análisis}
+
+La unidad secundaria de análisis es la trayectoria reconstruida para cada microorganismo. Desde una perspectiva cinemática, la trayectoria representa el recorrido geométrico descripto por el microorganismo en el plano durante el intervalo de observación.
+
+El sistema no observa dicho recorrido de manera continua, sino mediante posiciones discretas obtenidas a partir de los cuadros del video. Para un microorganismo identificado mediante un determinado track ID, estas observaciones se almacenan como una secuencia temporalmente ordenada:
+
+\[
+\mathcal{O}=\left\{(f_i,\mathbf{p}_i)\right\}_{i=1}^{n},
+\qquad
+\mathbf{p}_i=(x_i,y_i).
+\]
+
+\[
+\mathcal{T}=(\mathbf{p}_1,\mathbf{p}_2,\ldots,\mathbf{p}_n).
+\]
+
+A partir de estas observaciones puede representarse la trayectoria mediante la sucesión ordenada de posiciones:
+
+\[
+\mathbf{r}(t)=\bigl(x(t),y(t)\bigr).
+\]
+
+Cuando se conoce la frecuencia de cuadros del video, cada número de cuadro puede asociarse con un instante temporal. De esta manera, las observaciones discretas pueden interpretarse como muestras de una función posición
+
+% TODO(EQUATION): transcribir ecuación exacta desde Google Docs.
+
+que representa conceptualmente la ubicación del microorganismo en función del tiempo.
+
+La calidad de la trayectoria reconstruida depende tanto de la precisión con la que se localiza cada microorganismo como de la capacidad del método de seguimiento para conservar correctamente su identidad. Las pérdidas de detección, los cambios de identificador y las asociaciones incorrectas pueden modificar la representación obtenida y, en consecuencia, afectar las métricas calculadas posteriormente.
+
+\subsection{Unidad experimental}
+
+La unidad experimental es cada video microscópico obtenido bajo una determinada condición de observación. El video contiene la secuencia de imágenes sobre la que se ejecutan las etapas de detección, seguimiento y análisis de trayectorias.
+
+Cada grabación se encuentra asociada con una muestra, una temperatura y determinadas condiciones de adquisición. Dentro de un mismo video pueden detectarse y seguirse varios microorganismos, por lo que es posible obtener métricas individuales y posteriormente construir indicadores generales para la grabación.
+
+La relación entre las unidades de análisis puede resumirse de la siguiente manera:
+
+\begin{itemize}
+  \item Video microscópico → microorganismos detectados y seguidos → trayectorias individuales → métricas cuantitativas de movimiento.
+\end{itemize}
+
+\section{Variables y magnitudes de interés}
+
+El estudio adopta un enfoque cuantitativo basado en variables asociadas con el desplazamiento de los microorganismos y con las condiciones de adquisición de los videos. Estas variables se dividen en dos grupos: variables computacionales, obtenidas mediante el procesamiento de las trayectorias, y variables experimentales o contextuales, utilizadas para interpretar y organizar los resultados.
+
+\subsection{Variables computacionales y métricas de movimiento}
+
+\subsubsection{Posición observada}
+
+La posición representa la ubicación estimada de un microorganismo en un cuadro determinado del video. Para el cuadro $f_i$, se expresa mediante el par de coordenadas:
+
+\[
+\mathbf{p}_i=(x_i,y_i).
+\]
+
+donde $x_i$ e $y_i$ corresponden generalmente al centro de la caja delimitadora obtenida mediante el detector.
+
+Mientras no se disponga de una calibración espacial válida, estas coordenadas se expresan en píxeles.
+
+\subsubsection{Relación entre cuadro y tiempo}
+
+El número de cuadro constituye un índice discreto y no debe interpretarse directamente como una medida temporal. Cuando se conoce la frecuencia de cuadros del video, expresada en cuadros por segundo (FPS), puede establecerse la relación entre los cuadros y el tiempo.
+
+Para dos observaciones registradas en los cuadros $f_i$ y $f_{i+1}$, el intervalo temporal se calcula mediante:
+
+\[
+\Delta t_i=\frac{f_{i+1}-f_i}{FPS}.
+\]
+
+Asimismo, tomando como referencia un cuadro inicial $f_0$, el instante correspondiente a un cuadro determinado puede expresarse como:
+
+\[
+t_i=\frac{f_i-f_0}{FPS}.
+\]
+
+Esta conversión permite expresar las métricas temporales en segundos y considerar correctamente los casos en los que las observaciones no corresponden a cuadros consecutivos.
+
+\subsubsection{Secuencia ordenada de observaciones}
+
+Para cada identificador de seguimiento, el sistema almacena una secuencia ordenada de observaciones:
+
+\[
+\mathcal{O}=\left\{(f_i,\mathbf{p}_i)\right\}_{i=1}^{n},
+\qquad \mathbf{p}_i=(x_i,y_i).
+\]
+
+Cada elemento contiene el número de cuadro y la posición estimada del microorganismo. Esta secuencia constituye la representación computacional directamente obtenida del proceso de seguimiento.
+
+Los cuadros registrados no necesariamente son consecutivos. Las pérdidas temporales de detección o las dificultades de asociación pueden producir intervalos sin observaciones, denominados gaps.
+
+\subsubsection{Función posición y trayectoria}
+
+Desde una perspectiva cinemática, el movimiento puede describirse mediante una función posición:
+
+\[
+\mathbf{r}(t)=\bigl(x(t),y(t)\bigr).
+\]
+
+que representa la ubicación del microorganismo en función del tiempo.
+
+Sin embargo, el video proporciona únicamente observaciones en instantes discretos. Por esta razón, el sistema no obtiene directamente una función continua, sino un conjunto temporalmente ordenado de muestras de la posición.
+
+La trayectoria corresponde al recorrido geométrico descripto por el microorganismo. En el sistema se aproxima mediante la sucesión ordenada de las posiciones registradas:
+
+\[
+\mathcal{T}=(\mathbf{p}_1,\mathbf{p}_2,\ldots,\mathbf{p}_n).
+\]
+
+Esta distinción permite separar conceptualmente la información espacial correspondiente al recorrido de la información temporal que indica cómo dicho recorrido se desarrolla a lo largo del video.
+
+\subsubsection{Duración del seguimiento}
+
+La duración del seguimiento corresponde al tiempo transcurrido entre la primera y la última observación asociada con un mismo identificador:
+
+\[
+T=t_n-t_1.
+\]
+
+Utilizando directamente los números de cuadro, puede calcularse como:
+
+\[
+T=\frac{f_n-f_1}{FPS}.
+\]
+
+La duración temporal debe distinguirse de la cantidad de observaciones disponibles. Una trayectoria puede extenderse durante un intervalo prolongado y, al mismo tiempo, contener pérdidas temporales de detección.
+
+Por esta razón, la cantidad de observaciones y la duración constituyen propiedades diferentes y deben analizarse conjuntamente con las métricas de continuidad temporal.
+
+\subsubsection{Distancia total recorrida}
+
+La distancia total recorrida representa la longitud acumulada del desplazamiento reconstruido a partir de las posiciones observadas del microorganismo.
+
+Sean dos posiciones consecutivas de la trayectoria $\mathbf{p}_i$ y $\mathbf{p}_{i+1}$, la distancia correspondiente al segmento comprendido entre ambas posiciones se calcula mediante la distancia euclídea:
+
+\[
+d_i=\left\|\mathbf{p}_{i+1}-\mathbf{p}_i\right\|.
+\]
+
+o, expresada en coordenadas:
+
+\[
+d_i=\sqrt{(x_{i+1}-x_i)^2+(y_{i+1}-y_i)^2}.
+\]
+
+Para una trayectoria formada por n posiciones observadas, la distancia total recorrida se obtiene sumando las distancias de los n-1 segmentos consecutivos:
+
+\[
+D_T=\sum_{i=1}^{n-1}d_i
+=\sum_{i=1}^{n-1}\left\|\mathbf{p}_{i+1}-\mathbf{p}_i\right\|.
+\]
+
+Esta magnitud permite estimar la longitud total del recorrido reconstruido, independientemente de la dirección seguida por el microorganismo.
+
+\subsubsection{Desplazamiento neto}
+
+La distancia neta representa la separación entre la posición inicial y la posición final de la trayectoria. En este trabajo se utiliza su magnitud:
+
+\[
+D_N=\left\|\mathbf{p}_n-\mathbf{p}_1\right\|.
+\]
+
+A diferencia de la distancia total, esta magnitud no considera el recorrido intermedio. La comparación entre la distancia total y la magnitud del desplazamiento neto permite obtener información sobre la geometría general de la trayectoria. Por ejemplo, una trayectoria que regresa aproximadamente a su punto de partida puede presentar una distancia total elevada y, al mismo tiempo, un desplazamiento neto reducido.
+
+\subsubsection{Velocidad y rapidez entre observaciones}
+
+La velocidad es una magnitud vectorial. Esto significa que indica no solo cuánto se mueve el microorganismo, sino también en qué dirección y sentido.
+
+La velocidad media correspondiente al tramo entre ambas observaciones se estima mediante:
+
+\[
+\mathbf{v}_i=\frac{\mathbf{p}_{i+1}-\mathbf{p}_i}{\Delta t_i}.
+\]
+
+Como las posiciones tienen dos coordenadas, puede escribirse:
+
+\[
+\mathbf{v}_i=
+\left(
+\frac{x_{i+1}-x_i}{\Delta t_i},
+\frac{y_{i+1}-y_i}{\Delta t_i}
+\right).
+\]
+
+Por lo tanto, sus componentes son:
+
+\[
+v_{x,i}=\frac{x_{i+1}-x_i}{\Delta t_i}.
+\]
+
+\[
+v_{y,i}=\frac{y_{i+1}-y_i}{\Delta t_i}.
+\]
+
+Por ejemplo, si el microorganismo se desplaza hacia la derecha y hacia arriba, ambas componentes pueden ser positivas. Si cambia de dirección, los signos de estas componentes pueden cambiar.
+
+La rapidez no conserva la dirección. Es una magnitud escalar que indica únicamente cuánto se desplaza el microorganismo por unidad de tiempo.
+
+Se obtiene calculando el módulo de la velocidad:
+
+\[
+v_i=\left\|\mathbf{v}_i\right\|
+=\frac{\left\|\mathbf{p}_{i+1}-\mathbf{p}_i\right\|}{\Delta t_i}.
+\]
+
+Si trabajamos directamente con lo frames podemos definir lo siguiente:
+
+\[
+v_i=
+\frac{\left\|\mathbf{p}_{i+1}-\mathbf{p}_i\right\|\,FPS}
+{f_{i+1}-f_i}.
+\]
+
+\subsubsection{Velocidad media y rapidez media de una trayectoria}
+
+La velocidad media y la rapidez media describen propiedades diferentes del movimiento de un microorganismo a lo largo de una trayectoria completa.
+
+La velocidad media es una magnitud vectorial y se calcula a partir del desplazamiento neto entre la posición inicial y la posición final, dividido por el tiempo total transcurrido:
+
+\[
+\overline{\mathbf{v}}=
+\frac{\mathbf{p}_n-\mathbf{p}_1}{t_n-t_1}.
+\]
+
+Por otra parte, la rapidez media se calcula utilizando la distancia total recorrida durante toda la trayectoria:
+
+\[
+\overline{v}=\frac{D_T}{t_n-t_1}.
+\]
+
+La diferencia fundamental es que la velocidad media depende únicamente de las posiciones inicial y final, mientras que la rapidez media considera todo el recorrido realizado entre ambas.
+
+Por ejemplo, un microorganismo que describe una trayectoria aproximadamente circular y termina cerca de su posición inicial puede presentar un desplazamiento neto reducido y, por lo tanto, una velocidad media de magnitud cercana a cero. Sin embargo, si durante ese intervalo recorrió una distancia considerable, su rapidez media puede ser elevada.
+
+En el presente trabajo, la rapidez media resulta especialmente útil para cuantificar cuánto se desplaza un microorganismo durante el período observado. La velocidad media vectorial aporta, en cambio, información sobre el cambio global de posición y su dirección. La información direccional más detallada se complementa mediante el análisis geométrico de las trayectorias y los cambios de orientación entre segmentos
+
+\subsubsection{Variación de la rapidez y aceleración}
+
+En cinemática, la aceleración describe la variación del vector velocidad respecto del tiempo. De manera general, puede expresarse como:
+
+\[
+\mathbf{a}(t)=\frac{d\mathbf{v}(t)}{dt}.
+\]
+
+Dado que el sistema desarrollado trabaja principalmente con la rapidez como magnitud escalar, también resulta posible analizar la variación de esta magnitud entre intervalos sucesivos.
+
+Una estimación discreta de la variación temporal de la rapidez puede expresarse como:
+
+\[
+a_i=\frac{v_i-v_{i-1}}{\Delta t_i}.
+\]
+
+Esta magnitud permite identificar aumentos y disminuciones de la rapidez y detectar variaciones bruscas durante el seguimiento.
+
+Debe distinguirse esta medida de la aceleración vectorial completa. Un microorganismo puede mantener aproximadamente constante su rapidez y modificar únicamente la dirección de su movimiento, como ocurre en una trayectoria curva, y aun así presentar aceleración.
+
+Cuando no se dispone de calibración espacial, las variaciones de rapidez se expresan en píxeles por segundo cuadrado.
+
+\subsubsection{Períodos de inactividad}
+
+Los períodos de inactividad son intervalos en los que la rapidez estimada permanece por debajo de un umbral durante una duración mínima. A partir de ellos pueden calcularse la cantidad de períodos detectados, su duración total y la proporción del seguimiento en la que el microorganismo presenta un desplazamiento reducido.
+
+El término inactividad se utiliza en un sentido estrictamente computacional. Indica que el desplazamiento medido se encuentra por debajo de un criterio definido, pero no permite afirmar que el microorganismo carezca de actividad biológica.
+
+\subsubsection{Cambios de régimen de movimiento}
+
+Los cambios de régimen representan modificaciones relevantes en el comportamiento de una trayectoria. Pueden incluir transiciones entre baja movilidad y desplazamiento rápido, aumentos o disminuciones bruscas de la rapidez y modificaciones marcadas de la dirección.
+
+Su detección tiene como finalidad identificar automáticamente segmentos que presentan variaciones cuantitativas y que pueden resultar de interés para un análisis posterior. No implica una explicación física o biológica de las causas del cambio.
+
+\subsubsection{Continuidad temporal}
+
+La continuidad temporal describe en qué medida una secuencia de seguimiento conserva observaciones a lo largo del intervalo analizado.
+
+Si dos observaciones consecutivas se encuentran asociadas con los cuadros $f_i$ y $f_{i+1}$, la cantidad de cuadros intermedios sin observaciones puede expresarse mediante:
+
+\[
+g_i=f_{i+1}-f_i-1.
+\]
+
+\begin{itemize}
+  \item Si $g_i=0$, las observaciones corresponden a cuadros consecutivos.
+  \item Si $g_i>0$, existe un intervalo sin observaciones o \textit{gap}.
+\end{itemize}
+
+Estos intervalos pueden originarse por pérdidas de detección, oclusiones o dificultades para conservar correctamente el identificador del microorganismo.
+
+La continuidad puede evaluarse mediante la cantidad de observaciones, la proporción de cobertura temporal, la cantidad de gaps, su duración y el tamaño máximo de los intervalos sin detecciones. Una trayectoria muy fragmentada puede producir estimaciones poco representativas de distancia, rapidez, aceleración o patrones de movimiento.
+
+\subsubsection{Tipo de movimiento clasificado}
+
+El tipo de movimiento es una variable categórica asignada a partir de las características geométricas y temporales de la trayectoria. Las clases principales consideradas por el sistema son:
+
+\begin{itemize}
+  \item movimiento direccional;
+  \item movimiento browniano o errático;
+  \item movimiento circular u oscilatorio.
+\end{itemize}
+
+El sistema también contempla las salidas datos insuficientes, cuando la trayectoria no contiene información suficiente para ser analizada, y desconocido, cuando las métricas no permiten asignar claramente una de las clases principales.
+
+La clasificación constituye una descripción computacional simplificada del recorrido y no equivale a una clasificación física o biológica del movimiento.
+
+\subsection{Variables experimentales y contextuales}
+
+\subsubsection{Temperatura del medio}
+
+La temperatura constituye una condición experimental asociada con cada video o muestra. En el contexto del grupo de investigación, los microorganismos son observados dentro de un rango aproximado de 0 °C a 15 °C.
+
+En esta tesis, la temperatura permite organizar y comparar las métricas obtenidas bajo diferentes condiciones térmicas. Sin embargo, el sistema no controla esta variable ni demuestra una relación causal entre la temperatura y el movimiento.
+
+\subsubsection{Video y muestra experimental}
+
+El video identifica la unidad experimental sobre la cual se ejecuta el procesamiento. La muestra permite distinguir el material acuático del que proceden los microorganismos registrados.
+
+Estas variables permiten organizar las trayectorias y evitar que resultados correspondientes a diferentes grabaciones o condiciones sean tratados como un único conjunto homogéneo.
+
+\subsubsection{Condiciones de adquisición}
+
+Las condiciones de adquisición comprenden factores como la configuración del microscopio y de la cámara, el nivel de aumento, la iluminación, el enfoque, el contraste, la duración de la grabación y la preparación de la muestra.
+
+Aunque estas condiciones no son necesariamente manipuladas por el sistema, pueden afectar la calidad de las detecciones, la continuidad del seguimiento y la precisión de las posiciones obtenidas. Por esta razón, deben documentarse siempre que la información se encuentre disponible.
+
+\subsubsection{Frecuencia de cuadros por segundo}
+
+La frecuencia de cuadros por segundo, o FPS, indica cuántas imágenes se registran durante cada segundo del video. Se utiliza para convertir los números de cuadro en unidades temporales.
+
+La precisión de las métricas de duración, rapidez, aceleración e inactividad depende de que el valor utilizado coincida con la frecuencia real de adquisición o con la frecuencia establecida para el análisis.
+
+\subsubsection{Resolución}
+
+La resolución indica la cantidad de píxeles que componen cada cuadro del video. Condiciona el tamaño aparente de los microorganismos y la precisión con la que puede representarse su posición.
+
+También debe considerarse al comparar grabaciones diferentes, ya que una misma distancia expresada en píxeles puede corresponder a desplazamientos físicos distintos si cambian la resolución, el aumento o la configuración óptica.
+
+\subsubsection{Escala espacial}
+
+La escala espacial establece la relación entre las distancias medidas en píxeles y su equivalente en una unidad física, como micrómetros. Si se dispone de un factor de calibración (s), expresado en micrómetros por píxel, una distancia puede convertirse mediante:
+
+\[
+D_{\mu m}=s\,D_{px}.
+\]
+
+\begin{itemize}
+  \item $D_{\mu m}$: distancia expresada en micrómetros ($\mu m$).
+\end{itemize}
+
+\begin{itemize}
+  \item $D_{px}$: distancia calculada en la imagen, expresada en píxeles.
+\end{itemize}
+
+\begin{itemize}
+  \item $s$: escala espacial o factor de calibración, expresado en $\mu m/px$.
+\end{itemize}
+
+Cuando no se dispone de una calibración válida, las posiciones y distancias deben conservarse en píxeles, las rapidez en píxeles por segundo y las aceleraciones en píxeles por segundo cuadrado.
+
+\section{Alcance del estudio}
+
+El presente trabajo se limita al desarrollo y evaluación de una herramienta computacional para analizar el movimiento de microorganismos acuáticos en videos obtenidos mediante microscopía óptica. Su alcance se concentra en el procesamiento de las grabaciones, la reconstrucción de trayectorias y la obtención de información cuantitativa sobre el movimiento.
+
+\subsection{Aspectos incluidos}
+
+El alcance del estudio comprende:
+
+\begin{itemize}
+  \item la detección automática de microorganismos en los cuadros de los videos;
+  \item el seguimiento temporal y la asignación de identificadores;
+  \item la reconstrucción y el filtrado de trayectorias individuales;
+  \item el cálculo de métricas cuantitativas de movimiento;
+  \item la detección de períodos de inactividad y cambios de régimen;
+  \item la evaluación de la continuidad temporal de las trayectorias;
+  \item la clasificación básica e interpretable de patrones de movimiento;
+  \item la generación de gráficos, videos procesados y archivos de resultados;
+  \item la evaluación de los principales componentes del sistema;
+  \item la comparación de los resultados y tiempos de procesamiento con el procedimiento manual.
+\end{itemize}
+
+\subsection{Aspectos no incluidos}
+
+La herramienta no realiza una identificación taxonómica de los microorganismos. Aunque el detector reconoce categorías visuales incluidas en los datos de entrenamiento, sus predicciones no determinan especies, géneros ni otras categorías biológicas con validez taxonómica.
+
+Las clases utilizadas por el sistema deben interpretarse, por lo tanto, como categorías operativas definidas para el procesamiento computacional. Una identificación microbiológica requeriría procedimientos experimentales y análisis especializados adicionales, que se encuentran fuera del alcance de esta tesis.
+
+El trabajo tampoco busca explicar las causas fisiológicas o biológicas del movimiento, demostrar una relación causal entre la temperatura y la actividad de los microorganismos ni predecir su supervivencia o adaptación. Las métricas obtenidas permiten describir y comparar el movimiento, pero su interpretación científica requiere un análisis posterior por parte de los especialistas.
+
+El sistema parte de videos previamente adquiridos y no incluye el control automático del microscopio, la cámara, la iluminación o la temperatura de la muestra.
+
+La calidad de las mediciones depende además de las condiciones de adquisición de los videos. Factores como el enfoque, el contraste, la estabilidad de la cámara, la resolución, la iluminación y el movimiento del sistema de captura pueden afectar la detección de los microorganismos y la reconstrucción de sus trayectorias.
+
+La obtención de magnitudes espaciales expresadas en unidades físicas requiere una calibración válida de la relación entre píxeles y distancia real. Cuando esta información no se encuentra disponible, las posiciones y distancias se conservan en píxeles, mientras que las rapidez y las variaciones de rapidez se expresan respectivamente en píxeles por segundo y píxeles por segundo cuadrado.
+
+Finalmente, no se pretende garantizar una generalización directa a cualquier tipo de microorganismo, microscopio o condición experimental. La evaluación se realiza sobre los videos y las categorías visuales disponibles en el contexto del Grupo de Física de la Atmósfera. Su aplicación en otros escenarios podría requerir nuevos datos de entrenamiento, ajustes de parámetros o modificaciones en los métodos utilizados.
+
+De esta manera, el aporte principal de la tesis se concentra en la automatización y evaluación del análisis computacional del movimiento, mientras que la identificación taxonómica y la interpretación física y biológica de los resultados permanecen fuera del alcance del sistema.

@@ -1,0 +1,56 @@
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{libertinus}
+\usepackage{microtype}
+\usepackage[a4paper,left=30mm,right=25mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{setspace}
+\setstretch{1.18}
+
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\hypersetup{
+  hidelinks,
+  pdftitle={\ThesisTitle},
+  pdfauthor={\ThesisAuthor}
+}
+
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=ieee,
+  sorting=none,
+  maxbibnames=99
+]{biblatex}
+\addbibresource{bibliography/references.bib}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\LARGE}
+  {\chaptername\ \thechapter}
+  {0.5em}
+  {\Huge}
+\titleformat{\subsubsection}
+  {\normalfont\bfseries\normalsize}
+  {}
+  {0pt}
+  {}
+
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}

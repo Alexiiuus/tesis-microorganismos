@@ -1,0 +1,17 @@
+\newcommand{\thesisgraphic}[2][0.9\textwidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][4cm][c]{#1}{\centering
+      Figura pendiente de renderizado\\[0.4em]
+      \texttt{\detokenize{#2}}}}%
+  }%
+}
+
+\newcommand{\institutionlogo}[2][0.26\textwidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][1.4cm][c]{#1}{\centering Logo pendiente}}%
+  }%
+}

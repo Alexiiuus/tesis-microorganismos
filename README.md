@@ -75,3 +75,25 @@ bibliography/
 La fuente de contenido es la pestaña **version 2** del Google Docs de trabajo.
 
 Antes de fusionar esta primera migración, revisar \`MIGRATION_NOTES.md\`, especialmente la comparación de ecuaciones con el documento original.
+
+
+## Si las citas aparecen como claves
+
+Si en el PDF aparece algo como `mader2006` en lugar de `[1]`, significa que Biber no se ejecutó o que quedaron archivos auxiliares de una compilación anterior.
+
+En ese caso:
+
+```bash
+biber --version
+```
+
+debe responder correctamente. Luego limpiar los archivos auxiliares y recompilar con la receta **LuaLaTeX + Biber + LuaLaTeX x2**.
+
+En VS Code:
+
+1. `Ctrl+Shift+P`;
+2. **LaTeX Workshop: Clean up auxiliary files**;
+3. **LaTeX Workshop: Build with recipe**;
+4. elegir **LuaLaTeX + Biber + LuaLaTeX x2**.
+
+La bibliografía se imprime automáticamente al final del documento mediante `\printbibliography`.

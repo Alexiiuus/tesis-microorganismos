@@ -1,0 +1,88 @@
+\chapter{Diseño metodológico}
+
+Este capítulo presenta el diseño metodológico utilizado para desarrollar y evaluar la herramienta propuesta. Se describen la organización de los datos experimentales, las unidades de análisis y los criterios empleados para obtener mediciones cuantitativas reproducibles.
+
+A diferencia del capítulo anterior, centrado en los fundamentos conceptuales, aquí se especifican las decisiones que vinculan los videos experimentales con el procesamiento automático, la evaluación mediante referencias manuales y la interpretación de las mediciones.
+
+También se establecen los criterios de calibración temporal y espacial. Las secciones posteriores desarrollan el procedimiento general, la operacionalización de las magnitudes, el protocolo de evaluación y sus limitaciones.
+
+\section{Diseño metodológico general}
+
+El trabajo se plantea como una investigación aplicada, de enfoque principalmente cuantitativo, orientada al desarrollo y evaluación de una herramienta computacional. Su finalidad metodológica es obtener, a partir de videos microscópicos, trayectorias y mediciones cuantitativas mediante criterios uniformes y reproducibles, sin explicar las causas físicas o biológicas del movimiento.
+
+Como resume la Figura~\ref{fig:metodologia-general}, el diseño comprende dos componentes: el procesamiento automático de los videos —detección, seguimiento, reconstrucción de trayectorias, cálculo de métricas y clasificación— y la evaluación de los resultados mediante pruebas y referencias manuales.
+
+Las etapas son dependientes: los errores de detección o seguimiento pueden propagarse a las trayectorias y a las métricas derivadas. Por ello, la evaluación considera tanto los componentes individuales como el flujo integrado.
+
+La comparación con Tracker se utiliza como referencia experimental. Cuando el ground truth es parcial, solo se consideran pares aquellas trayectorias cuya correspondencia fue revisada y registrada; un seguimiento automático sin referencia manual no se interpreta por sí solo como un falso positivo.
+
+Para favorecer la reproducibilidad, cada ejecución relevante conserva la identidad del video, el modelo, la configuración y los parámetros efectivos utilizados.
+
+\begin{figure}[htbp]
+  \centering
+  \thesisgraphic[0.96\textwidth]{figures/chapter04/fig04_01_metodologia.pdf}
+  \caption{Esquema general del diseño metodológico del estudio, desde el procesamiento de los videos hasta la evaluación experimental y la trazabilidad de las ejecuciones.}
+  \label{fig:metodologia-general}
+\end{figure}
+
+\section{Conjunto de datos y unidades de análisis}
+
+El material experimental comprende videos microscópicos proporcionados por el Grupo de Física de la Atmósfera y materiales auxiliares utilizados durante el desarrollo, la validación y la calibración. Las condiciones de adquisición disponibles —como temperatura, FPS y resolución— se conservan como información contextual.
+
+Como resume la Figura~\ref{fig:datos-unidades}, las imágenes anotadas se utilizaron en la adaptación previa del detector; los videos constituyen la entrada del sistema; las trayectorias reconstruidas con Tracker sirven como referencia manual; y la escala micrométrica se utiliza para establecer la relación entre píxeles y distancia física.
+
+Las unidades de análisis mantienen la organización definida en el capítulo 2: el video constituye la unidad experimental, el microorganismo seguido la unidad primaria de observación y su secuencia de posiciones la trayectoria analizada. El identificador es computacional, por lo que una fragmentación puede representar a un mismo microorganismo mediante más de un ID.
+
+Para preservar la trazabilidad, los procedimientos manual y automático deben utilizar el mismo archivo de video y conservar la información necesaria para identificarlo, junto con la configuración de procesamiento y los productos derivados.
+
+Los resultados se interpretan dentro del dominio experimental estudiado y no implican, por sí solos, generalización a otros microorganismos, configuraciones ópticas o condiciones de adquisición.
+
+\begin{figure}[htbp]
+  \centering
+  \thesisgraphic[0.88\textwidth]{figures/chapter04/fig04_02_datos_unidades.pdf}
+  \caption{Relación entre los materiales utilizados y las unidades de análisis del estudio.}
+  \label{fig:datos-unidades}
+\end{figure}
+
+\section{Calibración espacial y temporal}
+
+Cada trayectoria conserva el número de cuadro y la posición en píxeles. Como resume la Figura~\ref{fig:calibracion}, la conversión temporal se realiza mediante los FPS de análisis, mientras que la conversión espacial requiere una calibración micrométrica válida antes de expresar las magnitudes en unidades físicas.
+
+\begin{figure}[htbp]
+  \centering
+  \thesisgraphic[0.96\textwidth]{figures/chapter04/fig04_03_calibracion.pdf}
+  \caption{Relación entre la representación interna de las trayectorias y las conversiones temporal y espacial. La conversión temporal mediante FPS forma parte de la implementación actual, mientras que la conversión espacial requiere una calibración válida.}
+  \label{fig:calibracion}
+\end{figure}
+
+\subsection{Calibración temporal}
+
+La referencia temporal se obtiene a partir de la frecuencia de cuadros utilizada para el análisis, expresada en cuadros por segundo (FPS). Para dos observaciones consecutivas de una misma trayectoria, registradas en los cuadros $f_i$ y $f_{i+1}$, el intervalo temporal se calcula como:
+
+\[
+\Delta t_i=\frac{f_{i+1}-f_i}{FPS}.
+\]
+
+El cálculo utiliza la separación real entre cuadros. Si existen gaps, el intervalo temporal aumenta según los cuadros transcurridos y no se reemplaza por un valor fijo equivalente a 1/FPS.
+
+Cuando el origen temporal se fija en el inicio del video, el instante asociado con un cuadro $f_i$ puede expresarse como $t_i=(f_i-f_0)/FPS$. Esta referencia permite conservar el momento real de aparición de cada trayectoria dentro de la grabación. Para visualizaciones específicas puede mostrarse únicamente una ventana alrededor del intervalo donde existe información, sin modificar los valores absolutos de tiempo.
+
+El FPS utilizado debe corresponder a la frecuencia de adquisición o a la definida explícitamente para el análisis, y mantenerse separado de la frecuencia empleada únicamente para escribir un video de salida.
+
+\subsection{Calibración espacial}
+
+La posición de cada microorganismo se representa inicialmente en píxeles. Para expresar posiciones, distancias y magnitudes derivadas en unidades físicas se requiere una escala micrométrica obtenida bajo una configuración óptica compatible con la utilizada en los videos.
+
+La escala de referencia utilizada presenta divisiones mayores tales que diez divisiones equivalen a $1\,\mathrm{mm}$. Por lo tanto, la distancia física entre dos divisiones mayores consecutivas es de $0{,}1\,\mathrm{mm}$, es decir, $100\,\mu\mathrm{m}$. Si se seleccionan N intervalos mayores de la escala y la distancia correspondiente en la imagen es $L_{px}$ píxeles, la longitud física de referencia es $L_{\mathrm{real}}=100N\,\mu\mathrm{m}$ y el factor de calibración espacial se obtiene como:
+
+\[
+s=\frac{L_{\mathrm{real}}}{L_{px}}.
+\]
+
+donde $s$ se expresa en micrómetros por píxel ($\mu\mathrm{m}/px$). Para reducir la influencia del error de selección de los extremos, resulta preferible medir varios intervalos de la escala en lugar de utilizar una única subdivisión y, cuando se dispone de más de una medición equivalente, comprobar la consistencia del factor obtenido.
+
+Una vez que se establezca y valide s, una distancia calculada internamente en píxeles podrá convertirse mediante $D_{\mu m}=sD_{px}$. De la misma forma, las coordenadas podrán expresarse en micrómetros respecto del origen elegido. Las magnitudes derivadas conservarán el mismo factor espacial: los valores de rapidez podrán multiplicarse por s para expresarlos en µm/s y las variaciones temporales de la rapidez podrán expresarse en $\mu\mathrm{m}/s^2$.
+
+El factor de calibración solo es válido para grabaciones con condiciones ópticas compatibles. Cambios en el aumento, la resolución, el recorte o la configuración requieren verificar nuevamente la escala y asociarla con el video correspondiente.
+
+La representación interna conserva los cuadros y las coordenadas en píxeles. La conversión a unidades físicas se aplica posteriormente durante el análisis y reporte, una vez validada la escala correspondiente, preservando así la trazabilidad de las observaciones originales y la semántica de los umbrales internos.

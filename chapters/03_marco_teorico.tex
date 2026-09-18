@@ -114,11 +114,11 @@ El resultado se encuentra entre cero y uno. El resultado toma valores entre 0 y 
 
 Para determinar si una detección coincide correctamente con una anotación se establece un umbral mínimo de IoU. A partir de esta correspondencia pueden distinguirse tres casos principales:
 
-% TODO(EQUATION): transcribir ecuación exacta desde Google Docs.
-
-% TODO(EQUATION): transcribir ecuación exacta desde Google Docs.
-
-% TODO(EQUATION): transcribir ecuación exacta desde Google Docs.
+\begin{itemize}
+  \item \textbf{Verdadero positivo (TP):} una predicción identifica correctamente un objeto y satisface el criterio de correspondencia establecido.
+  \item \textbf{Falso positivo (FP):} el modelo informa una detección que no puede asociarse correctamente con una anotación de referencia.
+  \item \textbf{Falso negativo (FN):} existe un objeto anotado que no fue detectado correctamente por el modelo.
+\end{itemize}
 
 Los falsos positivos pueden originarse, por ejemplo, cuando el detector confunde partículas, estructuras del fondo o artefactos visuales con microorganismos. Los falsos negativos pueden producirse ante objetos pequeños, desenfocados, con bajo contraste, superpuestos o con valores de confianza inferiores al umbral seleccionado.
 

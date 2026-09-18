@@ -1,6 +1,15 @@
 {
-  "latex-workshop.latex.recipe.default": "latexmk (lualatex)",
+  "latex-workshop.latex.recipe.default": "LuaLaTeX + Biber + LuaLaTeX x2",
   "latex-workshop.latex.recipes": [
+    {
+      "name": "LuaLaTeX + Biber + LuaLaTeX x2",
+      "tools": [
+        "lualatex",
+        "biber",
+        "lualatex",
+        "lualatex"
+      ]
+    },
     {
       "name": "latexmk (lualatex)",
       "tools": [
@@ -10,6 +19,25 @@
   ],
   "latex-workshop.latex.tools": [
     {
+      "name": "lualatex",
+      "command": "lualatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOCFILE_EXT%"
+      ],
+      "cwd": "%DIR%"
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": [
+        "%DOCFILE%"
+      ],
+      "cwd": "%DIR%"
+    },
+    {
       "name": "lualatexmk",
       "command": "latexmk",
       "args": [
@@ -17,8 +45,9 @@
         "-interaction=nonstopmode",
         "-file-line-error",
         "-lualatex",
-        "%DOC%"
-      ]
+        "%DOC_EXT%"
+      ],
+      "cwd": "%DIR%"
     }
   ],
   "latex-workshop.view.pdf.viewer": "tab"

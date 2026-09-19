@@ -63,17 +63,17 @@ La referencia temporal se obtiene a partir de la frecuencia de cuadros utilizada
 \Delta t_i=\frac{f_{i+1}-f_i}{FPS}.
 \]
 
-El cálculo utiliza la separación real entre cuadros. Si existen gaps, el intervalo temporal aumenta según los cuadros transcurridos y no se reemplaza por un valor fijo equivalente a 1/FPS.
+Si existen \textit{gaps}, el intervalo temporal se calcula con los cuadros realmente transcurridos; no se asume un valor fijo de $1/FPS$.
 
 Cuando el origen temporal se fija en el inicio del video, el instante asociado con un cuadro $f_i$ puede expresarse como $t_i=(f_i-f_0)/FPS$. Esta referencia permite conservar el momento real de aparición de cada trayectoria dentro de la grabación. Para visualizaciones específicas puede mostrarse únicamente una ventana alrededor del intervalo donde existe información, sin modificar los valores absolutos de tiempo.
 
-El FPS utilizado debe corresponder a la frecuencia de adquisición o a la definida explícitamente para el análisis, y mantenerse separado de la frecuencia empleada únicamente para escribir un video de salida.
+El FPS de análisis debe corresponder a la adquisición o definirse explícitamente y mantenerse separado del FPS utilizado solo para escribir el video de salida.
 
 \subsection{Calibración espacial}
 
-La posición de cada microorganismo se representa inicialmente en píxeles. Para expresar posiciones, distancias y magnitudes derivadas en unidades físicas se requiere una escala micrométrica obtenida bajo una configuración óptica compatible con la utilizada en los videos.
+Las posiciones se representan inicialmente en píxeles. Su conversión a unidades físicas requiere una escala micrométrica obtenida bajo una configuración óptica compatible.
 
-La escala de referencia utilizada presenta divisiones mayores tales que diez divisiones equivalen a $1\,\mathrm{mm}$. Por lo tanto, la distancia física entre dos divisiones mayores consecutivas es de $0{,}1\,\mathrm{mm}$, es decir, $100\,\mu\mathrm{m}$. Si se seleccionan N intervalos mayores de la escala y la distancia correspondiente en la imagen es $L_{px}$ píxeles, la longitud física de referencia es $L_{\mathrm{real}}=100N\,\mu\mathrm{m}$ y el factor de calibración espacial se obtiene como:
+La escala de referencia utilizada presenta divisiones mayores tales que diez divisiones equivalen a $1\,\mathrm{mm}$. Por lo tanto, la distancia física entre dos divisiones mayores consecutivas es de $0{,}1\,\mathrm{mm}$, es decir, $100\,\mu\mathrm{m}$. Si se seleccionan $N$ intervalos mayores de la escala y la distancia correspondiente en la imagen es $L_{px}$ píxeles, la longitud física de referencia es $L_{\mathrm{real}}=100N\,\mu\mathrm{m}$ y el factor de calibración espacial se obtiene como:
 
 \[
 s=\frac{L_{\mathrm{real}}}{L_{px}}.
@@ -81,8 +81,195 @@ s=\frac{L_{\mathrm{real}}}{L_{px}}.
 
 donde $s$ se expresa en micrómetros por píxel ($\mu\mathrm{m}/px$). Para reducir la influencia del error de selección de los extremos, resulta preferible medir varios intervalos de la escala en lugar de utilizar una única subdivisión y, cuando se dispone de más de una medición equivalente, comprobar la consistencia del factor obtenido.
 
-Una vez que se establezca y valide s, una distancia calculada internamente en píxeles podrá convertirse mediante $D_{\mu m}=sD_{px}$. De la misma forma, las coordenadas podrán expresarse en micrómetros respecto del origen elegido. Las magnitudes derivadas conservarán el mismo factor espacial: los valores de rapidez podrán multiplicarse por s para expresarlos en µm/s y las variaciones temporales de la rapidez podrán expresarse en $\mu\mathrm{m}/s^2$.
+Una vez que se establezca y valide $s$, una distancia calculada internamente en píxeles podrá convertirse mediante $D_{\mu m}=sD_{px}$. De la misma forma, las coordenadas podrán expresarse en micrómetros respecto del origen elegido. Las magnitudes derivadas conservarán el mismo factor espacial: los valores de rapidez podrán multiplicarse por $s$ para expresarlos en $\mu\mathrm{m}/s$ y las variaciones temporales de la rapidez podrán expresarse en $\mu\mathrm{m}/s^2$.
 
-El factor de calibración solo es válido para grabaciones con condiciones ópticas compatibles. Cambios en el aumento, la resolución, el recorte o la configuración requieren verificar nuevamente la escala y asociarla con el video correspondiente.
+El factor de calibración es válido solo para condiciones ópticas compatibles; cambios de aumento, resolución, recorte o configuración requieren verificar nuevamente la escala.
 
-La representación interna conserva los cuadros y las coordenadas en píxeles. La conversión a unidades físicas se aplica posteriormente durante el análisis y reporte, una vez validada la escala correspondiente, preservando así la trazabilidad de las observaciones originales y la semántica de los umbrales internos.
+La representación interna conserva cuadros y coordenadas en píxeles; la conversión a unidades físicas se aplica posteriormente, una vez validada la escala, sin alterar los datos originales.
+
+\section{Procedimiento general}
+
+El procedimiento general se resume en la Figura~\ref{fig:procedimiento-general}. El flujo distingue el procesamiento automático de la construcción de la referencia manual y reúne ambos en la etapa de validación. Cada ejecución conserva el video, el modelo, el FPS, los parámetros efectivos y la información del entorno necesarios para reproducir los resultados.
+
+\begin{figure}[htbp]
+  \centering
+  \thesisgraphic[0.96\textwidth]{figures/chapter04/fig04_04_procedimiento.pdf}
+  \caption{Procedimiento operativo desde la preparación de las entradas hasta la validación y el registro de resultados.}
+  \label{fig:procedimiento-general}
+\end{figure}
+
+\section{Operacionalización de variables y magnitudes}
+
+Las variables definidas en el capítulo 2 se operacionalizan a partir de las observaciones discretas de cada trayectoria y de la información contextual asociada con el video. La Tabla~\ref{tab:operacionalizacion} resume la representación utilizada, la forma de obtención y la unidad o tipo de dato correspondiente. Las fórmulas detalladas no se repiten aquí, ya que fueron definidas previamente.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}p{0.20\textwidth}p{0.54\textwidth}p{0.18\textwidth}@{}}
+\caption{Operacionalización de las principales variables y magnitudes del estudio.}
+\label{tab:operacionalizacion}\\
+\toprule
+\textbf{Magnitud / variable} & \textbf{Definición operacional} & \textbf{Unidad / tipo} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Magnitud / variable} & \textbf{Definición operacional} & \textbf{Unidad / tipo} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+Posición &
+Centro de la caja delimitadora asociado a cada observación $(x_i,y_i)$. &
+px \\
+
+Tiempo entre observaciones &
+Diferencia real de cuadros dividida por el FPS de análisis. &
+s \\
+
+Distancia total &
+Suma de las distancias euclídeas entre posiciones consecutivas. &
+px; $\mu$m tras calibración \\
+
+Desplazamiento neto &
+Distancia entre la primera y la última posición de la trayectoria. &
+px; $\mu$m tras calibración \\
+
+Rapidez &
+Distancia de cada segmento dividida por su intervalo temporal; para la trayectoria completa, distancia total dividida por el tiempo transcurrido. &
+px/s; $\mu$m/s tras calibración \\
+
+Variación de rapidez / aceleración &
+Cambio de rapidez entre intervalos sucesivos dividido por el tiempo transcurrido. &
+px/s$^2$; $\mu$m/s$^2$ tras calibración \\
+
+Rectitud &
+Relación entre desplazamiento neto y distancia total cuando la distancia total es mayor que cero. &
+Adimensional \\
+
+Continuidad temporal &
+Cobertura del intervalo de seguimiento y análisis de \textit{gaps} a partir de los cuadros observados. &
+Proporción, conteos y cuadros \\
+
+Inactividad &
+Rapidez suavizada por debajo de un umbral operativo durante el análisis. &
+Proporción / intervalos; umbral en px/s \\
+
+Tipo de movimiento &
+Clasificación heurística en direccional, browniano/errático, circular/oscilatorio, datos insuficientes o desconocido. &
+Categórica \\
+
+Variables contextuales &
+Temperatura, FPS, resolución y escala espacial asociadas con el video y su adquisición. &
+$^\circ$C, fps, px, $\mu$m/px \\
+
+\end{longtable}
+\endgroup
+
+La posición, las distancias y las magnitudes derivadas permanecen expresadas en píxeles mientras no se aplique una calibración espacial válida. Cuando dicha escala se encuentre establecida, las conversiones a micrómetros se realizan como una capa posterior, manteniendo los valores originales para conservar la trazabilidad.
+
+\section{Protocolo y criterios de evaluación}
+
+La evaluación se organiza por niveles para distinguir errores de detección, seguimiento y análisis. En la etapa piloto se seleccionan entre tres y cinco videos con distinta dificultad, considerando densidad, cruces, oclusiones, entradas o salidas del campo visual y posibles fragmentaciones. Antes de comparar resultados se verifica que el video, el FPS, la resolución y el sistema de coordenadas sean compatibles entre Tracker y el procesamiento automático.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}p{0.18\textwidth}p{0.31\textwidth}p{0.43\textwidth}@{}}
+\caption{Criterios utilizados para evaluar los distintos niveles del sistema.}
+\label{tab:criterios-evaluacion}\\
+\toprule
+\textbf{Nivel} & \textbf{Qué se evalúa} & \textbf{Criterios principales} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Nivel} & \textbf{Qué se evalúa} & \textbf{Criterios principales} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+Detección &
+Localización de microorganismos en imágenes. &
+Precisión, \textit{recall}, F1 y AP; se informan el IoU y el umbral de confianza. \\
+
+Seguimiento y trayectorias &
+Correspondencia temporal y geométrica con la referencia manual. &
+Error de posición, cobertura, distancia total, rapidez, rectitud, fragmentación y tracks sin correspondencia. \\
+
+Métricas y clasificación &
+Coherencia de magnitudes derivadas y clasificación de patrones. &
+Comparar solo magnitudes calculables; conservar datos insuficientes y desconocido como resultados válidos. \\
+
+Reproducibilidad &
+Capacidad de repetir una ejecución bajo las mismas condiciones. &
+Mismo video, FPS y coordenadas; registrar modelo, parámetros, entorno y procedencia. \\
+
+Eficiencia &
+Tiempo requerido para procesar los videos. &
+Medición por video bajo hardware y software documentados. \\
+
+Agregación &
+Síntesis de resultados experimentales. &
+Resumir primero por trayectoria, luego por video y finalmente de forma global; no reemplazar valores no calculables por cero. \\
+
+\end{longtable}
+\endgroup
+
+Cuando el \textit{ground truth} es parcial, una trayectoria automática sin referencia manual no se considera por sí sola un falso positivo; los pares utilizados como evidencia deben quedar revisados y documentados. Las métricas se resumen primero por trayectoria y luego por video, conservando como no calculables aquellas magnitudes que no estén definidas.
+
+Los umbrales de confianza, filtrado, inactividad, aceleración y cambios de régimen se consideran parámetros operativos mientras no exista una validación experimental que permita tratarlos como valores óptimos.
+
+\section{Limitaciones metodológicas y amenazas a la validez}
+
+Las principales amenazas metodológicas se resumen en la Tabla~\ref{tab:amenazas-validez}. Estas limitaciones condicionan la interpretación de los resultados y deben considerarse junto con las métricas obtenidas.
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}p{0.19\textwidth}p{0.36\textwidth}p{0.37\textwidth}@{}}
+\caption{Principales amenazas a la validez y su implicancia metodológica.}
+\label{tab:amenazas-validez}\\
+\toprule
+\textbf{Dimensión} & \textbf{Amenaza o limitación} & \textbf{Implicancia metodológica} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Dimensión} & \textbf{Amenaza o limitación} & \textbf{Implicancia metodológica} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+Validez de medición &
+Diferencia entre el centro de la caja automática y el punto marcado manualmente; errores en FPS o escala. &
+Puede introducir error espacial o temporal aun cuando ambas observaciones correspondan al mismo individuo. \\
+
+Validez interna &
+Los errores de detección y seguimiento se propagan a las métricas; los umbrales son operativos. &
+\textit{Gaps}, fragmentación y parámetros deben analizarse junto con las magnitudes derivadas. \\
+
+Validez de la referencia &
+Tracker depende del criterio del anotador y el \textit{ground truth} puede ser parcial. &
+Los pares se revisan explícitamente; un track automático sin referencia no implica por sí solo un falso positivo. \\
+
+Validez de conclusión &
+El conjunto piloto es pequeño y no constituye una muestra estadística general. &
+Los resultados se interpretan de forma descriptiva y comparativa, no causal. \\
+
+Validez externa &
+La evaluación se restringe a los videos y condiciones ópticas disponibles. &
+No se asume generalización a otras especies, microscopios o protocolos de adquisición. \\
+
+Representación e interpretación &
+El movimiento observado es una proyección 2D; el ID es computacional y las categorías son heurísticas. &
+No se interpreta el track ID como identidad biológica ni la clasificación como explicación causal. \\
+
+Reproducibilidad &
+Videos, pesos y anotaciones se almacenan fuera del repositorio. &
+Deben conservarse identificadores, hashes, configuración, metadatos y procedencia de las entradas. \\
+
+\end{longtable}
+\endgroup
+
+En conjunto, estas limitaciones restringen el alcance de las conclusiones al dominio experimental estudiado y refuerzan la necesidad de conservar la trazabilidad de los datos, parámetros y condiciones de adquisición.

@@ -20,40 +20,33 @@ Para favorecer la reproducibilidad, cada ejecución relevante conserva la identi
 
 \begin{figure}[htbp]
   \centering
-  \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[node distance=7mm and 8mm]
-    \node[thesisflow] (a) {Videos microscópicos};
-    \node[thesisflow, right=of a] (b) {Detección de\\microorganismos};
-    \node[thesisflow, right=of b] (c) {Seguimiento\\temporal};
-    \node[thesisflow, right=of c] (d) {Reconstrucción de\\trayectorias};
-    \node[thesisflow, right=of d] (e) {Cálculo de\\métricas};
-    \node[thesisflow, right=of e] (f) {Clasificación de\\patrones};
+  \begin{tikzpicture}[
+    node distance=10mm and 15mm,
+    thesisflow/.append style={
+      text width=3.25cm,
+      minimum height=1.05cm,
+      font=\footnotesize
+    }
+  ]
+    % Flujo automático
+    \node[thesisflow] (video) {Videos microscópicos};
+    \node[thesisflow, right=of video] (proc) {Procesamiento automático\\Detección y seguimiento};
+    \node[thesisflow, right=of proc] (results) {Resultados automáticos\\Trayectorias, métricas y clasificación};
 
-    \draw[thesisarrow] (a)--(b);
-    \draw[thesisarrow] (b)--(c);
-    \draw[thesisarrow] (c)--(d);
-    \draw[thesisarrow] (d)--(e);
-    \draw[thesisarrow] (e)--(f);
+    % Referencia y evaluación
+    \node[thesisflow, below=of video] (tracker) {Referencia manual\\Tracker};
+    \node[thesisflow, below=of results] (eval) {Comparación y\\evaluación experimental};
+    \node[thesisflow, right=of eval] (trace) {Trazabilidad y\\reproducibilidad};
 
-    \node[thesisflow, below=13mm of d] (g) {Comparación con\\trayectorias de Tracker};
-    \node[thesisflow, below=13mm of e] (h) {Comparación de\\métricas};
-    \node[thesisflow, right=9mm of h] (i) {Evaluación\\experimental};
-    \draw[thesisarrow] (d)--(g);
-    \draw[thesisarrow] (e)--(h);
-    \draw[thesisarrow] (g)--(i);
-    \draw[thesisarrow] (h)--(i);
+    \draw[thesisarrow] (video) -- (proc);
+    \draw[thesisarrow] (proc) -- (results);
 
-    \node[thesisflow, below=13mm of i] (k) {Trazabilidad y\\reproducibilidad};
-    \node[thesisflow, left=7mm of k] (j) {Configuración de\\ejecución};
-    \node[thesisflow, below=6mm of j] (l) {Modelo utilizado};
-    \node[thesisflow, below=6mm of k] (m) {Video procesado};
-    \draw[thesisarrow] (i)--(k);
-    \draw[thesisarrow] (j)--(k);
-    \draw[thesisarrow] (l)--(k);
-    \draw[thesisarrow] (m)--(k);
-  \end{tikzpicture}%
-  }
-  \caption{Esquema general del diseño metodológico del estudio, desde el procesamiento de los videos hasta la evaluación experimental y la trazabilidad de las ejecuciones.}
+    \draw[thesisarrow] (video) -- (tracker);
+    \draw[thesisarrow] (tracker) -- (eval);
+    \draw[thesisarrow] (results) -- (eval);
+    \draw[thesisarrow] (eval) -- (trace);
+  \end{tikzpicture}
+  \caption{Esquema general del diseño metodológico del estudio, desde el procesamiento automático y la construcción de la referencia manual hasta la evaluación y la trazabilidad de los resultados.}
   \label{fig:metodologia-general}
 \end{figure}
 

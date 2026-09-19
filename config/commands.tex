@@ -1,0 +1,39 @@
+\newcommand{\thesisgraphic}[2][0.9\textwidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][4cm][c]{#1}{\centering
+      Figura pendiente de renderizado\\[0.4em]
+      \texttt{\detokenize{#2}}}}%
+  }%
+}
+
+\newcommand{\institutionlogo}[2][0.26\textwidth]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1]{#2}%
+  }{%
+    \fbox{\parbox[c][1.4cm][c]{#1}{\centering Logo pendiente}}%
+  }%
+}
+
+
+% Estilo común para diagramas metodológicos.
+\tikzset{
+  thesisflow/.style={
+    draw,
+    rounded corners=2pt,
+    align=center,
+    inner xsep=6pt,
+    inner ysep=4pt,
+    font=\small
+  },
+  thesisarrow/.style={
+    -{Latex[length=2mm]},
+    line width=0.55pt
+  },
+  thesisgroup/.style={
+    draw=gray,
+    rounded corners=2pt,
+    inner sep=5pt
+  }
+}

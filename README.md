@@ -57,7 +57,7 @@ npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_03_calibracion.mm
 npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_04_procedimiento.mmd -o figures/chapter04/fig04_04_procedimiento.pdf
 \`\`\`
 
-Si los PDF todavía no existen, LaTeX muestra un placeholder en su lugar.
+Los PDF renderizados de las cuatro figuras del capítulo 4 también están versionados en el repositorio. Los archivos `.mmd` se conservan como fuente editable.
 
 ## Organización
 

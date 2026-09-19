@@ -54,6 +54,7 @@ Para generar las versiones PDF vectoriales:
 npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_01_metodologia.mmd -o figures/chapter04/fig04_01_metodologia.pdf
 npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_02_datos_unidades.mmd -o figures/chapter04/fig04_02_datos_unidades.pdf
 npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_03_calibracion.mmd -o figures/chapter04/fig04_03_calibracion.pdf
+npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_04_procedimiento.mmd -o figures/chapter04/fig04_04_procedimiento.pdf
 \`\`\`
 
 Si los PDF todavía no existen, LaTeX muestra un placeholder en su lugar.

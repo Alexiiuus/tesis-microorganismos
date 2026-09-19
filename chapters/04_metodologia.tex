@@ -20,7 +20,39 @@ Para favorecer la reproducibilidad, cada ejecución relevante conserva la identi
 
 \begin{figure}[htbp]
   \centering
-  \thesisgraphic[0.96\textwidth]{figures/chapter04/fig04_01_metodologia.pdf}
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[node distance=7mm and 8mm]
+    \node[thesisflow] (a) {Videos microscópicos};
+    \node[thesisflow, right=of a] (b) {Detección de\\microorganismos};
+    \node[thesisflow, right=of b] (c) {Seguimiento\\temporal};
+    \node[thesisflow, right=of c] (d) {Reconstrucción de\\trayectorias};
+    \node[thesisflow, right=of d] (e) {Cálculo de\\métricas};
+    \node[thesisflow, right=of e] (f) {Clasificación de\\patrones};
+
+    \draw[thesisarrow] (a)--(b);
+    \draw[thesisarrow] (b)--(c);
+    \draw[thesisarrow] (c)--(d);
+    \draw[thesisarrow] (d)--(e);
+    \draw[thesisarrow] (e)--(f);
+
+    \node[thesisflow, below=13mm of d] (g) {Comparación con\\trayectorias de Tracker};
+    \node[thesisflow, below=13mm of e] (h) {Comparación de\\métricas};
+    \node[thesisflow, right=9mm of h] (i) {Evaluación\\experimental};
+    \draw[thesisarrow] (d)--(g);
+    \draw[thesisarrow] (e)--(h);
+    \draw[thesisarrow] (g)--(i);
+    \draw[thesisarrow] (h)--(i);
+
+    \node[thesisflow, below=13mm of i] (k) {Trazabilidad y\\reproducibilidad};
+    \node[thesisflow, left=7mm of k] (j) {Configuración de\\ejecución};
+    \node[thesisflow, below=6mm of j] (l) {Modelo utilizado};
+    \node[thesisflow, below=6mm of k] (m) {Video procesado};
+    \draw[thesisarrow] (i)--(k);
+    \draw[thesisarrow] (j)--(k);
+    \draw[thesisarrow] (l)--(k);
+    \draw[thesisarrow] (m)--(k);
+  \end{tikzpicture}%
+  }
   \caption{Esquema general del diseño metodológico del estudio, desde el procesamiento de los videos hasta la evaluación experimental y la trazabilidad de las ejecuciones.}
   \label{fig:metodologia-general}
 \end{figure}
@@ -39,7 +71,36 @@ Los resultados se interpretan dentro del dominio experimental estudiado y no imp
 
 \begin{figure}[htbp]
   \centering
-  \thesisgraphic[0.88\textwidth]{figures/chapter04/fig04_02_datos_unidades.pdf}
+  \resizebox{0.92\textwidth}{!}{%
+  \begin{tikzpicture}[node distance=7mm and 11mm]
+    \node[thesisflow] (a) {Material experimental};
+
+    \node[thesisflow, below left=10mm and 34mm of a] (b) {Imágenes anotadas};
+    \node[thesisflow, below left=10mm and 8mm of a] (c) {Videos microscópicos};
+    \node[thesisflow, below right=10mm and 10mm of a] (d) {Trayectorias manuales\\de Tracker};
+    \node[thesisflow, below right=10mm and 39mm of a] (e) {Escala micrométrica};
+
+    \node[thesisflow, below=of b] (b1) {Adaptación y evaluación\\del detector};
+    \node[thesisflow, below=of c] (c1) {Video\\Unidad experimental};
+    \node[thesisflow, below=of c1] (c2) {Microorganismo seguido\\Unidad primaria de observación};
+    \node[thesisflow, below=of c2] (c3) {Trayectoria reconstruida\\Unidad de análisis computacional};
+    \node[thesisflow, below=of d] (d1) {Referencia manual\\para validación};
+    \node[thesisflow, below=of e] (e1) {Referencia para\\calibración espacial};
+
+    \draw[thesisarrow] (a)--(b);
+    \draw[thesisarrow] (a)--(c);
+    \draw[thesisarrow] (a)--(d);
+    \draw[thesisarrow] (a)--(e);
+    \draw[thesisarrow] (b)--(b1);
+    \draw[thesisarrow] (c)--(c1);
+    \draw[thesisarrow] (c1)--(c2);
+    \draw[thesisarrow] (c2)--(c3);
+    \draw[thesisarrow] (d)--(d1);
+    \draw[thesisarrow] (d1)--(c3);
+    \draw[thesisarrow] (e)--(e1);
+    \draw[thesisarrow] (e1)--(c3);
+  \end{tikzpicture}%
+  }
   \caption{Relación entre los materiales utilizados y las unidades de análisis del estudio.}
   \label{fig:datos-unidades}
 \end{figure}
@@ -50,7 +111,39 @@ Cada trayectoria conserva el número de cuadro y la posición en píxeles. Como 
 
 \begin{figure}[htbp]
   \centering
-  \thesisgraphic[0.96\textwidth]{figures/chapter04/fig04_03_calibracion.pdf}
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[node distance=6mm and 14mm]
+    \node[thesisflow] (a) {Observación de una trayectoria};
+    \node[thesisflow, right=of a] (b) {Representación interna\\(cuadro, $x_{px}$, $y_{px}$)};
+
+    \node[thesisflow, above right=8mm and 14mm of b] (c) {Información temporal};
+    \node[thesisflow, below right=8mm and 14mm of b] (d) {Información espacial};
+
+    \node[thesisflow, right=of c] (c1) {Número de cuadro};
+    \node[thesisflow, right=of c1] (c2) {FPS de análisis};
+    \node[thesisflow, right=of c2] (c3) {Tiempo en segundos};
+    \node[thesisflow, right=of c3] (c4) {Rapidez y variaciones\\temporales};
+
+    \node[thesisflow, right=of d] (d1) {Coordenadas\\en píxeles};
+    \node[thesisflow, right=of d1] (d2) {Escala\\micrométrica};
+    \node[thesisflow, right=of d2] (d3) {Factor de calibración\\$\mu$m/px};
+    \node[thesisflow, right=of d3] (d4) {Posiciones y distancias\\en $\mu$m};
+    \node[thesisflow, right=of d4] (d5) {Rapidez\\en $\mu$m/s};
+
+    \draw[thesisarrow] (a)--(b);
+    \draw[thesisarrow] (b)--(c);
+    \draw[thesisarrow] (b)--(d);
+    \draw[thesisarrow] (c)--(c1);
+    \draw[thesisarrow] (c1)--(c2);
+    \draw[thesisarrow] (c2)--(c3);
+    \draw[thesisarrow] (c3)--(c4);
+    \draw[thesisarrow] (d)--(d1);
+    \draw[thesisarrow] (d1)--(d2);
+    \draw[thesisarrow] (d2)--(d3);
+    \draw[thesisarrow] (d3)--(d4);
+    \draw[thesisarrow] (d4)--(d5);
+  \end{tikzpicture}%
+  }
   \caption{Relación entre la representación interna de las trayectorias y las conversiones temporal y espacial. La conversión temporal mediante FPS forma parte de la implementación actual, mientras que la conversión espacial requiere una calibración válida.}
   \label{fig:calibracion}
 \end{figure}
@@ -93,7 +186,29 @@ El procedimiento general se resume en la Figura~\ref{fig:procedimiento-general}.
 
 \begin{figure}[htbp]
   \centering
-  \thesisgraphic[0.96\textwidth]{figures/chapter04/fig04_04_procedimiento.pdf}
+  \resizebox{0.95\textwidth}{!}{%
+  \begin{tikzpicture}[node distance=9mm and 12mm]
+    \node[thesisflow] (a) {Video + modelo + configuración};
+    \node[thesisflow, right=of a] (b) {Procesamiento automático};
+    \node[thesisflow, right=of b] (c) {Tracks reconstruidos};
+    \node[thesisflow, right=of c] (d) {Métricas, gráficos\\y clasificación};
+
+    \node[thesisflow, below=13mm of b] (e) {Tracker};
+    \node[thesisflow, right=of e] (f) {Referencia manual};
+
+    \node[thesisflow, right=15mm of d] (g) {Comparación y\\validación};
+    \node[thesisflow, right=of g] (h) {Resultados +\\trazabilidad};
+
+    \draw[thesisarrow] (a)--(b);
+    \draw[thesisarrow] (b)--(c);
+    \draw[thesisarrow] (c)--(d);
+    \draw[thesisarrow] (a)|-(e);
+    \draw[thesisarrow] (e)--(f);
+    \draw[thesisarrow] (d)--(g);
+    \draw[thesisarrow] (f)-|(g);
+    \draw[thesisarrow] (g)--(h);
+  \end{tikzpicture}%
+  }
   \caption{Procedimiento operativo desde la preparación de las entradas hasta la validación y el registro de resultados.}
   \label{fig:procedimiento-general}
 \end{figure}

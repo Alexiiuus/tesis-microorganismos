@@ -18,31 +18,58 @@ La comparación con Tracker se utiliza como referencia experimental. Cuando el g
 
 Para favorecer la reproducibilidad, cada ejecución relevante conserva la identidad del video, el modelo, la configuración y los parámetros efectivos utilizados.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{tikzpicture}[
-    node distance=7mm,
-    thesisflow/.append style={
-      text width=5.2cm,
-      minimum height=0.95cm,
+    x=1cm,
+    y=1cm,
+    box/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=4.3cm,
+      minimum height=1.0cm,
+      inner sep=4pt,
       font=\footnotesize
+    },
+    widebox/.style={
+      box,
+      text width=5.6cm
+    },
+    arr/.style={
+      -{Latex[length=2mm]},
+      line width=0.55pt
     }
   ]
-    \node[thesisflow] (video) {Videos microscópicos};
-    \node[thesisflow, below=of video] (proc) {Procesamiento automático\\Detección y seguimiento};
-    \node[thesisflow, below=of proc] (results) {Trayectorias, métricas y clasificación};
-    \node[thesisflow, below=12mm of results] (eval) {Comparación y evaluación experimental};
-    \node[thesisflow, below=of eval] (trace) {Resultados, trazabilidad y reproducibilidad};
+    \node[widebox] (video) at (0,0) {Videos microscópicos};
 
-    \node[thesisflow, left=17mm of eval, text width=3.2cm] (tracker) {Referencia manual\\Tracker};
+    \node[box] (auto) at (-3.2,-1.8)
+      {Procesamiento automático\\Detección y seguimiento};
+    \node[box] (manual) at (3.2,-1.8)
+      {Construcción de referencia\\Tracker};
 
-    \draw[thesisarrow] (video) -- (proc);
-    \draw[thesisarrow] (proc) -- (results);
-    \draw[thesisarrow] (results) -- (eval);
-    \draw[thesisarrow] (tracker) -- (eval);
-    \draw[thesisarrow] (eval) -- (trace);
+    \node[box] (autores) at (-3.2,-3.6)
+      {Trayectorias, métricas\\y clasificación};
+    \node[box] (manres) at (3.2,-3.6)
+      {Trayectorias de referencia\\revisadas};
+
+    \node[widebox] (eval) at (0,-5.5)
+      {Comparación y evaluación experimental};
+    \node[widebox] (trace) at (0,-7.2)
+      {Resultados, trazabilidad y reproducibilidad};
+
+    \draw[arr] (video.south) -- ++(0,-0.35) -| (auto.north);
+    \draw[arr] (video.south) -- ++(0,-0.35) -| (manual.north);
+
+    \draw[arr] (auto) -- (autores);
+    \draw[arr] (manual) -- (manres);
+
+    \draw[arr] (autores.south) |- (eval.west);
+    \draw[arr] (manres.south) |- (eval.east);
+
+    \draw[arr] (eval) -- (trace);
   \end{tikzpicture}
-  \caption{Esquema general del diseño metodológico. El procesamiento automático y la referencia manual convergen en la etapa de evaluación, cuyos resultados se registran junto con la información necesaria para su trazabilidad.}
+  \caption{Esquema general del diseño metodológico. El procesamiento automático y la construcción de la referencia manual convergen en la evaluación experimental, cuyos resultados se conservan junto con la información necesaria para su trazabilidad y reproducibilidad.}
   \label{fig:metodologia-general}
 \end{figure}
 
@@ -60,26 +87,57 @@ Los resultados se interpretan dentro del dominio experimental estudiado y no imp
 
 \begin{figure}[H]
   \centering
-  \small
-  \setlength{\tabcolsep}{6pt}
-  \renewcommand{\arraystretch}{1.18}
-  \begin{tabularx}{0.88\textwidth}{@{}>{\raggedright\arraybackslash}p{0.25\textwidth}X@{}}
-    \toprule
-    \textbf{Material} & \textbf{Función dentro del estudio} \\
-    \midrule
-    Imágenes anotadas &
-    Adaptación y evaluación del detector. \\
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    source/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=3.7cm,
+      minimum height=1.0cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    role/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=5.6cm,
+      minimum height=1.0cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    arr/.style={
+      -{Latex[length=2mm]},
+      line width=0.55pt
+    }
+  ]
+    \node[source] (i1) at (-3.8,0)
+      {Imágenes anotadas};
+    \node[role] (o1) at (3.0,0)
+      {Adaptación y evaluación del detector};
 
-    Videos microscópicos &
-    Entrada principal del sistema. Cada video constituye una unidad experimental; los microorganismos seguidos son las unidades primarias de observación y sus trayectorias las unidades de análisis computacional. \\
+    \node[source] (i2) at (-3.8,-1.8)
+      {Videos microscópicos};
+    \node[role] (o2) at (3.0,-1.8)
+      {Video = unidad experimental\\Microorganismo = unidad primaria\\Trayectoria = unidad computacional};
 
-    Trayectorias de Tracker &
-    Referencia manual utilizada para comparar y validar las trayectorias obtenidas automáticamente. \\
+    \node[source] (i3) at (-3.8,-3.9)
+      {Trayectorias manuales\\de Tracker};
+    \node[role] (o3) at (3.0,-3.9)
+      {Referencia manual para la validación};
 
-    Escala micrométrica &
-    Referencia empleada para establecer el factor de calibración espacial y convertir las mediciones desde píxeles a unidades físicas. \\
-    \bottomrule
-  \end{tabularx}
+    \node[source] (i4) at (-3.8,-5.7)
+      {Escala micrométrica};
+    \node[role] (o4) at (3.0,-5.7)
+      {Referencia para la calibración espacial};
+
+    \draw[arr] (i1) -- (o1);
+    \draw[arr] (i2) -- (o2);
+    \draw[arr] (i3) -- (o3);
+    \draw[arr] (i4) -- (o4);
+  \end{tikzpicture}
   \caption{Relación entre los materiales utilizados y su función metodológica dentro del estudio.}
   \label{fig:datos-unidades}
 \end{figure}
@@ -88,42 +146,71 @@ Los resultados se interpretan dentro del dominio experimental estudiado y no imp
 
 Cada trayectoria conserva el número de cuadro y la posición en píxeles. Como resume la Figura~\ref{fig:calibracion}, la conversión temporal se realiza mediante los FPS de análisis, mientras que la conversión espacial requiere una calibración micrométrica válida antes de expresar las magnitudes en unidades físicas.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[node distance=6mm and 14mm]
-    \node[thesisflow] (a) {Observación de una trayectoria};
-    \node[thesisflow, right=of a] (b) {Representación interna\\(cuadro, $x_{px}$, $y_{px}$)};
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    box/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=4.3cm,
+      minimum height=1.0cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    widebox/.style={
+      box,
+      text width=5.6cm
+    },
+    arr/.style={
+      -{Latex[length=2mm]},
+      line width=0.55pt
+    }
+  ]
+    \node[widebox] (obs) at (0,0)
+      {Observación de una trayectoria};
+    \node[widebox] (repr) at (0,-1.6)
+      {Representación interna: cuadro, $x_{px}$, $y_{px}$};
 
-    \node[thesisflow, above right=8mm and 14mm of b] (c) {Información temporal};
-    \node[thesisflow, below right=8mm and 14mm of b] (d) {Información espacial};
+    \node[box] (temp1) at (-3.2,-3.4)
+      {Número de cuadro};
+    \node[box] (spat1) at (3.2,-3.4)
+      {Coordenadas en píxeles};
 
-    \node[thesisflow, right=of c] (c1) {Número de cuadro};
-    \node[thesisflow, right=of c1] (c2) {FPS de análisis};
-    \node[thesisflow, right=of c2] (c3) {Tiempo en segundos};
-    \node[thesisflow, right=of c3] (c4) {Rapidez y variaciones\\temporales};
+    \node[box] (temp2) at (-3.2,-5.0)
+      {FPS de análisis};
+    \node[box] (spat2) at (3.2,-5.0)
+      {Escala micrométrica};
 
-    \node[thesisflow, right=of d] (d1) {Coordenadas\\en píxeles};
-    \node[thesisflow, right=of d1] (d2) {Escala\\micrométrica};
-    \node[thesisflow, right=of d2] (d3) {Factor de calibración\\$\mu$m/px};
-    \node[thesisflow, right=of d3] (d4) {Posiciones y distancias\\en $\mu$m};
-    \node[thesisflow, right=of d4] (d5) {Rapidez\\en $\mu$m/s};
+    \node[box] (temp3) at (-3.2,-6.6)
+      {Tiempo e intervalos $\Delta t$};
+    \node[box] (spat3) at (3.2,-6.6)
+      {Factor $s$ ($\mu$m/px)};
 
-    \draw[thesisarrow] (a)--(b);
-    \draw[thesisarrow] (b)--(c);
-    \draw[thesisarrow] (b)--(d);
-    \draw[thesisarrow] (c)--(c1);
-    \draw[thesisarrow] (c1)--(c2);
-    \draw[thesisarrow] (c2)--(c3);
-    \draw[thesisarrow] (c3)--(c4);
-    \draw[thesisarrow] (d)--(d1);
-    \draw[thesisarrow] (d1)--(d2);
-    \draw[thesisarrow] (d2)--(d3);
-    \draw[thesisarrow] (d3)--(d4);
-    \draw[thesisarrow] (d4)--(d5);
-  \end{tikzpicture}%
-  }
-  \caption{Relación entre la representación interna de las trayectorias y las conversiones temporal y espacial. La conversión temporal mediante FPS forma parte de la implementación actual, mientras que la conversión espacial requiere una calibración válida.}
+    \node[box] (spat4) at (3.2,-8.2)
+      {Posiciones y distancias\\en $\mu$m};
+
+    \node[widebox] (derived) at (0,-10.0)
+      {Magnitudes derivadas\\por ejemplo, rapidez en $\mu$m/s};
+
+    \draw[arr] (obs) -- (repr);
+
+    \draw[arr] (repr.south) -- ++(0,-0.35) -| (temp1.north);
+    \draw[arr] (repr.south) -- ++(0,-0.35) -| (spat1.north);
+
+    \draw[arr] (temp1) -- (temp2);
+    \draw[arr] (temp2) -- (temp3);
+
+    \draw[arr] (spat1) -- (spat2);
+    \draw[arr] (spat2) -- (spat3);
+    \draw[arr] (spat3) -- (spat4);
+
+    \draw[arr] (temp3.south) |- (derived.west);
+    \draw[arr] (spat4.south) |- (derived.east);
+  \end{tikzpicture}
+  \caption{Relación entre la representación interna de una trayectoria y las conversiones temporal y espacial. La información temporal se obtiene a partir de los cuadros y los FPS de análisis; la conversión espacial se aplica una vez validado el factor de calibración.}
   \label{fig:calibracion}
 \end{figure}
 
@@ -163,31 +250,62 @@ La representación interna conserva cuadros y coordenadas en píxeles; la conver
 
 El procedimiento general se resume en la Figura~\ref{fig:procedimiento-general}. El flujo distingue el procesamiento automático de la construcción de la referencia manual y reúne ambos en la etapa de validación. Cada ejecución conserva el video, el modelo, el FPS, los parámetros efectivos y la información del entorno necesarios para reproducir los resultados.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \resizebox{0.95\textwidth}{!}{%
-  \begin{tikzpicture}[node distance=9mm and 12mm]
-    \node[thesisflow] (a) {Video + modelo + configuración};
-    \node[thesisflow, right=of a] (b) {Procesamiento automático};
-    \node[thesisflow, right=of b] (c) {Tracks reconstruidos};
-    \node[thesisflow, right=of c] (d) {Métricas, gráficos\\y clasificación};
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    box/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=4.3cm,
+      minimum height=1.0cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    widebox/.style={
+      box,
+      text width=5.6cm
+    },
+    arr/.style={
+      -{Latex[length=2mm]},
+      line width=0.55pt
+    }
+  ]
+    \node[widebox] (input) at (0,0)
+      {Video + modelo + configuración};
 
-    \node[thesisflow, below=13mm of b] (e) {Tracker};
-    \node[thesisflow, right=of e] (f) {Referencia manual};
+    \node[box] (auto1) at (-3.2,-1.8)
+      {Procesamiento automático};
+    \node[box] (manual1) at (3.2,-1.8)
+      {Tracker};
 
-    \node[thesisflow, right=15mm of d] (g) {Comparación y\\validación};
-    \node[thesisflow, right=of g] (h) {Resultados +\\trazabilidad};
+    \node[box] (auto2) at (-3.2,-3.4)
+      {Tracks reconstruidos};
+    \node[box] (manual2) at (3.2,-3.4)
+      {Referencia manual};
 
-    \draw[thesisarrow] (a)--(b);
-    \draw[thesisarrow] (b)--(c);
-    \draw[thesisarrow] (c)--(d);
-    \draw[thesisarrow] (a)|-(e);
-    \draw[thesisarrow] (e)--(f);
-    \draw[thesisarrow] (d)--(g);
-    \draw[thesisarrow] (f)-|(g);
-    \draw[thesisarrow] (g)--(h);
-  \end{tikzpicture}%
-  }
+    \node[box] (auto3) at (-3.2,-5.0)
+      {Métricas, gráficos\\y clasificación};
+
+    \node[widebox] (compare) at (0,-6.8)
+      {Comparación y validación};
+    \node[widebox] (output) at (0,-8.4)
+      {Resultados + trazabilidad};
+
+    \draw[arr] (input.south) -- ++(0,-0.35) -| (auto1.north);
+    \draw[arr] (input.south) -- ++(0,-0.35) -| (manual1.north);
+
+    \draw[arr] (auto1) -- (auto2);
+    \draw[arr] (auto2) -- (auto3);
+    \draw[arr] (manual1) -- (manual2);
+
+    \draw[arr] (auto3.south) |- (compare.west);
+    \draw[arr] (manual2.south) |- (compare.east);
+
+    \draw[arr] (compare) -- (output);
+  \end{tikzpicture}
   \caption{Procedimiento operativo desde la preparación de las entradas hasta la validación y el registro de resultados.}
   \label{fig:procedimiento-general}
 \end{figure}

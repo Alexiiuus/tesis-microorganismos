@@ -1,0 +1,47 @@
+\chapter{Introducción}
+
+\section{Contexto general}
+
+A principios de 2024, el Grupo de Física de la Atmósfera (GFA) inició una línea de investigación orientada al estudio de la posible existencia de vida microbiana en las venas líquidas presentes en el hielo \cite{mader2006,rohde2007,dani2012}. Esta línea busca contribuir a la comprensión de la capacidad de los microorganismos para sobrevivir y mantener actividad biológica en ambientes caracterizados por temperaturas cercanas al punto de congelación y otras condiciones físicas potencialmente adversas.
+
+Como primera aproximación experimental, la investigación se centró en microorganismos acuáticos presentes en muestras de aguas estancadas de la ciudad de Córdoba. Estas muestras fueron estudiadas en un rango de temperaturas comprendido entre 0 °C y 15 °C, con el propósito de observar su comportamiento en condiciones progresivamente cercanas al punto de fusión del hielo. Este enfoque permite analizar posibles variaciones en la movilidad de los microorganismos y obtener información relacionada con su actividad en entornos de baja temperatura \cite{pedernera2024}.
+
+Las observaciones experimentales se realizaron mediante filmaciones obtenidas con una cámara acoplada a un microscopio óptico. A partir de estas grabaciones, el grupo comenzó a estudiar las trayectorias descriptas por los microorganismos, sus velocidades medias y la posible relación de estas magnitudes con la temperatura del medio acuático. En las muestras consideradas durante las primeras etapas de la investigación se identificaron cuatro tipos de microorganismos, cuyos movimientos requieren ser observados y cuantificados individualmente.
+
+En este contexto, el análisis cuantitativo del movimiento constituye una herramienta para comparar la actividad observada bajo distintas condiciones experimentales. El presente trabajo aborda, por lo tanto, la necesidad de procesar de manera sistemática los videos obtenidos durante los experimentos y transformar las observaciones visuales en datos cuantitativos que puedan ser analizados posteriormente.
+
+\section{Motivación del trabajo}
+
+La caracterización cuantitativa del movimiento resulta necesaria para describir y comparar el comportamiento de los microorganismos bajo diferentes condiciones experimentales. Para ello, es necesario reconstruir sus trayectorias individuales y obtener métricas como la distancia recorrida, la rapidez, la aceleración, la continuidad temporal y los períodos de baja movilidad. En conjunto, estas mediciones permiten representar diferentes aspectos del desplazamiento e identificar patrones generales de movimiento.
+
+La obtención sistemática de estas métricas puede facilitar la comparación entre individuos, muestras y condiciones térmicas. Sin embargo, para que dichas comparaciones resulten consistentes, el procedimiento de análisis debe aplicar criterios uniformes y permitir que el procesamiento pueda repetirse bajo las mismas condiciones.
+
+La automatización de las etapas de detección, seguimiento y extracción de métricas permitiría reducir la intervención requerida durante el procesamiento, analizar una mayor cantidad de videos y generar resultados más comparables y reproducibles. De esta manera, los investigadores podrían concentrar su participación en la revisión e interpretación de los resultados, en lugar de dedicar una parte considerable del trabajo al registro manual de las posiciones.
+
+\section{Problema general}
+
+Actualmente, el Grupo de Física de la Atmósfera obtiene las trayectorias de los microorganismos mediante un seguimiento realizado manualmente con el programa Tracker. Este procedimiento requiere que un operador identifique cada microorganismo y registre su posición a lo largo de numerosos cuadros del video.
+
+Cuando una grabación contiene varios microorganismos o se analizan distintas muestras, temperaturas y repeticiones experimentales, el volumen de trabajo aumenta considerablemente. Como consecuencia, el tiempo necesario para reconstruir las trayectorias limita la cantidad de videos y datos experimentales que pueden procesarse.
+
+La intervención manual también puede introducir variaciones en la selección de las posiciones. Estas dificultades se vuelven más relevantes cuando los microorganismos presentan bajo contraste, realizan desplazamientos rápidos, se superponen o cruzan sus trayectorias. En tales situaciones, mantener correctamente la identidad de cada individuo a lo largo del video puede requerir una supervisión continua.
+
+El problema abordado en esta tesis consiste, por lo tanto, en la ausencia de un flujo automático adaptado y evaluado para los videos experimentales del grupo, que permita detectar múltiples microorganismos, conservar su identidad temporal, reconstruir sus trayectorias y obtener métricas cuantitativas de manera sistemática.
+
+\section{Propuesta del trabajo}
+
+En esta tesis se propone desarrollar un sistema de visión por computadora para procesar videos obtenidos mediante microscopía óptica y reducir la intervención requerida durante su análisis. El sistema identificará los microorganismos presentes en cada cuadro, asociará las detecciones correspondientes a un mismo individuo a lo largo del tiempo y reconstruirá sus trayectorias.
+
+A partir de las trayectorias obtenidas, se calcularán métricas cuantitativas relacionadas con el desplazamiento, la rapidez, la aceleración, la inactividad y la continuidad temporal. También se aplicará una clasificación interpretable de patrones básicos de movimiento y se generarán visualizaciones, videos procesados y archivos de resultados que faciliten su inspección y análisis posterior.
+
+El sistema será evaluado mediante el análisis del desempeño de sus principales componentes. Se considerará la calidad de la detección, la coherencia de las trayectorias reconstruidas, la información obtenida a partir de ellas y el tiempo requerido para procesar los videos. Asimismo, los resultados automáticos serán comparados con el procedimiento manual utilizado actualmente.
+
+La herramienta propuesta no pretende reemplazar la interpretación física o biológica de los resultados. Su finalidad es proporcionar mediciones organizadas, reproducibles y obtenidas mediante criterios uniformes, que puedan ser utilizadas por los especialistas para estudiar posteriormente el comportamiento de los microorganismos bajo distintas condiciones experimentales.
+
+\section{Organización de la tesis}
+
+La tesis se encuentra organizada en trece capítulos, además de las referencias bibliográficas y los apéndices. El presente capítulo introduce el contexto científico, la motivación, el problema general y la propuesta del trabajo. El capítulo 2 delimita el problema de investigación y presenta las preguntas, los objetivos, la justificación y el alcance del estudio. El capítulo 3 desarrolla la perspectiva teórica y los antecedentes relacionados con la visión por computadora, la detección, el seguimiento y el análisis de trayectorias. El capítulo 4 describe el diseño metodológico utilizado para desarrollar y evaluar la herramienta.
+
+Los capítulos 5 a 10 presentan el desarrollo computacional del sistema. El capítulo 5 describe su arquitectura y organización general; el capítulo 6 aborda la detección automática de microorganismos; el capítulo 7 desarrolla el seguimiento y la reconstrucción de trayectorias; el capítulo 8 presenta las métricas utilizadas para analizar el movimiento; el capítulo 9 explica el método de clasificación de patrones; y el capítulo 10 documenta la implementación y las pruebas realizadas.
+
+Finalmente, el capítulo 11 presenta la evaluación y los resultados obtenidos, mientras que el capítulo 12 los analiza en relación con los objetivos, las preguntas de investigación y las limitaciones del sistema. El capítulo 13 reúne las conclusiones y las posibles líneas de trabajo futuro. Los apéndices contienen información complementaria sobre el uso de la herramienta, sus parámetros, los formatos de salida y las pruebas implementadas.

@@ -1,0 +1,122 @@
+\chapter{Detección de microorganismos}
+\label{chap:deteccion}
+
+Este capítulo describe la obtención del detector y su uso en el procesamiento de videos microscópicos. Se presentan la preparación de los datos, la adaptación del modelo y la transformación de sus resultados en observaciones que pueden incorporarse a las trayectorias.
+
+\section{Rol de la detección dentro del sistema}
+
+La detección constituye la primera etapa del procesamiento visual: recibe un cuadro y localiza los microorganismos mediante cajas delimitadoras, acompañadas de una clase y un valor de confianza. Una detección aislada no establece si el objeto corresponde a un individuo observado en otro cuadro; esa asociación pertenece al seguimiento temporal.
+
+En Detection-Morg, ambas operaciones se ejecutan mediante la interfaz integrada de Ultralytics. La Figura~\ref{fig:flujo-deteccion} distingue sus funciones: las detecciones alimentan la asociación temporal y, una vez disponibles los identificadores, el programa extrae los centros para almacenarlos. El diagrama representa etapas funcionales, no llamadas independientes implementadas por la aplicación.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    box/.style={thesisflow,text width=6.2cm,minimum height=0.75cm},
+    every node/.style={outer sep=0pt}
+  ]
+    \node[box] (video) at (0,0) {Video microscópico};
+    \node[box] (frame) at (0,-1.1) {Cuadro del video};
+    \node[box] (detector) at (0,-2.2) {Detector con pesos adaptados};
+    \node[box] (boxes) at (0,-3.3) {Cajas delimitadoras, clase y confianza};
+    \node[box] (tracking) at (0,-4.4) {Asociación temporal e identificadores};
+    \node[box] (centers) at (0,-5.5) {Extracción de centros y registro\\$(\texttt{frame\_idx},x,y)$ por ID};
+    \draw[thesisarrow] (video.south) -- (frame.north);
+    \draw[thesisarrow] (frame.south) -- (detector.north);
+    \draw[thesisarrow] (detector.south) -- (boxes.north);
+    \draw[thesisarrow] (boxes.south) -- (tracking.north);
+    \draw[thesisarrow] (tracking.south) -- (centers.north);
+  \end{tikzpicture}
+  \caption{Flujo por cuadro desde la entrada del video hasta el registro de posiciones. La identidad temporal corresponde al seguimiento.}
+  \label{fig:flujo-deteccion}
+\end{figure}
+
+\section{Modelo de detección utilizado}
+
+El detector utilizado pertenece a la familia YOLO11 de Ultralytics, en su variante \texttt{x} \cite{jocher2024}. Los registros de los dos entrenamientos conservados, denominados \texttt{train} y \texttt{train2}, indican el uso inicial de \texttt{yolo11x.pt} y pesos preentrenados. La versión utilizada actualmente corresponde a \texttt{train2}. Se trabajó con una única clase, \texttt{E}, que identifica operacionalmente a los microorganismos de apariencia esférica; no constituye una identificación taxonómica.
+
+La elección se apoyó en la disponibilidad de pesos preentrenados, la facilidad de adaptación y la integración de detección y seguimiento en una misma biblioteca. Estos fueron criterios prácticos para desarrollar la prueba de concepto; no se realizó una comparación exhaustiva que permita afirmar que la variante elegida sea la más adecuada para cualquier configuración de microscopía.
+
+La aplicación carga el archivo indicado por \texttt{path\_model} mediante \texttt{YOLO(path\_model)}. El entrenamiento se realizó previamente en Google Colab y no forma parte del procesamiento actual de videos. Por tanto, la ruta configurable determina qué pesos se utilizan en cada ejecución.
+
+\section{Preparación y adaptación del detector}
+
+La construcción inicial se realizó en Roboflow con imágenes extraídas de un video de muestra. El primer informe documenta 100 imágenes anotadas: 40 manualmente y 60 con asistencia de un modelo preliminar, cuyas propuestas se corrigieron de forma manual. Esta cifra describe el conjunto inicial y no debe confundirse con las cantidades de las exportaciones posteriores.
+
+Se conservaron dos versiones del dataset: v5, denominada \texttt{POC\_MORG\_V3}, utilizada en \texttt{train}, y v6, denominada \texttt{POC\_DATASETV1}, utilizada en \texttt{train2}. La Tabla~\ref{tab:dataset-deteccion} presenta su composición. Cada partición contiene carpetas de imágenes y etiquetas, con un archivo de anotaciones por imagen. Ambos archivos \texttt{data.yaml} declaran una sola clase, \texttt{E}, y las rutas de entrenamiento, validación y prueba.
+
+\begin{table}[H]
+  \centering
+  \caption{Composición de las exportaciones conservadas de los datasets de detección. Las cantidades corresponden a imágenes exportadas.}
+  \label{tab:dataset-deteccion}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Dataset & Entrenamiento & Validación & Prueba & Total \\
+    \midrule
+    v5 (\texttt{train}) & 580 & 71 & 34 & 685 \\
+    v6 (\texttt{train2}) & 58 & 71 & 34 & 163 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Las anotaciones utilizan el formato de detección YOLO: cada fila del archivo \texttt{.txt} contiene el índice de clase y las coordenadas del centro, ancho y alto de la caja, normalizadas por las dimensiones de la imagen. El índice \texttt{0} corresponde a \texttt{E}. Estas coordenadas normalizadas de las etiquetas se distinguen de las posiciones en píxeles obtenidas durante la inferencia.
+
+La exportación v5 aplicó orientación automática y redimensionamiento a $512\times512$ píxeles, con estiramiento. Su registro describe diez versiones por imagen de entrenamiento mediante volteo horizontal, rotaciones de $90^\circ$, rotaciones aleatorias entre $-15^\circ$ y $15^\circ$, desenfoque y ruido. Así, sus 580 imágenes de entrenamiento incluyen aumentos de 58 imágenes de origen. La exportación v6 conserva 163 imágenes, aplica orientación automática y no genera aumentos en Roboflow. Los registros no documentan el criterio de selección de cuadros ni su independencia temporal.
+
+Los archivos \texttt{args.yaml} de ambas ejecuciones registran ajuste a partir de pesos preentrenados, 100 épocas, lotes de 16 imágenes e \texttt{imgsz=640}. Este último valor corresponde al tamaño de entrada configurado durante el entrenamiento y no al redimensionamiento de la exportación v5. También se conservaron \texttt{seed=0}, \texttt{deterministic=true}, \texttt{optimizer=auto} y \texttt{lr0=0.01}. La selección automática del optimizador impide identificar su resolución efectiva únicamente a partir de este YAML; el valor de \texttt{lr0} debe interpretarse como configuración registrada, no como tasa efectiva constante.
+
+La ausencia de aumentos en la exportación v6 no implica ausencia de aumentos durante el entrenamiento. En ambas ejecuciones se registraron, entre otros, cambios de color HSV, traslación, escala, volteo horizontal y mosaico, con desactivación del mosaico en las últimas diez épocas. Estos ajustes pertenecen al entrenamiento de Ultralytics y se distinguen de las transformaciones realizadas previamente por Roboflow.
+
+Los archivos \texttt{results.csv} contienen registros de las 100 épocas y las carpetas de pesos conservan \texttt{best.pt} y \texttt{last.pt}. Se adoptó la segunda ejecución, \texttt{train2}, para el uso actual. Los registros textuales revisados no explicitan la época y el criterio efectivo de selección de \texttt{best.pt}, ni el modelo de GPU empleado. Tampoco documentan el proceso completo que vincula las 100 anotaciones iniciales con las 163 imágenes de v6. Estas limitaciones acotan la reconstrucción del entrenamiento; sus métricas y las incidencias numéricas de validación se reservan para el capítulo de evaluación y resultados.
+
+\section{Proceso de inferencia}
+
+El módulo \texttt{TrackingMorg} invoca \texttt{model.track} con la ruta del video, los umbrales \texttt{conf} e \texttt{iou} y las opciones \texttt{persist=True} y \texttt{stream=True}. La biblioteca procesa la secuencia y entrega resultados que integran detecciones y seguimiento. La aplicación no implementa una segunda inferencia independiente ni una asociación propia basada solamente en los centros.
+
+Para cada resultado que contiene cajas e identificadores, el programa consulta \texttt{r.boxes.xywh} y \texttt{r.boxes.id}. Cada caja se descompone como $(x,y,w,h)$: las dos primeras componentes indican su centro en píxeles, y las restantes su ancho y alto. El centro es una aproximación de posición obtenida de la caja rectangular, no el centroide de una segmentación del microorganismo.
+
+El contador \texttt{frame\_idx} comienza en cero y avanza por cada resultado de la secuencia, incluso cuando no se incorporan observaciones. Si faltan cajas o identificadores, no se agrega un punto a las trayectorias. De este modo, la ausencia de una observación no comprime la numeración de los cuadros posteriores. La asociación temporal se desarrolla en el capítulo siguiente.
+
+\section{Parámetros de detección}
+
+La Tabla~\ref{tab:parametros-deteccion} resume los parámetros operativos definidos en \texttt{Utils/Constants.py} y utilizados por el procesamiento general. Sus valores pueden modificarse al ejecutar el sistema.
+
+\begin{table}[H]
+  \centering
+  \caption{Configuración predeterminada de la detección durante el procesamiento de videos.}
+  \label{tab:parametros-deteccion}
+  \begin{tabularx}{\textwidth}{l l X}
+    \toprule
+    Parámetro & Valor & Función \\
+    \midrule
+    \texttt{path\_model} & \texttt{best.pt} & Ruta de los pesos cargados. \\
+    \texttt{conf} & $0{,}6$ & Umbral de confianza de las detecciones. \\
+    \texttt{iou} & $0{,}5$ & Umbral de IoU para la supresión de cajas redundantes (NMS). \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+El parámetro \texttt{iou} se transmite a la biblioteca para el posprocesamiento de las detecciones; no define por sí mismo el criterio de asociación entre cuadros. Estos umbrales son valores operativos, sin una búsqueda experimental documentada que demuestre su optimalidad. El \texttt{iou=0.7} registrado en los YAML de entrenamiento pertenece a aquella configuración y no reemplaza al valor utilizado por la aplicación durante el procesamiento de videos.
+
+\section{Salida de la etapa de detección}
+
+Durante el procesamiento se dispone de cajas, clases y valores de confianza. La asociación temporal añade identificadores. La aplicación conserva por cada ID únicamente observaciones $(\texttt{frame\_idx},x,y)$, compatibles con la representación de trayectorias del capítulo 5. El ancho y el alto de la caja, la clase y la confianza no forman parte de la representación canónica almacenada.
+
+Esta separación permite distinguir la información necesaria para localizar un objeto de la utilizada para analizar su movimiento. Una caja sin identificador no se incorpora como trayectoria, y el registro conserva solamente las posiciones observadas, sin interpolar las ausencias. Las coordenadas se almacenan en píxeles; su conversión a distancia física requiere la calibración espacial descrita en la metodología.
+
+\IfFileExists{figures/chapter06/fig06_02_deteccion_real.png}{%
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.48\textwidth,height=0.24\textheight,keepaspectratio]{figures/chapter06/fig06_02_deteccion_real.png}
+    \caption{Ejemplo real de localización de microorganismos en un cuadro microscópico. Las cajas corresponden a detecciones; los identificadores, cuando se muestran, pertenecen al seguimiento temporal.}
+    \label{fig:deteccion-real}
+  \end{figure}
+}{}
+
+\section{Consideraciones y limitaciones}
+
+El tamaño reducido de los microorganismos, el bajo contraste y las variaciones de iluminación o enfoque pueden dificultar su localización. La proximidad entre individuos, los solapamientos y las oclusiones pueden producir cajas ambiguas; además, los organismos pueden entrar o salir del campo visual. El detector puede omitir objetos o conservar falsos positivos, por lo que sus salidas requieren evaluación dentro de las condiciones de adquisición utilizadas.
+
+Los errores de detección pueden propagarse a la asociación temporal, fragmentar trayectorias o alterar las posiciones con las que se calculan las métricas de movimiento. La configuración de umbrales y los filtros posteriores no garantizan por sí solos la eliminación de esos errores. El entrenamiento limitado a la clase \texttt{E} tampoco permite extender los resultados a las otras morfologías observadas en las muestras. El seguimiento y el tratamiento de las observaciones disponibles se presentan en el capítulo siguiente.

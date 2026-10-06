@@ -35,7 +35,7 @@ El sistema desarrollado integra ambas operaciones mediante la interfaz de Ultral
 
 \section{Modelo de detección utilizado}
 
-El detector utilizado es YOLO11x de Ultralytics \cite{jocher2024}. Ambos entrenamientos partieron de \texttt{yolo11x.pt} con pesos preentrenados. El modelo utilizado actualmente se ajustó con la versión 2 del dataset y sus pesos se conservan en \texttt{best.pt}. Se entrenó una sola clase, \texttt{E}, que identifica operacionalmente a los microorganismos de apariencia esférica; no constituye una identificación taxonómica.
+El detector utilizado es YOLO11x de Ultralytics \cite{jocher2024}. Ambos entrenamientos partieron de \texttt{yolo11x.pt} con pesos preentrenados. El modelo utilizado actualmente se ajustó con la versión 2 del dataset y sus pesos se conservan en \texttt{best.pt}. Se entrenó una sola clase, \texttt{E} (denominación asignada por el Grupo de Física de la Atmósfera en referencia a la forma esférica de los microorganismos). Esta clase constituye una categoría visual, no una identificación taxonómica.
 
 La elección se apoyó en la disponibilidad de pesos preentrenados, la facilidad de adaptación y la integración de detección y seguimiento en una misma biblioteca. Estos fueron criterios prácticos para desarrollar la prueba de concepto; no se realizó una comparación exhaustiva que permita afirmar que la variante elegida sea la más adecuada para cualquier configuración de microscopía.
 

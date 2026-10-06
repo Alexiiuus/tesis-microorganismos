@@ -35,7 +35,7 @@ El sistema desarrollado integra ambas operaciones mediante la interfaz de Ultral
 
 \section{Modelo de detección utilizado}
 
-El detector utilizado es YOLO11x de Ultralytics \cite{jocher2024}. Los registros de \texttt{train} y \texttt{train2} indican el uso inicial de \texttt{yolo11x.pt} con pesos preentrenados. La aplicación utiliza \texttt{best.pt} de \texttt{train2}, correspondiente al YOLO11x ajustado. Se entrenó una sola clase, \texttt{E}, que identifica operacionalmente a los microorganismos de apariencia esférica; no constituye una identificación taxonómica.
+El detector utilizado es YOLO11x de Ultralytics \cite{jocher2024}. Ambos entrenamientos partieron de \texttt{yolo11x.pt} con pesos preentrenados. El modelo utilizado actualmente se ajustó con la versión 2 del dataset y sus pesos se conservan en \texttt{best.pt}. Se entrenó una sola clase, \texttt{E}, que identifica operacionalmente a los microorganismos de apariencia esférica; no constituye una identificación taxonómica.
 
 La elección se apoyó en la disponibilidad de pesos preentrenados, la facilidad de adaptación y la integración de detección y seguimiento en una misma biblioteca. Estos fueron criterios prácticos para desarrollar la prueba de concepto; no se realizó una comparación exhaustiva que permita afirmar que la variante elegida sea la más adecuada para cualquier configuración de microscopía.
 
@@ -45,7 +45,7 @@ La aplicación carga el archivo indicado por \texttt{path\_model} mediante \text
 
 La construcción inicial se realizó en Roboflow con imágenes extraídas de un video de muestra. El primer informe documenta 100 imágenes anotadas: 40 manualmente y 60 con asistencia de un modelo preliminar, cuyas propuestas se corrigieron de forma manual. Esta cifra describe el conjunto inicial y no debe confundirse con las cantidades de las exportaciones posteriores.
 
-Se conservaron dos versiones del dataset: v5, denominada \texttt{POC\_MORG\_V3}, utilizada en \texttt{train}, y v6, denominada \texttt{POC\_DATASETV1}, utilizada en \texttt{train2}. La Tabla~\ref{tab:dataset-deteccion} presenta su composición. Cada partición contiene carpetas de imágenes y etiquetas, con un archivo de anotaciones por imagen. Ambos archivos \texttt{data.yaml} declaran una sola clase, \texttt{E}, y las rutas de entrenamiento, validación y prueba.
+Se conservaron dos versiones del dataset, denominadas en este trabajo \emph{versión 1} y \emph{versión 2}. La Tabla~\ref{tab:dataset-deteccion} presenta su composición. Cada partición contiene carpetas de imágenes y etiquetas, con un archivo de anotaciones por imagen. Ambos archivos \texttt{data.yaml} declaran una sola clase, \texttt{E}, y las rutas de entrenamiento, validación y prueba.
 
 \begin{table}[H]
   \centering
@@ -55,21 +55,21 @@ Se conservaron dos versiones del dataset: v5, denominada \texttt{POC\_MORG\_V3},
     \toprule
     Dataset & Entrenamiento & Validación & Prueba & Total \\
     \midrule
-    v5 (\texttt{train}) & 580 & 71 & 34 & 685 \\
-    v6 (\texttt{train2}) & 58 & 71 & 34 & 163 \\
+    Versión 1 & 580 & 71 & 34 & 685 \\
+    Versión 2 & 58 & 71 & 34 & 163 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 Las anotaciones utilizan el formato de detección YOLO: cada fila del archivo \texttt{.txt} contiene el índice de clase y las coordenadas del centro, ancho y alto de la caja, normalizadas por las dimensiones de la imagen. El índice \texttt{0} corresponde a \texttt{E}. Estas coordenadas normalizadas de las etiquetas se distinguen de las posiciones en píxeles obtenidas durante la inferencia.
 
-La exportación v5 aplicó orientación automática y redimensionamiento a $512\times512$ píxeles, con estiramiento. Su registro describe diez versiones por imagen de entrenamiento mediante volteo horizontal, rotaciones de $90^\circ$, rotaciones aleatorias entre $-15^\circ$ y $15^\circ$, desenfoque y ruido. Así, sus 580 imágenes de entrenamiento incluyen aumentos de 58 imágenes de origen. La exportación v6 conserva 163 imágenes, aplica orientación automática y no genera aumentos en Roboflow. Los registros no documentan el criterio de selección de cuadros ni su independencia temporal.
+La exportación de la versión 1 aplicó orientación automática y redimensionamiento a $512\times512$ píxeles, con estiramiento. Su registro describe diez variantes por imagen de entrenamiento mediante volteo horizontal, rotaciones de $90^\circ$, rotaciones aleatorias entre $-15^\circ$ y $15^\circ$, desenfoque y ruido. Así, sus 580 imágenes de entrenamiento incluyen aumentos de 58 imágenes de origen. La exportación de la versión 2 conserva 163 imágenes, aplica orientación automática y no genera aumentos en Roboflow. Los registros no documentan el criterio de selección de cuadros ni su independencia temporal.
 
-El entrenamiento se realizó con una GPU asignada por el nivel gratuito de Google Colab; no se registró el modelo específico del acelerador. Los archivos \texttt{args.yaml} de ambas ejecuciones registran ajuste a partir de pesos preentrenados, 100 épocas, lotes de 16 imágenes e \texttt{imgsz=640}. Este último valor corresponde al tamaño de entrada configurado durante el entrenamiento y no al redimensionamiento de la exportación v5. También se conservaron \texttt{seed=0}, \texttt{deterministic=true}, \texttt{optimizer=auto} y \texttt{lr0=0.01}. La selección automática del optimizador impide identificar su resolución efectiva únicamente a partir de este YAML; el valor de \texttt{lr0} debe interpretarse como configuración registrada, no como tasa efectiva constante.
+El entrenamiento se realizó con una GPU asignada por el nivel gratuito de Google Colab; no se registró el modelo específico del acelerador. Los archivos \texttt{args.yaml} de ambas ejecuciones registran ajuste a partir de pesos preentrenados, 100 épocas, lotes de 16 imágenes e \texttt{imgsz=640}. Este último valor corresponde al tamaño de entrada configurado durante el entrenamiento y no al redimensionamiento de la versión 1 del dataset. También se conservaron \texttt{seed=0}, \texttt{deterministic=true}, \texttt{optimizer=auto} y \texttt{lr0=0.01}. La selección automática del optimizador impide identificar su resolución efectiva únicamente a partir de este YAML; el valor de \texttt{lr0} debe interpretarse como configuración registrada, no como tasa efectiva constante.
 
-La ausencia de aumentos en la exportación v6 no implica ausencia de aumentos durante el entrenamiento. En ambas ejecuciones se registraron, entre otros, cambios de color HSV, traslación, escala, volteo horizontal y mosaico, con desactivación del mosaico en las últimas diez épocas. Estos ajustes pertenecen al entrenamiento de Ultralytics y se distinguen de las transformaciones realizadas previamente por Roboflow.
+La ausencia de aumentos en la exportación de la versión 2 no implica ausencia de aumentos durante el entrenamiento. En ambas ejecuciones se registraron, entre otros, cambios de color HSV, traslación, escala, volteo horizontal y mosaico, con desactivación del mosaico en las últimas diez épocas. Estos ajustes pertenecen al entrenamiento de Ultralytics y se distinguen de las transformaciones realizadas previamente por Roboflow.
 
-Los archivos \texttt{results.csv} contienen registros de las 100 épocas y las carpetas de pesos conservan \texttt{best.pt} y \texttt{last.pt}. Se adoptó la segunda ejecución, \texttt{train2}, para el uso actual. Los registros textuales revisados no explicitan la época y el criterio efectivo de selección de \texttt{best.pt}. Tampoco documentan el proceso completo que vincula las 100 anotaciones iniciales con las 163 imágenes de v6. Estas limitaciones acotan la reconstrucción del entrenamiento; sus métricas y las incidencias numéricas de validación se reservan para el capítulo de evaluación y resultados.
+Los archivos \texttt{results.csv} contienen registros de las 100 épocas y las carpetas de pesos conservan \texttt{best.pt} y \texttt{last.pt}. Se adoptó para el uso actual el modelo adaptado con la versión 2 del dataset. Los registros textuales revisados no explicitan la época y el criterio efectivo de selección de \texttt{best.pt}. Tampoco documentan el proceso completo que vincula las 100 anotaciones iniciales con las 163 imágenes de la versión 2. Estas limitaciones acotan la reconstrucción del entrenamiento; sus métricas y las incidencias numéricas de validación se reservan para el capítulo de evaluación y resultados.
 
 \section{Proceso de inferencia}
 

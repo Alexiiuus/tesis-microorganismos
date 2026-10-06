@@ -7,7 +7,7 @@ Este capítulo describe la obtención del detector y su uso en el procesamiento 
 
 La detección constituye la primera etapa del procesamiento visual: recibe un cuadro y localiza los microorganismos mediante cajas delimitadoras, acompañadas de una clase y un valor de confianza. Una detección aislada no establece si el objeto corresponde a un individuo observado en otro cuadro; esa asociación pertenece al seguimiento temporal.
 
-En Detection-Morg, ambas operaciones se ejecutan mediante la interfaz integrada de Ultralytics. La Figura~\ref{fig:flujo-deteccion} distingue sus funciones: las detecciones alimentan la asociación temporal y, una vez disponibles los identificadores, el programa extrae los centros para almacenarlos. El diagrama representa etapas funcionales, no llamadas independientes implementadas por la aplicación.
+El sistema desarrollado integra ambas operaciones mediante la interfaz de Ultralytics. La Figura~\ref{fig:flujo-deteccion} distingue sus funciones: las detecciones alimentan la asociación temporal y, una vez disponibles los identificadores, el programa extrae los centros para almacenarlos. El diagrama representa etapas funcionales, no llamadas independientes implementadas por la aplicación.
 
 \begin{figure}[H]
   \centering

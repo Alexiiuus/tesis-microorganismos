@@ -1,0 +1,318 @@
+\chapter{Diseño general del sistema computacional}
+
+Este capítulo describe la organización general de la herramienta desarrollada y la forma en que circula la información entre sus componentes. El objetivo no es detallar todavía cada algoritmo, sino presentar la arquitectura que integra la detección, el seguimiento, la reconstrucción de trayectorias, el cálculo de métricas, la clasificación y la generación de resultados.
+
+La descripción se mantiene en un nivel funcional para evitar repetir los fundamentos teóricos del capítulo 3 y los procedimientos metodológicos del capítulo 4. Los capítulos siguientes profundizan en cada componente cuando resulta necesario.
+
+\section{Requerimientos funcionales y no funcionales}
+
+Los requerimientos se derivan del problema planteado: transformar videos microscópicos en trayectorias analizables y resultados reproducibles. La Tabla~\ref{tab:requerimientos-sistema} resume los requerimientos principales implementados en la versión actual.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.12}
+  \caption{Requerimientos principales del sistema.}
+  \label{tab:requerimientos-sistema}
+  \begin{tabularx}{0.94\textwidth}{@{}p{0.16\textwidth}p{0.17\textwidth}X@{}}
+    \toprule
+    \textbf{ID} & \textbf{Tipo} & \textbf{Requerimiento} \\
+    \midrule
+    RF01 & Funcional & Procesar un video microscópico utilizando un modelo de detección y seguimiento. \\
+    RF02 & Funcional & Reconstruir una trayectoria por cada identificador de seguimiento y conservar cuadro y posición. \\
+    RF03 & Funcional & Filtrar trayectorias por cantidad de observaciones o por consistencia temporal. \\
+    RF04 & Funcional & Calcular métricas de movimiento y generar visualizaciones por trayectoria. \\
+    RF05 & Funcional & Clasificar opcionalmente los patrones de movimiento mediante reglas interpretables. \\
+    RF06 & Funcional & Guardar resultados y metadatos suficientes para identificar una ejecución. \\
+    RNF01 & No funcional & Mantener una estructura modular que permita modificar análisis, visualización o clasificación sin rehacer el flujo completo. \\
+    RNF02 & No funcional & Conservar la trazabilidad temporal y rechazar configuraciones inválidas, como FPS no positivos u observaciones desordenadas. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Los pesos del detector y los videos se suministran mediante rutas externas. Esta separación evita acoplar el código a un conjunto experimental específico y permite repetir el procesamiento con diferentes entradas conservando la misma lógica de análisis.
+
+\section{Arquitectura general del sistema}
+
+La herramienta se organiza como un pipeline cuyo punto de entrada coordina el procesamiento completo. La Figura~\ref{fig:arquitectura-sistema} muestra los componentes principales y sus dependencias. El video, el modelo y la configuración se reciben como entradas; a partir de ellos se obtienen tracks, métricas, clasificaciones y artefactos de salida.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    box/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=5.8cm,
+      minimum height=0.95cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    side/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=3.6cm,
+      minimum height=0.95cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    arr/.style={
+      -{Latex[length=2mm]},
+      line width=0.55pt
+    }
+  ]
+    \node[box] (input) at (0,0)
+      {Video + modelo + parámetros de ejecución};
+    \node[box] (tracking) at (0,-1.55)
+      {Detección y seguimiento temporal};
+    \node[box] (filter) at (0,-3.10)
+      {Filtrado y reconstrucción de trayectorias};
+    \node[box] (analysis) at (0,-4.65)
+      {Análisis de movimiento};
+    \node[side] (graphics) at (-3.3,-6.35)
+      {Visualización\\y exportación};
+    \node[side] (classif) at (3.3,-6.35)
+      {Clasificación\\de movimiento};
+    \node[box] (meta) at (0,-8.05)
+      {Resultados + metadatos de ejecución};
+
+    \draw[arr] (input) -- (tracking);
+    \draw[arr] (tracking) -- (filter);
+    \draw[arr] (filter) -- (analysis);
+    \draw[arr] (analysis.south) -- ++(0,-0.30) -| (graphics.north);
+    \draw[arr] (analysis.south) -- ++(0,-0.30) -| (classif.north);
+    \draw[arr] (graphics.south) |- (meta.west);
+    \draw[arr] (classif.south) |- (meta.east);
+  \end{tikzpicture}
+  \caption{Arquitectura general del sistema computacional. El flujo principal reconstruye trayectorias y luego deriva análisis, visualizaciones, clasificación y metadatos de ejecución.}
+  \label{fig:arquitectura-sistema}
+\end{figure}
+
+La función principal de procesamiento crea el componente de seguimiento, ejecuta el video y aplica, si corresponde, el filtro seleccionado. Sobre los tracks resultantes se realizan los análisis posteriores. La clasificación y la generación de gráficos son opcionales y no modifican la representación base de las trayectorias.
+
+\section{Representación interna de los datos}
+
+La estructura central del sistema es la trayectoria. Cada track se representa mediante un identificador entero asociado con una secuencia ordenada de observaciones:
+
+\[
+T_j=\left[(f_1,x_1,y_1),\ldots,(f_n,x_n,y_n)\right],
+\]
+
+donde $f_i$ es el número de cuadro y $(x_i,y_i)$ es la posición del centro de la detección en píxeles. En la implementación, el conjunto completo equivale a un diccionario que asocia cada identificador con su lista de observaciones.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    box/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=4.4cm,
+      minimum height=0.95cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    arr/.style={
+      -{Latex[length=2mm]},
+      line width=0.55pt
+    }
+  ]
+    \node[box] (det) at (0,0)
+      {Detección en el cuadro $f_i$};
+    \node[box] (point) at (0,-1.55)
+      {Observación $(f_i,x_i,y_i)$};
+    \node[box] (track) at (0,-3.10)
+      {Track $T_j$: secuencia temporal ordenada};
+    \node[box] (metrics) at (0,-4.65)
+      {Distancias, rapidez, continuidad y otras métricas};
+
+    \draw[arr] (det) -- (point);
+    \draw[arr] (point) -- (track);
+    \draw[arr] (track) -- (metrics);
+  \end{tikzpicture}
+  \caption{Representación interna de una trayectoria y su relación con las magnitudes derivadas.}
+  \label{fig:representacion-track}
+\end{figure}
+
+Los números de cuadro deben ser estrictamente crecientes. Si dos observaciones consecutivas están separadas por más de un cuadro, esa separación se conserva como un \textit{gap} temporal válido; el sistema no reordena, deduplica ni interpola observaciones automáticamente. Esta decisión permite que las magnitudes temporales utilicen el intervalo realmente transcurrido.
+
+El identificador del track es computacional y no se interpreta como una identidad biológica permanente. Una misma entidad observada puede quedar fragmentada en más de un identificador si el seguimiento se interrumpe.
+
+\section{Estructura modular del sistema}
+
+La implementación separa las responsabilidades principales en módulos específicos. La Tabla~\ref{tab:modulos-sistema} resume aquellos que resultan relevantes para comprender la arquitectura.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.12}
+  \caption{Responsabilidades de los principales módulos del sistema.}
+  \label{tab:modulos-sistema}
+  \begin{tabularx}{0.94\textwidth}{@{}p{0.28\textwidth}X@{}}
+    \toprule
+    \textbf{Componente} & \textbf{Responsabilidad principal} \\
+    \midrule
+    Orquestación del pipeline & Recibir configuración, ejecutar el flujo y coordinar salidas. \\
+    Detección y seguimiento & Procesar el video y construir tracks a partir de detecciones asociadas temporalmente. \\
+    Análisis temporal y geométrico & Calcular distancias, rapidez, aceleración, continuidad e indicadores derivados. \\
+    Inspección y visualización & Consultar una trayectoria individual y producir gráficos de trayectoria y comportamiento temporal. \\
+    Clasificación de movimiento & Calcular métricas interpretables, construir scores heurísticos y asignar una categoría de movimiento. \\
+    Validación & Comparar trayectorias automáticas con referencias manuales revisadas y resumir errores y cobertura. \\
+    Trazabilidad & Registrar video, modelo, parámetros, opciones y entorno asociados con la ejecución. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Esta separación permite utilizar los tracks como interfaz común entre componentes. En consecuencia, los módulos de métricas, visualización o clasificación pueden operar sobre una trayectoria ya construida sin depender directamente de la inferencia sobre el video.
+
+\section{Flujo de ejecución}
+
+El procesamiento completo se inicia con la carga del modelo y del video. Durante el recorrido cuadro a cuadro se registran las posiciones y los identificadores asignados por el seguimiento. Luego se seleccionan los tracks que cumplen el criterio configurado y se ejecutan únicamente los análisis solicitados.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    box/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=5.4cm,
+      minimum height=0.9cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    side/.style={
+      draw,
+      rounded corners=2pt,
+      align=center,
+      text width=3.7cm,
+      minimum height=0.9cm,
+      inner sep=4pt,
+      font=\footnotesize
+    },
+    arr/.style={
+      -{Latex[length=2mm]},
+      line width=0.55pt
+    }
+  ]
+    \node[box] (start) at (0,0)
+      {Inicialización de modelo, video y parámetros};
+    \node[box] (run) at (0,-1.45)
+      {Procesamiento cuadro a cuadro};
+    \node[box] (tracks) at (0,-2.90)
+      {Construcción del conjunto de tracks};
+    \node[box] (filter) at (0,-4.35)
+      {Filtrado opcional};
+    \node[side] (plots) at (-3.2,-6.10)
+      {Métricas y gráficos};
+    \node[side] (cls) at (3.2,-6.10)
+      {Clasificación opcional};
+    \node[box] (save) at (0,-7.85)
+      {Persistencia de resultados y metadatos};
+
+    \draw[arr] (start) -- (run);
+    \draw[arr] (run) -- (tracks);
+    \draw[arr] (tracks) -- (filter);
+    \draw[arr] (filter.south) -- ++(0,-0.30) -| (plots.north);
+    \draw[arr] (filter.south) -- ++(0,-0.30) -| (cls.north);
+    \draw[arr] (plots.south) |- (save.west);
+    \draw[arr] (cls.south) |- (save.east);
+  \end{tikzpicture}
+  \caption{Flujo simplificado de una ejecución completa del sistema.}
+  \label{fig:flujo-ejecucion}
+\end{figure}
+
+El filtrado puede omitirse, limitarse a una cantidad mínima de observaciones o incorporar criterios de consistencia temporal. La decisión se aplica antes de calcular los productos posteriores, de modo que todas las salidas de una misma ejecución utilicen el mismo conjunto de tracks seleccionados.
+
+\section{Parámetros configurables}
+
+Los parámetros se agrupan según su función. La Tabla~\ref{tab:parametros-sistema} presenta los principales valores expuestos por el pipeline actual. Los umbrales analíticos se consideran valores operativos y no valores científicamente óptimos.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.10}
+  \caption{Parámetros principales disponibles durante la ejecución.}
+  \label{tab:parametros-sistema}
+  \begin{tabularx}{0.96\textwidth}{@{}p{0.24\textwidth}p{0.17\textwidth}X@{}}
+    \toprule
+    \textbf{Parámetro} & \textbf{Valor por defecto} & \textbf{Función} \\
+    \midrule
+    \texttt{conf} & 0,6 & Umbral de confianza de las detecciones. \\
+    \texttt{iou} & 0,5 & Umbral de IoU utilizado durante la detección. \\
+    \texttt{analysis\_fps} & 30,0 & Conversión entre cuadro y tiempo para las magnitudes temporales. \\
+    \texttt{type\_filter} & \texttt{not\_filter} & Selección del criterio de filtrado de tracks. \\
+    \texttt{window\_size} & 20 & Ventana utilizada para suavizar la rapidez. \\
+    \texttt{vel\_min} & 30 px/s & Umbral operativo utilizado para identificar inactividad. \\
+    \texttt{accel\_threshold} & 450 px/s$^2$ & Umbral operativo para cambios bruscos de rapidez. \\
+    \texttt{time\_axis\_mode} & \texttt{context} & Control de los límites temporales en las visualizaciones. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Además de estos valores, la ejecución permite activar o desactivar la generación de video, gráficos, clasificación y archivos de salida. Esta configuración hace posible utilizar el mismo pipeline tanto para inspecciones exploratorias como para ejecuciones destinadas a la evaluación experimental.
+
+\section{Salidas generadas}
+
+La salida principal es el conjunto de tracks, que puede reutilizarse programáticamente. Sobre esa estructura se generan productos adicionales según las opciones activadas: gráficos de trayectorias, análisis temporales, clasificación y un archivo de metadatos de ejecución.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.12}
+  \caption{Principales productos generados por el sistema.}
+  \label{tab:salidas-sistema}
+  \begin{tabularx}{0.94\textwidth}{@{}p{0.31\textwidth}X@{}}
+    \toprule
+    \textbf{Producto} & \textbf{Contenido} \\
+    \midrule
+    Tracks & Secuencias de cuadro y posición asociadas con cada identificador. \\
+    Trayectoria gráfica & Recorrido bidimensional del track en coordenadas de imagen. \\
+    Análisis temporal & Rapidez suavizada, inactividad, gaps y cambios de comportamiento. \\
+    Clasificación & Categoría asignada, score de compatibilidad, métricas y justificación textual. \\
+    Metadatos de ejecución & Video, modelo, FPS, parámetros, opciones y entorno de procesamiento. \\
+    Reporte de validación & Errores espaciales, cobertura y comparación con referencias manuales cuando se ejecuta la evaluación. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Para evitar aumentar innecesariamente la extensión del capítulo, los gráficos de resultados reales no se incorporan de forma exhaustiva aquí. Sin embargo, resultan especialmente útiles tres ejemplos visuales: una trayectoria individual, la rapidez en función del tiempo y un gráfico que muestre inactividad o cambios de comportamiento. Estos artefactos se utilizarán preferentemente en los capítulos dedicados al análisis de métricas y a la evaluación experimental.
+
+% -------------------------------------------------------------------------
+% FIGURAS OPCIONALES CON SALIDAS REALES
+%
+% Estos bloques se incorporan automáticamente cuando existan los archivos.
+% Se recomienda utilizar ejemplos reales y representativos del conjunto
+% experimental, no datos simulados.
+% -------------------------------------------------------------------------
+
+\IfFileExists{figures/chapter05/fig05_04_trayectoria_real.png}{%
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.68\textwidth]{figures/chapter05/fig05_04_trayectoria_real.png}
+  \caption{Ejemplo de trayectoria bidimensional obtenida para un track real.}
+  \label{fig:salida-trayectoria-real}
+\end{figure}
+}{}
+
+\IfFileExists{figures/chapter05/fig05_05_analisis_temporal_real.png}{%
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.86\textwidth]{figures/chapter05/fig05_05_analisis_temporal_real.png}
+  \caption{Ejemplo de análisis temporal de un track real. La visualización puede emplearse para mostrar rapidez, gaps, inactividad o cambios de comportamiento.}
+  \label{fig:salida-analisis-temporal-real}
+\end{figure}
+}{}
+
+En los capítulos siguientes se desarrollan con mayor detalle los componentes de detección, seguimiento, análisis de trayectorias y clasificación, mientras que la evaluación experimental utiliza estas salidas para comparar el comportamiento del sistema con las referencias definidas en el capítulo anterior.

@@ -1,0 +1,383 @@
+\chapter{Perspectiva teórica y antecedentes}
+
+Este capítulo presenta los antecedentes experimentales y los fundamentos teóricos necesarios para situar el problema abordado en la tesis. En primer lugar, se describe el criterio utilizado para seleccionar y organizar la bibliografía; posteriormente se revisan trabajos relacionados con la observación y cuantificación del movimiento de microorganismos mediante video. A partir de estos antecedentes se desarrollan los conceptos de imágenes y videos digitales, visión por computadora, detección, seguimiento, análisis de trayectorias y clasificación de patrones que sustentan el diseño del sistema.
+
+\section{Revisión de literatura y criterios de selección}
+
+La revisión bibliográfica se organizó de acuerdo con los componentes principales del problema de investigación y no como una revisión sistemática exhaustiva de toda la literatura sobre motilidad microbiana. Su finalidad es establecer antecedentes suficientes para comprender el problema experimental, identificar métodos utilizados previamente para obtener información cuantitativa del movimiento y fundamentar las decisiones computacionales desarrolladas en los capítulos posteriores.
+
+Se priorizaron artículos científicos revisados por pares, trabajos metodológicos y revisiones que cumplieran al menos uno de los siguientes criterios: estudiar el movimiento de microorganismos mediante microscopía o video; reconstruir trayectorias individuales mediante seguimiento manual o automático; obtener magnitudes cuantitativas como distancia, rapidez o cambios de dirección; analizar el efecto de condiciones ambientales, especialmente la temperatura, sobre la motilidad; o describir técnicas de detección, seguimiento y análisis aplicables a objetos microscópicos. También se consideraron publicaciones sobre herramientas y métodos generales de visión por computadora cuando resultan necesarias para explicar los componentes utilizados en la propuesta.
+
+Los antecedentes se organizaron en cuatro ejes. El primero reúne estudios experimentales sobre observación y cuantificación del movimiento de microorganismos. El segundo comprende métodos computacionales de detección y seguimiento, incluyendo la separación entre el reconocimiento de los microorganismos en cada imagen y la asociación de esas observaciones a lo largo del tiempo, distinción destacada también en revisiones recientes sobre análisis de motilidad \cite{dubay2023}. El tercero considera métricas y representaciones utilizadas para describir trayectorias. El cuarto reúne herramientas y enfoques de análisis que permiten transformar secuencias de imágenes en datos cuantitativos.
+
+Este criterio permite relacionar trabajos con objetivos biológicos o experimentales diferentes sin asumir que sus resultados son directamente transferibles a los microorganismos analizados en esta tesis. En particular, los valores de rapidez, los patrones de movimiento y la respuesta frente a cambios ambientales dependen del organismo, del medio, de la escala de observación y de las condiciones de adquisición. Por este motivo, los antecedentes se utilizan para fundamentar métodos y variables de análisis, pero no para establecer de antemano el comportamiento que deberían presentar las muestras del Grupo de Física de la Atmósfera.
+
+\section{Análisis de microorganismos mediante video}
+
+\subsection{Videomicroscopía y cuantificación del movimiento}
+
+La microscopía combinada con adquisición de video permite observar el desplazamiento de microorganismos a lo largo del tiempo y convertir esa observación en secuencias de posiciones. Esta representación hace posible reconstruir trayectorias individuales y obtener magnitudes cuantitativas del movimiento. Las técnicas concretas dependen del tamaño y contraste de los organismos, del tipo de microscopía, de la frecuencia de adquisición y del método empleado para localizar y asociar los objetos entre cuadros \cite{dubay2023}.
+
+Bente et al. estudiaron bacterias magnetotácticas mediante videomicroscopía de alta velocidad y reconstrucción de trayectorias tridimensionales, utilizando el seguimiento para cuantificar características de una motilidad particularmente rápida \cite{bente2020}. Este trabajo muestra que el análisis de trayectorias puede utilizarse no solo para visualizar recorridos, sino también para estudiar cuantitativamente la rapidez y la geometría del movimiento. Al mismo tiempo, evidencia que una trayectoria observada en dos dimensiones constituye una proyección del movimiento real cuando este se desarrolla en tres dimensiones, aspecto que debe considerarse al interpretar resultados obtenidos sobre el plano de la imagen.
+
+Un antecedente metodológicamente más próximo al presente trabajo es el de Shunmugam et al., quienes analizaron el movimiento de Paramecium aurelia mediante videos de microscopía y un algoritmo de seguimiento de objetos \cite{shunmugam2021}. A partir de las posiciones registradas para cada organismo reconstruyeron trayectorias individuales y calcularon magnitudes como la distancia recorrida y la rapidez media. Estas mediciones fueron utilizadas posteriormente para comparar el comportamiento de los organismos bajo distintas condiciones del medio. El estudio constituye un ejemplo de cómo el seguimiento automático puede transformar videos microscópicos en datos cuantitativos utilizables para realizar comparaciones experimentales.
+
+Las revisiones metodológicas recientes muestran que este tipo de análisis requiere considerar de manera conjunta el sistema de adquisición y el procesamiento posterior. Dubay et al. distinguen explícitamente entre la detección de microorganismos en las imágenes, la vinculación de las detecciones para formar trayectorias y el análisis cuantitativo de esas trayectorias \cite{dubay2023}. Esta separación resulta relevante para la presente tesis, ya que un error en cualquiera de estas etapas puede propagarse hacia las métricas obtenidas posteriormente.
+
+\subsection{Temperatura y motilidad}
+
+La temperatura constituye una condición experimental relevante para el estudio del movimiento de microorganismos, aunque su efecto no puede interpretarse mediante una relación única y generalizable. La rapidez observada puede depender tanto de procesos fisiológicos como de propiedades físicas del medio. Beveridge et al. estudiaron esta dependencia en protistas manipulando de manera independiente la temperatura y la viscosidad del entorno. Sus resultados mostraron contribuciones de ambos factores y estimaron que, para las especies consideradas, una parte apreciable de la reducción de la rapidez observada entre 20 °C y 5 °C podía atribuirse al aumento de la viscosidad del agua \cite{beveridge2010}. Este antecedente indica que una variación de la rapidez asociada con la temperatura no debe interpretarse automáticamente como una respuesta exclusivamente biológica.
+
+Otros trabajos han estudiado directamente la motilidad a bajas temperaturas. Yamashita et al. analizaron Chlamydomonas reinhardtii en un intervalo que alcanzó temperaturas inferiores a 0 °C mediante sistemas de observación microscópica y seguimiento de células \cite{yamashita2024}. A bajas temperaturas observaron una marcada reducción del desplazamiento traslacional y una mayor presencia de movimientos oscilatorios alrededor de una región. Este resultado es relevante para el presente trabajo porque muestra que la temperatura puede asociarse no solo con cambios en la rapidez, sino también con modificaciones en la forma general del movimiento.
+
+La relación entre temperatura y trayectoria también ha sido estudiada en otros microorganismos. Nakaoka y Oosawa analizaron fotográficamente trayectorias de Paramecium caudatum bajo temperatura uniforme, gradientes térmicos y cambios temporales de temperatura, observando variaciones en los cambios direccionales de las células \cite{nakaoka1977}. Por su parte, Junge et al. estudiaron la bacteria psicrófila Colwellia psychrerythraea mediante microscopía con control térmico y observaron motilidad hasta −10 °C, cuantificando además rapidez de natación en condiciones subcero \cite{junge2003}. En conjunto, estos trabajos muestran que la motilidad puede estudiarse cuantitativamente en intervalos térmicos muy diferentes, pero también que la respuesta depende de la especie, del medio y del protocolo experimental.
+
+Por lo tanto, la bibliografía no justifica asumir que una disminución de la temperatura producirá necesariamente una reducción determinada de la rapidez o un patrón específico de trayectoria en todos los microorganismos. Lo que sí establece es que la temperatura constituye una variable experimental capaz de acompañarse de cambios cuantificables en el movimiento y que su análisis requiere mediciones reproducibles de posición, trayectoria y tiempo.
+
+\subsection{Relación con el problema experimental del Grupo de Física de la Atmósfera}
+
+En el Grupo de Física de la Atmósfera, la línea de investigación que da origen a esta tesis estudia microorganismos presentes en muestras acuáticas y su comportamiento bajo condiciones térmicas cercanas al punto de congelación \cite{pedernera2024}. Las observaciones se realizan mediante una cámara acoplada a un microscopio óptico y, en las primeras etapas del trabajo, las trayectorias fueron reconstruidas manualmente para analizar el movimiento de los organismos.
+
+Los antecedentes revisados muestran que la videomicroscopía y el seguimiento de objetos permiten obtener trayectorias y métricas de movimiento en distintos microorganismos y condiciones experimentales \cite{shunmugam2021}, \cite{bente2020}, \cite{yamashita2024}, \cite{junge2003}. También muestran que la temperatura puede modificar las magnitudes observadas a través de mecanismos físicos y biológicos cuya importancia relativa depende del sistema estudiado \cite{beveridge2010}, \cite{nakaoka1977}. En consecuencia, resulta necesario separar la obtención de mediciones de su interpretación causal.
+
+La contribución de esta tesis se sitúa en esa primera etapa. El sistema desarrollado busca automatizar la detección, el seguimiento y la obtención de métricas a partir de los videos experimentales del grupo, de manera que las posiciones, trayectorias, rapidez y demás características del movimiento puedan calcularse mediante un procedimiento uniforme y reproducible. La comparación posterior entre condiciones térmicas puede apoyarse en estos datos, pero determinar las causas físicas o biológicas de las diferencias observadas permanece fuera del alcance del sistema.
+
+\section{Visión por computadora}
+
+% TODO: el borrador fuente salta de la sección 3.2 a la 3.4; revisar si debe existir una sección 3.3.
+
+La visión por computadora es un área de la informática orientada al desarrollo de métodos capaces de analizar e interpretar imágenes y videos digitales. Su objetivo es transformar la información visual en datos que puedan ser procesados computacionalmente para reconocer objetos, determinar su ubicación y estudiar sus variaciones espaciales o temporales \cite{szeliski2022}.
+
+Entre sus tareas principales se encuentran la detección, la segmentación y el seguimiento de objetos. La detección permite identificar y localizar instancias de determinadas categorías presentes en una imagen, generalmente mediante una clase, una caja delimitadora y un valor de confianza asociado con la predicción \cite{ren2015}.
+
+La segmentación busca determinar qué píxeles pertenecen a cada objeto y permite representar con mayor precisión su forma mediante máscaras \cite{he2017}. Este tipo de representación resulta útil cuando se requiere analizar propiedades como el área, el contorno o la morfología. Sin embargo, no constituye una etapa central del sistema desarrollado en esta tesis, que utiliza cajas delimitadoras para localizar los microorganismos.
+
+El seguimiento de objetos incorpora la dimensión temporal del video y tiene como finalidad asociar las detecciones obtenidas en cuadros sucesivos para conservar la identidad de un mismo objeto a lo largo del tiempo \cite{bewley2016}. De esta manera, las observaciones correspondientes a un mismo microorganismo pueden organizarse temporalmente y utilizarse posteriormente para reconstruir su movimiento.
+
+En el presente trabajo, la visión por computadora proporciona el marco necesario para transformar videos microscópicos en datos estructurados. La detección permite localizar los microorganismos en cada cuadro, mientras que el seguimiento permite vincular esas observaciones a lo largo del tiempo. A partir de los datos obtenidos mediante ambas etapas se realiza posteriormente el análisis cuantitativo del movimiento.
+
+\section{Detección de objetos}
+
+La detección de objetos consiste en identificar y localizar instancias de determinadas categorías presentes en una imagen. A diferencia de la clasificación, que asigna una categoría general a una imagen completa, la detección debe determinar tanto qué objetos se encuentran presentes como dónde están ubicados \cite{redmon2016}.
+
+En esta tesis, la detección de objetos se utiliza para localizar los microorganismos visibles en cada cuadro de los videos microscópicos. Las detecciones obtenidas proporcionan la información espacial que posteriormente utiliza el método de seguimiento para asociar observaciones correspondientes a un mismo individuo a lo largo del tiempo.
+
+\subsection{Representación y confianza de las detecciones}
+
+Una caja delimitadora, o bounding box, es una región rectangular que aproxima la posición y extensión de un objeto dentro de una imagen. Puede representarse mediante las coordenadas de dos esquinas opuestas:
+
+\[
+B=(x_{\min},y_{\min},x_{\max},y_{\max}).
+\]
+
+\begin{itemize}
+\item $(x_{\min},y_{\min})$ corresponde a la esquina superior izquierda y $(x_{\max},y_{\max})$ a la esquina inferior derecha.
+\end{itemize}
+
+Otra representación frecuente utiliza el centro de la caja, su ancho y su alto:
+
+\[
+B=(x_c,y_c,w,h).
+\]
+
+En el sistema desarrollado, la caja delimitadora permite localizar cada microorganismo y obtener una posición representativa. Esta posición se calcula generalmente mediante el centro de la caja:
+
+\[
+x_c=\frac{x_{\min}+x_{\max}}{2}.
+\]
+
+\[
+y_c=\frac{y_{\min}+y_{\max}}{2}.
+\]
+
+En el sistema desarrollado, este centro se utiliza como una posición representativa del microorganismo. Los centroides obtenidos en cuadros sucesivos conforman los puntos de las trayectorias.
+
+Las cajas delimitadoras constituyen una aproximación rectangular y no representan necesariamente el contorno exacto del objeto. Por lo tanto, resultan adecuadas para localizar los microorganismos y seguir su desplazamiento, pero no para estudiar con precisión propiedades como su forma o área.
+
+Cada detección posee además un valor de confianza, que representa el grado de seguridad asignado por el modelo a la predicción. Este valor permite ordenar los resultados y descartar aquellos que no superan un umbral mínimo \cite{redmon2016}.
+
+La elección del umbral implica un compromiso. Un valor demasiado bajo puede conservar detecciones dudosas y aumentar los falsos positivos. En cambio, un valor demasiado alto puede eliminar microorganismos correctamente localizados e incrementar los falsos negativos. El valor de confianza no debe interpretarse necesariamente como una probabilidad perfectamente calibrada, ya que su significado exacto depende de la arquitectura y del procedimiento de entrenamiento.
+
+\subsection{Correspondencia entre predicciones y anotaciones}
+
+Para evaluar el detector, las cajas predichas se comparan con anotaciones de referencia realizadas manualmente. Una de las medidas utilizadas para determinar la correspondencia espacial entre ambas es la intersección sobre unión, conocida como IoU por Intersection over Union \cite{everingham2010}.
+
+Sean $B_p$ la caja predicha y $B_r$ la caja de referencia, la IoU se calcula como:
+
+\[
+IoU(B_p,B_r)=\frac{|B_p\cap B_r|}{|B_p\cup B_r|}.
+\]
+
+donde $|B_p\cap B_r|$ representa el área compartida por ambas cajas y $|B_p\cup B_r|$ el área total cubierta por ellas.
+
+El resultado se encuentra entre cero y uno. El resultado toma valores entre 0 y 1: un valor de 0 indica ausencia de superposición y valores cercanos a 1 indican una elevada coincidencia espacial.
+
+Para determinar si una detección coincide correctamente con una anotación se establece un umbral mínimo de IoU. A partir de esta correspondencia pueden distinguirse tres casos principales:
+
+\begin{itemize}
+  \item \textbf{Verdadero positivo (TP):} una predicción identifica correctamente un objeto y satisface el criterio de correspondencia establecido.
+  \item \textbf{Falso positivo (FP):} el modelo informa una detección que no puede asociarse correctamente con una anotación de referencia.
+  \item \textbf{Falso negativo (FN):} existe un objeto anotado que no fue detectado correctamente por el modelo.
+\end{itemize}
+
+Los falsos positivos pueden originarse, por ejemplo, cuando el detector confunde partículas, estructuras del fondo o artefactos visuales con microorganismos. Los falsos negativos pueden producirse ante objetos pequeños, desenfocados, con bajo contraste, superpuestos o con valores de confianza inferiores al umbral seleccionado.
+
+Durante la evaluación, una anotación de referencia debe asociarse como máximo con una predicción. De este modo, múltiples detecciones correspondientes a un mismo objeto no se contabilizan como aciertos adicionales \cite{everingham2010}.
+
+\subsection{Métricas de evaluación}
+
+Las cantidades de verdaderos positivos, falsos positivos y falsos negativos permiten calcular diferentes métricas para evaluar el desempeño del detector.
+
+La precisión indica qué proporción de las detecciones informadas corresponde con objetos correctamente identificados:
+
+\[
+Precision=\frac{TP}{TP+FP}.
+\]
+
+Una precisión elevada indica que el sistema produce pocos falsos positivos. En el contexto de esta tesis, significa que la mayoría de los objetos identificados como microorganismos corresponden con las anotaciones de referencia.
+
+El recall, también denominado sensibilidad o exhaustividad, indica qué proporción de los objetos existentes fue detectada correctamente:
+
+\[
+Recall=\frac{TP}{TP+FN}.
+\]
+
+Un valor elevado indica que el sistema omite pocos microorganismos. La precisión y el recall deben analizarse conjuntamente, ya que una modificación del umbral de confianza puede mejorar una de estas métricas y reducir la otra \cite{powers2011}.
+
+La medida F1 combina la precisión y el recall mediante su media armónica:
+
+\[
+F_1=2\,\frac{Precision\cdot Recall}{Precision+Recall}.
+\]
+
+Esta métrica alcanza valores elevados únicamente cuando tanto la precisión como el recall son altos. Resulta útil para resumir en un solo valor el equilibrio entre las detecciones incorrectas y los objetos no detectados \cite{powers2011}.
+
+La precisión promedio, o $AP$ por Average Precision, resume el comportamiento del detector para una clase a partir de la curva precisión–recall. Esta curva se construye variando el umbral de confianza y observando cómo cambian ambas métricas.
+
+De forma general, la AP puede interpretarse como el área bajo la curva de precisión en función del recall:
+
+\[
+AP=\int_0^1 P(R)\,dR.
+\]
+
+donde $P(R)$ representa la precisión obtenida para un determinado nivel de recall. En la práctica, los protocolos de evaluación calculan esta magnitud mediante procedimientos discretos o interpolados \cite{everingham2010}.
+
+La media de la precisión promedio, o $mAP$, se obtiene promediando los valores de AP correspondientes a las diferentes clases:
+
+\[
+mAP=\frac{1}{C}\sum_{c=1}^{C}AP_c.
+\]
+
+donde $C$ representa la cantidad de clases evaluadas.
+
+El valor de mAP depende del criterio de superposición utilizado durante la evaluación. Por ejemplo, mAP@0.5 considera un umbral de IoU de 0,5, mientras que mAP@0.5:0.95 resume los resultados obtenidos para distintos umbrales comprendidos entre 0,5 y 0,95 \cite{lin2014}, \cite{cocoapi2015}.
+
+Por esta razón, los valores de mAP deben informarse junto con el criterio de IoU empleado. El protocolo específico utilizado para evaluar los modelos desarrollados en esta tesis se describe posteriormente en el capítulo metodológico.
+
+\section{Modelos YOLO}
+
+YOLO, sigla de You Only Look Once, corresponde a una familia de modelos de aprendizaje profundo orientados a la detección de objetos en imágenes y videos. Su primera formulación propuso resolver la detección mediante un único modelo capaz de procesar una imagen y predecir directamente las cajas delimitadoras, las clases y los valores de confianza asociados con los objetos detectados \cite{redmon2016}.
+
+Desde su aparición, la familia YOLO ha evolucionado mediante distintas arquitecturas y estrategias de entrenamiento orientadas a mejorar la precisión y la eficiencia de la detección \cite{redmon2017}, \cite{redmon2018}. En esta tesis se utiliza YOLO11 mediante la biblioteca Ultralytics \cite{jocher2024}, adaptándolo al dominio de los videos microscópicos analizados.
+
+\subsection{Detectores de una etapa}
+
+Los modelos YOLO se clasifican generalmente como detectores de una etapa, o one-stage detectors. En este tipo de enfoque, la localización de los objetos y la predicción de sus clases se realizan directamente a partir de las características extraídas de la imagen \cite{redmon2016}.
+
+Esto los diferencia de los detectores de dos etapas, que primero generan regiones candidatas y posteriormente realizan su clasificación y ajuste. El enfoque utilizado por YOLO permite integrar estas operaciones dentro de un mismo flujo de inferencia, lo que resulta especialmente conveniente cuando deben procesarse grandes cantidades de imágenes.
+
+Esta característica es relevante para el análisis de video, ya que cada grabación está compuesta por numerosos cuadros que deben procesarse individualmente. Sin embargo, la velocidad efectiva del sistema depende también de factores como la resolución de entrada, el tamaño del modelo, la cantidad de objetos presentes y el hardware utilizado. Por esta razón, el procesamiento en tiempo real no puede asumirse únicamente por utilizar un modelo perteneciente a la familia YOLO.
+
+YOLO11 dispone de variantes de diferente tamaño que establecen distintos compromisos entre capacidad de representación, velocidad de inferencia y costo computacional \cite{jocher2024}. La selección de una variante debe considerar las características del problema y evaluarse sobre los datos correspondientes al dominio de aplicación.
+
+En los videos microscópicos utilizados en este trabajo, esta evaluación resulta particularmente importante debido al tamaño reducido de algunos microorganismos, su posible bajo contraste respecto del fondo y las variaciones existentes entre las condiciones de adquisición. La variante finalmente utilizada y los criterios empleados para su selección se describen en los capítulos correspondientes a la metodología y evaluación del sistema.
+
+\subsection{YOLO11 y aprendizaje por transferencia}
+
+En esta tesis se utiliza la implementación de YOLO11 proporcionada por Ultralytics \cite{jocher2024}. El modelo se adapta a los videos microscópicos mediante aprendizaje por transferencia, utilizando imágenes anotadas correspondientes a los microorganismos considerados en el estudio.
+
+El aprendizaje por transferencia permite partir de pesos previamente entrenados en lugar de inicializar completamente el modelo de manera aleatoria. Estos pesos proporcionan representaciones visuales generales que posteriormente pueden ajustarse mediante datos específicos del nuevo dominio.
+
+No obstante, las imágenes utilizadas durante el preentrenamiento no representan necesariamente las características particulares de las grabaciones microscópicas. Por esta razón, la adaptación requiere imágenes representativas de las clases visuales, tamaños, fondos, niveles de iluminación y contrastes presentes en los videos experimentales.
+
+En el sistema desarrollado, YOLO11 constituye el componente encargado de localizar los microorganismos en cada cuadro. Las detecciones resultantes proporcionan posteriormente la información espacial utilizada por la etapa de seguimiento para asociar las observaciones correspondientes a un mismo individuo a lo largo del tiempo.
+
+Los detalles relacionados con la construcción del conjunto de datos, el procedimiento de entrenamiento, los parámetros utilizados y la comparación entre configuraciones se presentan posteriormente en los capítulos metodológicos y de evaluación.
+
+\section{Seguimiento de múltiples objetos}
+
+El seguimiento de múltiples objetos, denominado habitualmente Multiple Object Tracking (MOT), consiste en localizar distintos objetos a lo largo de una secuencia de video y conservar su identidad a medida que transcurren los cuadros. A diferencia de la detección, que identifica objetos de manera independiente en cada imagen, el seguimiento busca determinar cuáles de las detecciones obtenidas en diferentes instantes corresponden al mismo individuo.
+
+Una estrategia ampliamente utilizada es el seguimiento basado en detecciones, o tracking-by-detection. En este enfoque, un detector localiza los objetos presentes en cada cuadro y un algoritmo de seguimiento utiliza posteriormente esas detecciones para establecer asociaciones temporales y mantener las identidades a lo largo del video \cite{bewley2016}, \cite{zhang2022}.
+
+En esta tesis, el seguimiento constituye el vínculo entre la detección de microorganismos y el análisis posterior de su movimiento. Las observaciones asociadas con un mismo individuo permiten construir los datos temporales necesarios para reconstruir y analizar su trayectoria.
+
+\subsection{Asociación temporal e identificadores}
+
+La asociación temporal consiste en determinar si una detección obtenida en un cuadro corresponde con un objeto observado previamente. Para establecer esta correspondencia pueden utilizarse diferentes tipos de información, entre ellos la proximidad espacial, la superposición entre cajas delimitadoras, la estimación del movimiento y las características visuales del objeto.
+
+Cuando una detección inicia un nuevo seguimiento, se le asigna un identificador o track ID. Este identificador se conserva mientras el algoritmo determine que las detecciones posteriores corresponden al mismo objeto. De esta manera, las observaciones realizadas en diferentes cuadros pueden vincularse temporalmente.
+
+El track ID constituye una etiqueta computacional y no una propiedad intrínseca del microorganismo. Su finalidad es mantener la correspondencia entre las detecciones obtenidas a lo largo del video. Por este motivo, la calidad de las asociaciones realizadas por el algoritmo determina directamente la coherencia de los datos utilizados posteriormente para analizar el movimiento.
+
+Los criterios empleados para realizar la asociación dependen del método de seguimiento. Algunos algoritmos utilizan principalmente información geométrica, como la distancia entre posiciones o la superposición entre cajas, mientras que otros incorporan modelos de movimiento o características de apariencia para intentar conservar las identidades en situaciones más complejas.
+
+\subsection{Principales dificultades del seguimiento}
+
+La conservación de la identidad de los objetos puede verse afectada por pérdidas de detección, oclusiones, cruces entre individuos y errores durante la asociación temporal.
+
+Una pérdida de detección ocurre cuando un microorganismo presente en un cuadro no es identificado por el detector. Esto puede deberse, entre otros factores, al bajo contraste, el desenfoque, el tamaño reducido, la superposición con otros objetos o una confianza inferior al umbral establecido. Una ausencia breve de detecciones no implica necesariamente que el microorganismo haya desaparecido, por lo que algunos métodos mantienen temporalmente activo su identificador.
+
+Una oclusión se produce cuando un microorganismo queda oculto total o parcialmente por otro objeto o estructura de la imagen. Las oclusiones pueden dificultar tanto la detección como la asociación posterior cuando el objeto vuelve a ser visible.
+
+Un cambio de identidad o ID switch ocurre cuando el identificador asociado con un microorganismo es asignado incorrectamente a otro \cite{wojke2017}, \cite{dendorfer2021}. Este problema resulta especialmente relevante cuando dos microorganismos se aproximan, cruzan sus recorridos o poseen apariencias similares.
+
+La fragmentación ocurre cuando el seguimiento de un mismo individuo se interrumpe y posteriormente continúa mediante un nuevo identificador. Como consecuencia, un único recorrido real puede quedar representado mediante varias secuencias independientes, alterando su duración y las métricas calculadas posteriormente \cite{dendorfer2021}.
+
+Estos problemas son particularmente importantes en videos microscópicos, donde los microorganismos pueden ser pequeños y presentar características visuales similares. Un error de asociación puede producir saltos espaciales, dividir recorridos o combinar observaciones pertenecientes a distintos individuos. Por esta razón, la calidad del seguimiento debe considerarse antes de interpretar las métricas derivadas de las trayectorias.
+
+\subsection{Métodos de seguimiento relacionados}
+
+Existen diferentes métodos de seguimiento basado en detecciones que utilizan estrategias distintas para conservar la identidad de los objetos.
+
+SORT combina un modelo de movimiento con la superposición entre cajas delimitadoras para asociar las detecciones obtenidas en cuadros consecutivos \cite{bewley2016}. Su diseño prioriza la simplicidad y la eficiencia, aunque puede presentar dificultades ante oclusiones o situaciones en las que varios objetos se encuentran próximos.
+
+Deep SORT extiende este enfoque incorporando características visuales de apariencia para complementar la información espacial y de movimiento \cite{wojke2017}. Estas características pueden contribuir a conservar las identidades cuando los objetos se cruzan o permanecen temporalmente ocultos. Sin embargo, su utilidad depende de que existan diferencias visuales suficientes entre los objetos observados.
+
+ByteTrack propone incorporar durante la asociación tanto detecciones de alta confianza como detecciones con valores menores de confianza \cite{zhang2022}. De esta forma, algunas observaciones que podrían ser descartadas inicialmente pueden utilizarse para mantener la continuidad de los seguimientos.
+
+Estos métodos constituyen antecedentes representativos de las estrategias disponibles para el seguimiento de múltiples objetos. Su desempeño depende de las características de los datos y del problema considerado. En el caso de los videos microscópicos de esta tesis, factores como el tamaño reducido de los microorganismos, su similitud visual y los cruces entre individuos hacen necesario evaluar el seguimiento específicamente sobre las condiciones experimentales disponibles.
+
+La selección, configuración y evaluación del método de seguimiento utilizado en el sistema se describen posteriormente en los capítulos correspondientes al desarrollo y evaluación de la herramienta.
+
+\section{Análisis de trayectorias}
+
+El análisis de trayectorias permite caracterizar cuantitativamente el movimiento de un objeto a partir de las posiciones registradas a lo largo del tiempo. En un video, el movimiento continuo se representa mediante observaciones discretas obtenidas en determinados cuadros, por lo que la trayectoria reconstruida constituye una aproximación del recorrido real \cite{edelhoff2016}.
+
+La calidad de esta representación depende de factores como la frecuencia temporal de las observaciones, la precisión con la que se estiman las posiciones y la continuidad del seguimiento. Estas características deben considerarse al interpretar las métricas derivadas, ya que los errores de localización o las observaciones faltantes pueden alterar la descripción obtenida \cite{edelhoff2016}, \cite{noonan2019}.
+
+Las magnitudes utilizadas en este trabajo, como la distancia total, el desplazamiento neto, la rapidez y la variación de la rapidez, fueron definidas en el capítulo anterior. En esta sección se consideran principalmente sus implicancias para la interpretación de las trayectorias y las limitaciones asociadas con su estimación a partir de datos discretos.
+
+\subsection{Interpretación y limitaciones de las métricas de movimiento}
+
+Las diferentes métricas describen aspectos complementarios del movimiento. La distancia total representa la longitud acumulada del recorrido reconstruido, mientras que el desplazamiento neto caracteriza el cambio global entre las posiciones inicial y final. Su comparación permite obtener una primera aproximación a la geometría del recorrido: valores similares indican un desplazamiento predominantemente directo, mientras que una distancia total considerablemente mayor puede asociarse con curvas, retornos o cambios frecuentes de dirección.
+
+Estas magnitudes deben interpretarse teniendo en cuenta que las posiciones son observadas únicamente en instantes discretos. Cuando el microorganismo realiza movimientos entre dos cuadros que no quedan representados por las observaciones disponibles, la distancia reconstruida puede diferir del recorrido real. De forma inversa, pequeñas fluctuaciones en la posición estimada por el detector pueden incrementar artificialmente la distancia acumulada \cite{noonan2019}.
+
+La rapidez también es sensible a la precisión espacial de las observaciones. Pequeñas variaciones en el centro de una caja delimitadora pueden producir valores de rapidez distintos de cero aun cuando el microorganismo presente un desplazamiento reducido. Esta sensibilidad aumenta cuando se analizan variaciones sucesivas de la rapidez, ya que los errores presentes en las posiciones pueden propagarse y amplificarse.
+
+Por este motivo, el análisis de trayectorias puede requerir criterios destinados a reducir la influencia de estas fluctuaciones, como ventanas temporales, procedimientos de suavizado o umbrales mínimos de movimiento. La selección concreta de estos procedimientos y de sus parámetros forma parte del desarrollo metodológico del sistema.
+
+\subsubsection{Rectitud y tortuosidad}
+
+Además de cuantificar la magnitud del desplazamiento, la geometría de una trayectoria permite describir cómo se distribuye espacialmente el recorrido.
+
+Una medida utilizada para este propósito es el índice de rectitud, definido mediante la relación entre la magnitud del desplazamiento neto y la distancia total recorrida:
+
+\[
+S=\frac{D_N}{D_T}, \qquad D_T>0.
+\]
+
+Cuando $D_T>0$, este índice toma valores comprendidos entre 0 y 1. Un valor cercano a 1 indica que la distancia recorrida es aproximadamente igual a la separación entre los extremos de la trayectoria, lo que corresponde a un recorrido predominantemente recto. Valores menores indican que el objeto acumuló una distancia mayor que la necesaria para unir directamente las posiciones inicial y final.
+
+La tortuosidad describe, de manera más general, el grado en que un recorrido presenta curvas y cambios de dirección. Sin embargo, no existe una única medida de tortuosidad aplicable a todos los tipos de trayectorias. Dependiendo del problema pueden utilizarse relaciones entre distancias, cambios angulares, sinuosidad u otros indicadores geométricos \cite{benhamou2004}.
+
+Por esta razón, resulta necesario especificar qué medida se utiliza en cada análisis y evitar tratar rectitud, tortuosidad y continuidad temporal como conceptos equivalentes. La rectitud describe una propiedad geométrica del recorrido, mientras que la continuidad se relaciona con la disponibilidad de observaciones a lo largo del tiempo.
+
+\subsubsection{Calidad temporal de las trayectorias}
+
+La interpretación de las métricas depende también de la continuidad temporal de las observaciones. Una trayectoria puede presentar intervalos en los que no se dispone de posiciones debido a pérdidas de detección, oclusiones o dificultades del algoritmo para mantener correctamente la identidad del microorganismo.
+
+Estos intervalos, denominados gaps, introducen incertidumbre sobre el recorrido realizado entre las observaciones disponibles. Si el intervalo es breve, las posiciones anteriores y posteriores pueden proporcionar una aproximación razonable del desplazamiento. Sin embargo, cuando los intervalos sin observaciones son extensos, no puede determinarse qué recorrido realizó realmente el microorganismo durante ese período.
+
+La presencia de numerosos gaps o de fragmentaciones también puede afectar la distancia acumulada, la rapidez, la duración del seguimiento y las características geométricas utilizadas posteriormente para clasificar el movimiento. Por esta razón, la cantidad y extensión de los intervalos sin observaciones constituyen información relevante para evaluar la calidad de una trayectoria antes de interpretar sus métricas.
+
+En conjunto, el análisis de trayectorias requiere considerar tanto las magnitudes que describen el movimiento como la calidad de los datos a partir de los cuales fueron calculadas. Esta consideración resulta especialmente importante cuando las trayectorias reconstruidas se utilizan posteriormente para comparar individuos o caracterizar patrones de movimiento.
+
+\section{Clasificación de patrones de movimiento}
+
+Además de cuantificar cuánto se desplaza un microorganismo, la geometría de una trayectoria puede utilizarse para describir de manera general cómo se produce ese desplazamiento. En el análisis de partículas y organismos se consideran distintas modalidades de movimiento, entre ellas los recorridos dirigidos, los movimientos aleatorios, los desplazamientos confinados y otras formas de difusión \cite{saxton1997,codling2008,monnier2012}.
+
+Estas categorías no constituyen una clasificación universal aplicable automáticamente a cualquier trayectoria. Su interpretación depende de factores como la escala espacial, la frecuencia de muestreo, la duración del seguimiento y las métricas utilizadas. Por esta razón, en este trabajo las categorías se consideran descripciones computacionales de patrones observados y no explicaciones físicas o biológicas definitivas del movimiento.
+
+\subsection{Patrones y características de las trayectorias}
+
+Un movimiento direccional se caracteriza por presentar una orientación predominante y un desplazamiento sostenido respecto de la posición inicial. Este tipo de recorrido suele asociarse con una elevada rectitud, una persistencia direccional relativamente alta y una menor frecuencia de cambios bruscos de orientación.
+
+Los movimientos brownianos o erráticos presentan recorridos más irregulares y con cambios frecuentes de dirección. En sentido físico, el movimiento browniano corresponde a un proceso aleatorio originado por interacciones microscópicas con el medio. Sin embargo, demostrar que una trayectoria sigue estrictamente este tipo de proceso requiere análisis estadísticos específicos, como el estudio del desplazamiento cuadrático medio o modelos de difusión \cite{saxton1997,codling2008,monnier2012}.
+
+Por este motivo, en esta tesis se utiliza la denominación browniano o errático para describir trayectorias que presentan características geométricas compatibles con un movimiento irregular, sin afirmar que el mecanismo físico responsable sea necesariamente browniano.
+
+Los movimientos circulares u oscilatorios se caracterizan por presentar recorridos recurrentes, cambios de orientación persistentes o retornos hacia regiones previamente visitadas. Un movimiento aproximadamente circular puede conservar un sentido de giro, mientras que uno oscilatorio puede presentar inversiones sucesivas de dirección. Aunque ambos patrones poseen diferencias, comparten la característica de acumular desplazamiento dentro de una región relativamente limitada.
+
+Estas categorías pueden analizarse mediante distintas características de las trayectorias, como la rectitud, la relación entre distancia recorrida y desplazamiento neto, los cambios de dirección, la persistencia direccional, la variabilidad angular y la recurrencia espacial. Ninguna de estas métricas, considerada de manera aislada, permite caracterizar completamente un patrón de movimiento.
+
+\subsection{Clasificación basada en reglas interpretables}
+
+En este trabajo se utiliza un enfoque de clasificación basado en reglas interpretables. Este tipo de procedimiento determina una categoría a partir de condiciones definidas sobre características calculadas previamente sobre las trayectorias.
+
+A diferencia de un modelo entrenado directamente con trayectorias etiquetadas, las reglas permiten conocer qué propiedades intervienen en cada decisión y revisar los criterios utilizados. Esta característica resulta relevante en un contexto científico, donde es importante poder justificar por qué una trayectoria fue asignada a una determinada categoría y modificar los criterios cuando se disponga de nueva evidencia \cite{rudin2019}.
+
+La clasificación se apoya en la combinación de diferentes características geométricas y temporales. Entre ellas pueden considerarse la rectitud del recorrido, la persistencia direccional, la variabilidad de los cambios de orientación, la magnitud del desplazamiento y la tendencia a regresar a regiones previamente recorridas.
+
+El propósito de esta clasificación no es establecer una explicación física o biológica del comportamiento observado, sino organizar las trayectorias según patrones generales y facilitar su comparación y análisis posterior.
+
+El sistema contempla además situaciones en las que no resulta adecuado asignar una de las categorías principales. Una trayectoria puede considerarse de datos insuficientes cuando posee pocas observaciones o una calidad temporal que impide obtener métricas representativas. También puede clasificarse como desconocida cuando contiene suficiente información, pero sus características no permiten asociarla claramente con alguno de los patrones definidos.
+
+Estas situaciones deben distinguirse de una trayectoria con desplazamiento reducido. Un microorganismo puede poseer una cantidad suficiente de observaciones y presentar escaso movimiento; en ese caso existe información válida para analizar el recorrido, aunque su movilidad sea baja.
+
+Las reglas, umbrales y métricas específicas utilizadas por el clasificador desarrollado se presentan posteriormente en el capítulo correspondiente a su diseño e implementación.
+
+\subsection{Limitaciones de la clasificación}
+
+La clasificación depende directamente de la calidad de las trayectorias utilizadas como entrada. Las pérdidas de detección, los cambios de identidad, las fragmentaciones o los saltos espaciales incorrectos pueden modificar las distancias, los ángulos y otras características empleadas para determinar el patrón de movimiento.
+
+También influyen la frecuencia de cuadros, la duración del seguimiento y la escala de observación. Una trayectoria demasiado breve puede no contener información suficiente para distinguir un patrón, mientras que un intervalo prolongado puede incluir diferentes comportamientos dentro de un mismo seguimiento.
+
+En particular, asignar una única categoría a una trayectoria completa constituye una simplificación. Un microorganismo podría presentar inicialmente un movimiento direccional y posteriormente mostrar un período de desplazamiento irregular o de baja movilidad. En esos casos, una clasificación global no representa necesariamente todas las etapas del movimiento.
+
+Por estas razones, las categorías obtenidas deben interpretarse como una caracterización inicial y reproducible de los recorridos. Su validez requiere complementarse con inspección visual, casos controlados y, cuando corresponda, revisión por parte de especialistas.
+
+\section{Herramientas existentes y relación con la propuesta}
+
+Existen distintas herramientas destinadas al análisis de imágenes y videos científicos que permiten registrar posiciones, seguir objetos y obtener mediciones cuantitativas. Estas soluciones constituyen antecedentes relevantes para el presente trabajo, aunque fueron desarrolladas con objetivos, tipos de imágenes y modalidades de uso diferentes.
+
+Por esta razón, la existencia de herramientas previas no implica que puedan aplicarse directamente a los videos considerados en esta tesis sin realizar configuraciones, adaptaciones o validaciones específicas.
+
+\subsection{Tracker}
+
+Tracker es una herramienta gratuita y de código abierto orientada al análisis y modelado del movimiento a partir de videos, particularmente utilizada en contextos educativos y experimentales de física \cite{tracker2026}.
+
+Permite definir sistemas de coordenadas, calibrar la escala espacial, registrar posiciones y obtener magnitudes como posición, velocidad y aceleración. El seguimiento puede realizarse manualmente o mediante la función Autotracker, que utiliza una plantilla visual para buscar características similares en cuadros sucesivos.
+
+La supervisión directa del usuario facilita la revisión y corrección de las posiciones cuando el seguimiento presenta errores. Sin embargo, cuando una grabación contiene numerosos microorganismos, el procedimiento debe repetirse para cada individuo y puede requerir una intervención considerable.
+
+En el Grupo de Física de la Atmósfera, Tracker constituye la herramienta utilizada previamente para reconstruir las trayectorias de los microorganismos. Por este motivo, proporciona una referencia directa para analizar las ventajas y limitaciones del procedimiento automático desarrollado en esta tesis.
+
+\subsection{TrackMate}
+
+TrackMate es una plataforma de código abierto distribuida como complemento de Fiji y orientada al seguimiento de partículas, células y otros objetos en secuencias de imágenes \cite{tinevez2017}.
+
+Su arquitectura modular permite combinar diferentes métodos de detección o segmentación con algoritmos de asociación temporal. Además, ofrece funciones para visualizar, editar, analizar y exportar las trayectorias obtenidas \cite{tinevez2017}, \cite{ershov2022}.
+
+TrackMate constituye un antecedente cercano a la propuesta de esta tesis, ya que integra varias etapas del análisis dentro de un mismo flujo. Sin embargo, su aplicación a los videos considerados requeriría seleccionar y validar configuraciones adecuadas para microorganismos pequeños, visualmente similares y registrados bajo condiciones particulares de microscopía.
+
+Asimismo, las métricas, criterios de filtrado y categorías de movimiento utilizadas en este trabajo responden a necesidades específicas del grupo experimental y no necesariamente coinciden con las configuraciones disponibles de manera predeterminada en la herramienta.
+
+\subsection{CellProfiler}
+
+CellProfiler es una plataforma de código abierto orientada al análisis automatizado y cuantitativo de imágenes biológicas \cite{carpenter2006}. Permite construir flujos de procesamiento mediante módulos destinados a identificar objetos, medir sus propiedades y exportar los resultados obtenidos.
+
+La herramienta se utiliza principalmente para tareas de segmentación y caracterización cuantitativa de objetos en imágenes, incluyendo propiedades como tamaño, forma, intensidad y textura.
+
+Aunque permite automatizar el análisis de grandes conjuntos de imágenes, la reconstrucción y caracterización de trayectorias temporales no constituye el núcleo central de su funcionamiento. Un problema como el abordado en esta tesis podría, por lo tanto, requerir extensiones adicionales o su integración con otras herramientas.
+
+\subsection{Relación con la propuesta}
+
+Las herramientas analizadas muestran que existen diferentes estrategias para obtener información cuantitativa a partir de imágenes y videos científicos. Tracker permite realizar un seguimiento con supervisión directa; TrackMate integra detección o segmentación, seguimiento y análisis de trayectorias; y CellProfiler proporciona flujos automatizados para la identificación y medición de objetos en imágenes biológicas.
+
+Por este motivo, la contribución de esta tesis no se fundamenta en la ausencia de herramientas capaces de automatizar estas tareas. El problema específico se encuentra en la necesidad de disponer de un flujo adaptado y evaluado para los videos experimentales del Grupo de Física de la Atmósfera.
+
+La propuesta integra detección, seguimiento, filtrado de trayectorias, cálculo de métricas y clasificación de patrones dentro de un procedimiento orientado a las características de estos videos. Esta adaptación permite además definir explícitamente los criterios de análisis utilizados y evaluar cada una de las etapas sobre los datos disponibles.
+
+En este sentido, el aporte principal consiste en construir y evaluar un procedimiento reproducible para el análisis automático de los microorganismos considerados en el estudio, manteniendo la posibilidad de modificar sus componentes y parámetros de acuerdo con futuras necesidades experimentales.

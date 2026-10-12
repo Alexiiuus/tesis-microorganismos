@@ -230,21 +230,7 @@ El FPS de análisis debe corresponder a la adquisición o definirse explícitame
 
 \subsection{Calibración espacial}
 
-Las posiciones se representan inicialmente en píxeles. Su conversión a unidades físicas requiere una escala micrométrica obtenida bajo una configuración óptica compatible.
-
-La escala de referencia utilizada presenta divisiones mayores tales que diez divisiones equivalen a $1\,\mathrm{mm}$. Por lo tanto, la distancia física entre dos divisiones mayores consecutivas es de $0{,}1\,\mathrm{mm}$, es decir, $100\,\mu\mathrm{m}$. Si se seleccionan $N$ intervalos mayores de la escala y la distancia correspondiente en la imagen es $L_{px}$ píxeles, la longitud física de referencia es $L_{\mathrm{real}}=100N\,\mu\mathrm{m}$ y el factor de calibración espacial se obtiene como:
-
-\[
-s=\frac{L_{\mathrm{real}}}{L_{px}}.
-\]
-
-donde $s$ se expresa en micrómetros por píxel ($\mu\mathrm{m}/px$). Para reducir la influencia del error de selección de los extremos, resulta preferible medir varios intervalos de la escala en lugar de utilizar una única subdivisión y, cuando se dispone de más de una medición equivalente, comprobar la consistencia del factor obtenido.
-
-Una vez que se establezca y valide $s$, una distancia calculada internamente en píxeles podrá convertirse mediante $D_{\mu m}=sD_{px}$. De la misma forma, las coordenadas podrán expresarse en micrómetros respecto del origen elegido. Las magnitudes derivadas conservarán el mismo factor espacial: los valores de rapidez podrán multiplicarse por $s$ para expresarlos en $\mu\mathrm{m}/s$ y las variaciones temporales de la rapidez podrán expresarse en $\mu\mathrm{m}/s^2$.
-
-El factor de calibración es válido solo para condiciones ópticas compatibles; cambios de aumento, resolución, recorte o configuración requieren verificar nuevamente la escala.
-
-La representación interna conserva cuadros y coordenadas en píxeles; la conversión a unidades físicas se aplica posteriormente, una vez validada la escala, sin alterar los datos originales.
+[ ========== A definir ========== ]
 
 \section{Procedimiento general}
 

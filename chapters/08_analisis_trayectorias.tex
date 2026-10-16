@@ -5,38 +5,13 @@ Este capítulo describe los cálculos aplicados a las trayectorias reconstruidas
 
 \section{Referencia temporal y duración}
 
-El análisis recibe las observaciones $(f_i,x_i,y_i)$ conservadas durante el seguimiento. Los índices $f_i$ mantienen los cuadros sin registro entre posiciones disponibles, según lo descrito en el capítulo~\ref{chap:seguimiento}. Las funciones temporales exigen índices estrictamente crecientes y una frecuencia de análisis $F>0$, expresada en cuadros por segundo.
+El parámetro \texttt{analysis\_fps}, denotado aquí por $F$, configura la conversión temporal definida en el capítulo 2. Su valor predeterminado es $30$ cuadros/s y no se obtiene automáticamente del video. Debe identificarse en cada ejecución y distinguirse del FPS empleado al escribir el video de salida.
 
-El parámetro \texttt{analysis\_fps} se transmite a los componentes de cálculo. Su valor predeterminado es $30$, pero el procesamiento general no lo sustituye automáticamente por el FPS leído del video. Por tanto, la frecuencia utilizada debe identificarse en cada ejecución y distinguirse de la empleada para escribir un video de salida.
-
-Con el cuadro cero como origen, el tiempo del video es $t_i=f_i/F$. La referencia relativa al inicio de una trayectoria es $\tau_i=(f_i-f_1)/F$. La duración transcurrida entre sus extremos es $T=(f_n-f_1)/F$, mientras que el intervalo entre observaciones consecutivas es $\Delta t_i=(f_{i+1}-f_i)/F$. Estas expresiones aplican la referencia temporal definida en el capítulo 4.
-
-El conteo inclusivo de cuadros, $f_n-f_1+1$, utilizado para la cobertura temporal no se divide por $F$ para obtener $T$. Tampoco se reemplaza $\Delta t_i$ por $1/F$ cuando existen gaps. La referencia predeterminada de los gráficos temporales conserva el tiempo del video y permite ubicar cada trayectoria dentro de la grabación.
+El cálculo de duración e intervalos conserva la separación entre los índices registrados, incluidos los gaps descritos en el capítulo~\ref{chap:seguimiento}. Las funciones temporales verifican el orden de las observaciones y rechazan frecuencias no positivas. Los gráficos usan por defecto el tiempo del video para ubicar cada trayectoria dentro de la grabación.
 
 \section{Coordenadas y unidades de medida}
 
-Las posiciones provienen de los centros de las cajas asociadas con cada ID. Se mantienen en el sistema de coordenadas de la imagen: el eje horizontal crece hacia la derecha y el vertical, hacia abajo. La inversión del eje vertical utilizada al dibujar trayectorias conserva esa orientación visual; no transforma las posiciones almacenadas.
-
-Las normas euclidianas y los cocientes temporales se calculan directamente sobre esas coordenadas. El Cuadro~\ref{tab:unidades-analisis} resume las magnitudes principales. Las salidas actuales conservan píxeles, px/s y px/s$^2$, además de indicadores adimensionales.
-
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Magnitudes y unidades utilizadas por el análisis actual.}
-  \label{tab:unidades-analisis}
-  \begin{tabularx}{\textwidth}{@{}p{0.30\textwidth}l X@{}}
-    \toprule
-    Magnitud & Unidad & Interpretación \\
-    \midrule
-    Posición y distancias & px & Coordenadas y longitudes en el plano de la imagen. \\
-    Tiempo y duración & s & Índices de cuadro divididos por el FPS de análisis. \\
-    Rapidez & px/s & Desplazamiento entre posiciones observadas por unidad de tiempo. \\
-    Variación de rapidez & px/s$^2$ & Diferencia de rapideces dividida por su intervalo temporal. \\
-    Rectitud & Sin unidad & Relación entre distancia neta y acumulada. \\
-    Fracción de inactividad & Sin unidad & Proporción de muestras suavizadas bajo un umbral. \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
+El procesamiento conserva las coordenadas del seguimiento en píxeles. Las salidas actuales expresan posiciones y distancias en px, rapidez en px/s y variación de rapidez en px/s$^2$. Los indicadores de rectitud e inactividad son adimensionales.
 
 \subsection{Calibración y conversión a micrómetros}
 
@@ -187,7 +162,7 @@ El Cuadro~\ref{tab:parametros-analisis-trayectorias} resume los parámetros oper
 
 \section{Resúmenes y visualizaciones}
 
-La inspección individual reúne posiciones, distancias, rapideces y muestras bajo el umbral de actividad. Sus gráficos muestran el recorrido bidimensional, las rapideces originales o suavizadas y las marcas de inactividad o cambio. Los límites del modo \texttt{context} ajustan la ventana visible alrededor de los datos sin reiniciar el origen temporal del video.
+La inspección individual reúne posiciones, distancias, rapideces y muestras bajo el umbral de actividad. Sus gráficos muestran el recorrido bidimensional, las rapideces originales o suavizadas y las marcas de inactividad o cambio. Los límites del modo \texttt{context} ajustan la ventana visible alrededor de los datos sin reiniciar el origen temporal del video. La trayectoria individual se dibuja con el eje vertical invertido para conservar la orientación de la imagen, sin modificar las coordenadas almacenadas.
 
 En las curvas temporales individuales se insertan interrupciones gráficas ante gaps de la serie y se sombrean sus intervalos. Esto no elimina los segmentos calculados sobre observaciones separadas ni impide que el suavizado abarque esos intervalos. La trayectoria espacial, en cambio, une posiciones consecutivas de la lista, incluso cuando sus cuadros no son consecutivos.
 

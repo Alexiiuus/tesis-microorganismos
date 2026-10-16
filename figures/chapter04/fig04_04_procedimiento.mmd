@@ -1,0 +1,11 @@
+flowchart LR
+    A["Video + modelo + configuración"] --> B[Procesamiento automático]
+    B --> C[Tracks reconstruidos]
+    C --> D["Métricas, gráficos y clasificación"]
+
+    A --> E[Tracker]
+    E --> F[Referencia manual]
+
+    D --> G[Comparación y validación]
+    F --> G
+    G --> H["Resultados + trazabilidad"]

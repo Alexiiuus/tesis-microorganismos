@@ -1,0 +1,21 @@
+flowchart LR
+    A[Observación de una trayectoria]
+
+    A --> B["Representación interna<br/>(cuadro, x_px, y_px)"]
+
+    B --> C[Información temporal]
+    B --> D[Información espacial]
+
+    C --> C1[Número de cuadro]
+    C1 --> C2[FPS de análisis]
+    C2 --> C3[Tiempo en segundos]
+    C3 --> C4[Rapidez y variaciones temporales]
+
+    D --> D1[Coordenadas en píxeles]
+    D1 --> D2[Escala micrométrica]
+    D2 --> D3[Factor de calibración<br/>µm/px]
+    D3 --> D4[Posiciones y distancias<br/>en µm]
+    D4 --> D5[Rapidez en µm/s]
+
+    C2 -. Conversión temporal incorporada al procesamiento .-> C3
+    D2 -. Conversión espacial aplicada tras validar la escala .-> D3

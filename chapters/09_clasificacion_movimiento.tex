@@ -1,0 +1,188 @@
+\chapter[Clasificación de patrones de movimiento]{Clasificación de patrones\\de movimiento}
+\label{chap:clasificacion-movimiento}
+
+El sistema desarrollado asigna una categoría a cada trayectoria mediante puntuaciones construidas a partir de sus características geométricas. Este capítulo especifica las métricas adicionales, las fórmulas de combinación y las reglas de decisión del clasificador. Las categorías se utilizan con el alcance descriptivo establecido en el capítulo 3; la evaluación sobre los videos experimentales se reserva para el capítulo de resultados.
+
+\section{Entrada y alcance de la clasificación}
+
+El clasificador recibe las observaciones ordenadas $(f_i,x_i,y_i)$ de una trayectoria, con la representación definida en los capítulos anteriores. Verifica que los índices de cuadro sean estrictamente crecientes y que la frecuencia de análisis sea positiva. La decisión se aplica al recorrido completo: no se divide la trayectoria en etapas ni se asignan categorías distintas a sus intervalos.
+
+La clasificación es una etapa opcional del procesamiento general y se encuentra desactivada por defecto. Cuando se habilita, opera sobre las trayectorias que conserva el filtro seleccionado en el capítulo~\ref{chap:seguimiento}. La integración omite aquellas con menos de dos observaciones; las restantes pueden recibir una categoría o un estado de clasificación. El mínimo de puntos exigido por el clasificador es una condición adicional, independiente de ese filtrado previo.
+
+Se calculan tres puntuaciones: direccional, errática y circular u oscilatoria. No se entrena un modelo con trayectorias etiquetadas para obtenerlas. Las reglas y sus parámetros están fijados en la implementación, mientras que los estados \textit{datos insuficientes} y \textit{desconocido} cubren condiciones específicas en las que no se asigna una de las tres categorías.
+
+\section{Características utilizadas}
+
+Se reutilizan la distancia acumulada $D_T$, la distancia neta $D_N$ y el índice de rectitud $S$ descritos en el capítulo~\ref{chap:analisis-trayectorias}. El campo denominado tortuosidad se define aquí como $1-S$, cuando $D_T>0$. Esta elección corresponde al indicador concreto empleado por el clasificador.
+
+\subsection{Orientaciones y cambios angulares}
+
+Para cada desplazamiento entre posiciones registradas se calcula su orientación mediante la función $\operatorname{atan2}$. Se excluyen los vectores cuya norma no supera $10^{-8}$ px, porque no proporcionan una orientación utilizable. Sean $\theta_1,\ldots,\theta_q$ las orientaciones restantes y $m=\max(q-1,0)$. Los cambios entre orientaciones sucesivas se expresan como
+\begin{equation}
+  \phi_j=\operatorname{atan2}\bigl(\sin(\theta_{j+1}-\theta_j),
+                                    \cos(\theta_{j+1}-\theta_j)\bigr),
+  \qquad j=1,\ldots,m.
+\end{equation}
+La expresión conserva el cambio angular principal y evita que el paso entre $-\pi$ y $\pi$ se interprete como un giro cercano a una vuelta completa. Al excluir desplazamientos casi nulos, las orientaciones comparadas pueden corresponder a segmentos que no eran adyacentes en la lista original.
+
+Sobre estos cambios se obtienen la media de sus magnitudes $\mu_{|\phi|}$, la desviación estándar de sus magnitudes $\sigma_{|\phi|}$ y la desviación estándar de los valores con signo $\sigma_\phi$. Las dos desviaciones son diferentes: una describe la dispersión de la magnitud de los giros y la otra también refleja la alternancia de su sentido. Se utilizan desviaciones poblacionales, con divisor $m$.
+
+El número $K$ de cambios de dirección cuenta los casos con $|\phi_j|>\alpha$, donde $\alpha$ es un umbral en radianes. Su proporción se expresa como $U=K/m$ cuando existen cambios angulares. Si no se obtiene ninguno, la implementación asigna cero a las estadísticas angulares y a esa proporción. Los ángulos se calculan entre los desplazamientos disponibles, incluidos los que atraviesan gaps; no se reconstruyen orientaciones dentro de esos intervalos.
+
+\subsection{Proximidad y distribución espacial}
+
+El indicador denominado \textit{tasa de retorno} utiliza un radio proporcional a la diagonal de la caja que contiene las posiciones. Si esa diagonal es $L$ y la fracción configurada es $\rho$, el radio es $r=\rho L$. Para las posiciones $\mathbf p_i=(x_i,y_i)$, el indicador se calcula como
+\begin{equation}
+ R=\frac{1}{n}\sum_{i=1}^{n}
+ \mathbf{1}\!\left[\exists j:\ 0<\|\mathbf p_i-\mathbf p_j\|<r\right].
+\end{equation}
+Por tanto, mide la fracción de posiciones que tienen alguna otra posición a distancia positiva e inferior a $r$. No exige que esta sea posterior, no impone una separación temporal mínima y excluye coincidencias espaciales exactas. Incluso posiciones consecutivas de un recorrido rectilíneo pueden contribuir. Su nombre en la salida no debe interpretarse como un conteo de retornos temporales. Si $L<10^{-8}$ px, devuelve cero.
+
+La dispersión radial se obtiene respecto del centroide $\bar{\mathbf p}$. Si $r_i=\|\mathbf p_i-\bar{\mathbf p}\|$, se calcula el coeficiente $C_r=\operatorname{std}(r_i)/\operatorname{mean}(r_i)$. Una dispersión baja indica distancias similares al centroide, aunque por sí sola no demuestra un recorrido circular. Si la media radial es inferior a $10^{-8}$ px, el indicador devuelve cero.
+
+La cobertura angular $A$ utiliza los ángulos polares de las posiciones respecto del mismo centroide. Se ordenan y se determina el mayor intervalo angular vacío $G_{\max}$, incluido el que cierra la vuelta. Se calcula $A=1-G_{\max}/(2\pi)$. Esta cobertura describe la distribución espacial de los ángulos: no utiliza el orden de visita ni mide el número de vueltas realizadas.
+
+\subsection{Características complementarias}
+
+La salida incluye también el número de inversiones del desplazamiento proyectado sobre el primer eje principal de las posiciones. Ese eje se obtiene mediante descomposición en valores singulares. Se excluyen los incrementos cuya magnitud no supera el 1\% de la máxima proyección absoluta respecto del centroide y se cuentan los cambios de signo entre los restantes.
+
+Además, se informa el coeficiente de variación de las rapideces por segmento, calculadas con los intervalos reales entre cuadros y la frecuencia de análisis del capítulo~\ref{chap:analisis-trayectorias}. No se utiliza la serie suavizada. Si la rapidez media es inferior a $10^{-8}$ px/s, el coeficiente devuelve cero.
+
+Estas dos características se conservan para inspección, pero no intervienen en las puntuaciones actuales. En particular, el número de inversiones no participa en la categoría denominada circular u oscilatoria. Los valores cero usados en casos degenerados son convenciones de cálculo y requieren distinguirse de evidencia de regularidad del movimiento.
+
+\section{Construcción de las puntuaciones}
+
+Los indicadores se combinan mediante medias de términos limitados al intervalo $[0,1]$. Se define $C(z)=\max(0,\min(1,z))$ y se introducen las cantidades
+\begin{equation}
+\begin{aligned}
+ a&=C(\mu_{|\phi|}/\pi), & b&=C(\sigma_{|\phi|}/\pi),
+ &u&=C(U),\\
+ r_s&=C(R), & g&=C(A), &h&=C(C_r),\\
+ z&=C(\sigma_\phi/\pi).
+\end{aligned}
+\end{equation}
+El subíndice de $r_s$ distingue la proximidad normalizada del radio espacial $r$. Las tres puntuaciones son
+\begin{equation}
+\begin{aligned}
+ Q_D&=\frac{S+(1-a)+(1-b)+(1-r_s)}{4},\\[0.3em]
+ Q_E&=\frac{(1-S)+a+b+u}{4},\\[0.3em]
+ Q_C&=\frac{(1-S)+g+(1-h)+(1-u)+(1-z)}{5}.
+\end{aligned}
+\label{eq:puntuaciones-movimiento}
+\end{equation}
+
+La puntuación direccional favorece una rectitud alta, giros de poca magnitud y dispersión, y un valor reducido de proximidad espacial. La errática favorece baja rectitud, mayor magnitud y dispersión de los giros, y una mayor proporción de cambios por encima del umbral angular. La circular u oscilatoria combina baja rectitud, cobertura angular alta, baja dispersión radial, pocos cambios por encima del umbral y baja dispersión de los giros con signo.
+
+Cada término tiene el mismo peso dentro de su puntuación, aunque las categorías utilizan distinto número de términos. Los valores no se normalizan para sumar uno y no constituyen probabilidades. Tampoco se establece una correspondencia exclusiva entre una característica y un patrón: diferentes geometrías pueden producir puntuaciones próximas o favorecer una misma categoría.
+
+Las distancias, los índices y las estadísticas angulares se redondean a cuatro decimales antes de combinarse. La clasificación utiliza las puntuaciones calculadas a partir de esas métricas y redondea a cuatro decimales los valores que entrega en la salida.
+
+\section{Regla de decisión y parámetros}
+
+Primero se compara la cantidad de posiciones con el mínimo $n_{\min}$. Si no se alcanza, se devuelve el estado \textit{datos insuficientes}, con puntuaciones y confianza iguales a cero; en ese caso solo se informa la cantidad de puntos. Esta regla no comprueba la cobertura temporal ni la representatividad del recorrido.
+
+Si se cumple el mínimo, se calculan las métricas. Cuando la distancia acumulada redondeada es inferior a $10^{-4}$ px, se devuelve \textit{desconocido}, con puntuaciones y confianza iguales a cero. Esta condición impide evaluar las expresiones que requieren rectitud definida. No equivale al criterio de inactividad del capítulo~\ref{chap:analisis-trayectorias}.
+
+En los demás casos se selecciona la categoría cuya puntuación es máxima. Si el máximo es inferior al umbral $\gamma$, el resultado se sustituye por \textit{desconocido}, conservando las puntuaciones calculadas. No se exige una diferencia mínima entre las dos puntuaciones más altas. En un empate exacto se conserva el orden de evaluación: direccional, errática y circular u oscilatoria.
+
+\begin{table}[htbp]
+ \centering
+ \caption{Parámetros predeterminados del clasificador.}
+ \label{tab:parametros-clasificacion}
+ \begin{tabularx}{\textwidth}{@{}l l X@{}}
+  \toprule
+  Parámetro & Valor & Función \\
+  \midrule
+  $n_{\min}$ & 15 posiciones & Mínimo exigido para calcular la clasificación. \\
+  $\rho$ & 0,10 & Fracción de la diagonal de la caja para el radio de proximidad. \\
+  $\alpha$ & 0,5 rad & Umbral estricto para contar cambios de dirección. \\
+  $\gamma$ & 0,35 & Mínimo de la puntuación máxima para aceptar una categoría. \\
+  \bottomrule
+ \end{tabularx}
+\end{table}
+
+El umbral predeterminado tiene una limitación derivada de las fórmulas. Al sumar las puntuaciones direccional y errática se obtiene
+\begin{equation}
+ Q_D+Q_E=1+\frac{u-r_s}{4}\geq 0{,}75.
+\end{equation}
+Por tanto, al menos una alcanza $0{,}375$, por encima de $\gamma=0{,}35$. El redondeo de las métricas no modifica esta conclusión. En la configuración actual, la comparación con ese umbral no rechaza las trayectorias que llegan al cálculo de puntuaciones; el estado \textit{desconocido} queda reservado, en la práctica, a la condición previa sobre la distancia. Modificar $\gamma$ puede activar el rechazo por puntuación, pero no incorpora una medida de separación entre categorías.
+
+La Figura~\ref{fig:decision-clasificacion} resume el procedimiento. Los parámetros del Cuadro~\ref{tab:parametros-clasificacion} son decisiones operativas de la implementación; su validación sobre las trayectorias experimentales requiere una evaluación específica.
+
+\begin{figure}[H]
+ \centering
+ \begin{tikzpicture}[node distance=6mm,
+  box/.style={thesisflow,text width=5.9cm},
+  side/.style={thesisflow,text width=3.2cm},
+  ]
+  \node[box] (input) {Trayectoria con orden temporal válido};
+  \node[box,below=of input] (minimum) {¿Alcanza $n_{\min}$ posiciones?};
+  \node[side,right=9mm of minimum] (short) {Datos insuficientes};
+  \node[box,below=of minimum] (distance) {Calcular métricas\\¿Distancia redondeada $\geq 10^{-4}$ px?};
+  \node[side,right=9mm of distance] (zero) {Desconocido};
+  \node[box,below=of distance] (scores) {Calcular $Q_D$, $Q_E$, $Q_C$\\y seleccionar el máximo};
+  \node[box,below=of scores] (floor) {¿El máximo alcanza $\gamma$?};
+  \node[side,right=9mm of floor] (reject) {Desconocido};
+  \node[box,below=of floor] (output) {Categoría seleccionada, puntuaciones\\y métricas};
+  \draw[thesisarrow] (input) -- (minimum);
+  \draw[thesisarrow] (minimum) -- node[right,font=\small] {Sí} (distance);
+  \draw[thesisarrow] (minimum) -- node[above,font=\small] {No} (short);
+  \draw[thesisarrow] (distance) -- node[right,font=\small] {Sí} (scores);
+  \draw[thesisarrow] (distance) -- node[above,font=\small] {No} (zero);
+  \draw[thesisarrow] (scores) -- (floor);
+  \draw[thesisarrow] (floor) -- node[right,font=\small] {Sí} (output);
+  \draw[thesisarrow] (floor) -- node[above,font=\small] {No} (reject);
+ \end{tikzpicture}
+ \caption{Reglas de decisión del clasificador. La rama de rechazo por $\gamma$ se conserva como parte del algoritmo configurable, con la limitación indicada para su valor predeterminado.}
+ \label{fig:decision-clasificacion}
+\end{figure}
+
+\section{Información generada e inspección}
+
+Cada resultado identifica la categoría o el estado mediante el campo \texttt{movement\_type}. Los identificadores de las categorías son \texttt{directional}, \texttt{brownian\_erratic} y \texttt{circular\_oscillatory}; los estados adicionales son \texttt{insufficient\_data} y \texttt{unknown}. La denominación errática describe características geométricas y no acredita un mecanismo físico browniano.
+
+El campo \texttt{scores} conserva las tres puntuaciones y \texttt{metrics} reúne las características disponibles. El campo \texttt{confidence} contiene la puntuación máxima, salvo los casos previos al cálculo de puntuaciones, en los que vale cero. Se interpreta como el valor de la regla ganadora y no como una probabilidad calibrada de acierto. Su comparación entre trayectorias tampoco incorpora la diferencia respecto de la segunda puntuación.
+
+La explicación de \texttt{reason} procede de un texto fijo asociado con la categoría o el estado. No se genera examinando qué términos dominaron en cada trayectoria. En particular, el texto de la categoría circular u oscilatoria menciona retornos frecuentes, aunque $R$ no aparece en $Q_C$. Para inspeccionar una asignación deben consultarse las métricas y las fórmulas, además de esa explicación general.
+
+Cuando la etapa está habilitada, el procesamiento informa la cantidad de trayectorias por categoría o estado y muestra hasta cinco resultados ordenados por el campo de confianza. El guardado en JSON es una opción adicional, también desactivada por defecto, y se realiza dentro de la etapa de clasificación. El archivo agrupa los resultados por identificador de trayectoria. Las opciones de activación se registran en los metadatos de ejecución; los cuatro parámetros propios del clasificador no se incorporan allí explícitamente en la integración actual.
+
+La Figura~\ref{fig:ejemplos-clasificacion} compara tres recorridos sintéticos de 41 observaciones en cuadros consecutivos, con los parámetros predeterminados. El rectilíneo usa incrementos uniformes y el circular, una vuelta con pasos angulares uniformes. El irregular acumula incrementos normales estándar bidimensionales generados con \texttt{default\_rng} de NumPy y semilla 4.
+
+\begin{figure}[H]
+ \centering
+ \begin{tikzpicture}[x=1cm,y=1cm]
+  \begin{scope}[xshift=0.0cm]
+   \node[font=\small\bfseries] at (2.2,3.65) {Recorrido rectilíneo};
+   \draw[line width=0.65pt,-{Latex[length=1.5mm]}] plot coordinates {(0.3000,2.0500) (0.3950,2.0500) (0.4900,2.0500) (0.5850,2.0500) (0.6800,2.0500) (0.7750,2.0500) (0.8700,2.0500) (0.9650,2.0500) (1.0600,2.0500) (1.1550,2.0500) (1.2500,2.0500) (1.3450,2.0500) (1.4400,2.0500) (1.5350,2.0500) (1.6300,2.0500) (1.7250,2.0500) (1.8200,2.0500) (1.9150,2.0500) (2.0100,2.0500) (2.1050,2.0500) (2.2000,2.0500) (2.2950,2.0500) (2.3900,2.0500) (2.4850,2.0500) (2.5800,2.0500) (2.6750,2.0500) (2.7700,2.0500) (2.8650,2.0500) (2.9600,2.0500) (3.0550,2.0500) (3.1500,2.0500) (3.2450,2.0500) (3.3400,2.0500) (3.4350,2.0500) (3.5300,2.0500) (3.6250,2.0500) (3.7200,2.0500) (3.8150,2.0500) (3.9100,2.0500) (4.0050,2.0500) (4.1000,2.0500)};
+   \fill (0.3000,2.0500) circle[radius=1pt];
+   \node[font=\small,align=center] at (2.2,-0.25) {$Q_D=0,7500$\\$Q_E=0,0000$\\$Q_C=0,5844$};
+  \end{scope}
+  \begin{scope}[xshift=5.1cm]
+   \node[font=\small\bfseries] at (2.2,3.65) {Recorrido irregular};
+   \draw[line width=0.65pt,-{Latex[length=1.5mm]}] plot coordinates {(3.5373,0.9563) (4.1000,1.1792) (3.5449,1.1775) (3.3340,1.2277) (2.7901,1.3095) (2.8697,1.8424) (2.9768,2.0151) (2.4718,2.7769) (1.8240,3.1496) (1.7124,2.8517) (1.4904,2.6245) (1.6190,2.5872) (2.1204,1.9685) (2.1194,1.6668) (2.3818,0.9504) (2.2655,1.0215) (1.7636,1.3547) (1.8240,1.6952) (2.1484,1.3638) (1.8786,1.2951) (2.1316,1.5829) (1.8915,1.3775) (1.6217,1.1799) (1.5412,1.1353) (2.2373,0.9641) (2.1397,1.1192) (1.8173,0.9945) (1.8218,1.2563) (1.3767,1.7202) (1.2575,1.7775) (1.5440,2.0009) (1.9023,2.0595) (1.8956,2.1665) (1.5589,2.5772) (1.2966,2.1510) (1.9921,2.1048) (1.5933,2.7313) (1.4818,3.0905) (1.2013,3.0063) (0.6302,2.3607) (0.3000,2.3343)};
+   \fill (3.5373,0.9563) circle[radius=1pt];
+   \node[font=\small,align=center] at (2.2,-0.25) {$Q_D=0,3976$\\$Q_E=0,5502$\\$Q_C=0,5885$};
+  \end{scope}
+  \begin{scope}[xshift=10.2cm]
+   \node[font=\small\bfseries] at (2.2,3.65) {Recorrido circular};
+   \draw[line width=0.65pt,-{Latex[length=1.5mm]}] plot coordinates {(3.3750,2.0500) (3.3605,2.2338) (3.3175,2.4131) (3.2469,2.5834) (3.1506,2.7406) (3.0309,2.8809) (2.8906,3.0006) (2.7334,3.0969) (2.5631,3.1675) (2.3838,3.2105) (2.2000,3.2250) (2.0162,3.2105) (1.8369,3.1675) (1.6666,3.0969) (1.5094,3.0006) (1.3691,2.8809) (1.2494,2.7406) (1.1531,2.5834) (1.0825,2.4131) (1.0395,2.2338) (1.0250,2.0500) (1.0395,1.8662) (1.0825,1.6869) (1.1531,1.5166) (1.2494,1.3594) (1.3691,1.2191) (1.5094,1.0994) (1.6666,1.0031) (1.8369,0.9325) (2.0162,0.8895) (2.2000,0.8750) (2.3838,0.8895) (2.5631,0.9325) (2.7334,1.0031) (2.8906,1.0994) (3.0309,1.2191) (3.1506,1.3594) (3.2469,1.5166) (3.3175,1.6869) (3.3605,1.8662) (3.3750,2.0500)};
+   \fill (3.3750,2.0500) circle[radius=1pt];
+   \node[font=\small,align=center] at (2.2,-0.25) {$Q_D=0,4875$\\$Q_E=0,2625$\\$Q_C=0,9914$};
+  \end{scope}
+ \end{tikzpicture}
+ \caption{Recorridos sintéticos y puntuaciones obtenidas con la implementación actual. El punto marca el inicio y la flecha indica el final. Los paneles conservan la proporción espacial de cada recorrido, con escalas independientes. Son ejemplos de cálculo, no resultados experimentales.}
+ \label{fig:ejemplos-clasificacion}
+\end{figure}
+
+En el recorrido irregular, la puntuación circular supera a la errática. El ejemplo permite verificar cómo compiten las reglas y por qué la forma visual de una trayectoria no garantiza una etiqueta determinada. No constituye una estimación del desempeño sobre los videos ni una validación de los umbrales.
+
+\section{Alcance y limitaciones del método}
+
+Las reglas resumen propiedades de las posiciones disponibles. Los gaps no activan una división automática en tramos ni reducen directamente la puntuación: pueden producirse giros entre segmentos separados temporalmente y proximidades entre posiciones distantes en el tiempo. El filtro previo permite seleccionar trayectorias, pero el clasificador no incorpora una evaluación propia de cobertura o duración mínima.
+
+La densidad de muestreo modifica la proximidad espacial, la distribución de giros y los conteos de cambios e inversiones. Por ello, obtener suficientes puntos no garantiza que dos trayectorias representen duraciones o resoluciones comparables. La distancia acumulada y la rapidez siguen dependiendo de las limitaciones descritas en el capítulo~\ref{chap:analisis-trayectorias}. La proximidad utiliza comparaciones entre todos los pares de posiciones, con un costo cuadrático respecto de su cantidad.
+
+La categoría circular u oscilatoria reúne comportamientos distintos mediante una sola puntuación. Aunque se informa el número de inversiones sobre el eje principal, este no interviene en la decisión. La clasificación global tampoco localiza transiciones entre patrones dentro de una trayectoria. Estas restricciones deben considerarse al contrastar sus resultados con una revisión manual.
+
+Las puntuaciones, sus pesos y los umbrales requieren validación con casos representativos y criterios de referencia. El sistema entrega una descripción computacional inspeccionable; atribuir un mecanismo físico o biológico al recorrido exige evidencia adicional. Las pruebas de implementación se documentan en el capítulo siguiente y la evaluación experimental se presenta posteriormente.

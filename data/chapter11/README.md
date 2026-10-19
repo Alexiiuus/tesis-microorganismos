@@ -24,4 +24,4 @@ Genera tres figuras vectoriales en `figures/chapter11/`, las comparaciones por c
 
 `provenance.json` registra la revisión, las huellas y la identificación de las fuentes. La alineación vertical utiliza exclusivamente el primer par de posiciones: `y_aligned = y_model(0) + y_manual(0) - y_manual`. Las métricas de posición posteriores excluyen ese anclaje y conservan X. El contraste de rapidez utiliza los mismos extremos de los intervalos de ambas series y sí utiliza el primer punto como extremo inicial.
 
-La clasificación es un posprocesamiento posterior, porque estaba desactivada en la ejecución histórica. Sus salidas no son etiquetas independientes de referencia. La escala física permanece **A DEFINIR**.
+La clasificación se calcula con los módulos del sistema desarrollado y sus parámetros predeterminados. Sus salidas no son etiquetas independientes de referencia. La escala física permanece **A DEFINIR**.

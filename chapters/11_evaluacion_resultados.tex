@@ -1,9 +1,9 @@
 \chapter{Evaluación experimental y resultados}
 \label{chap:evaluacion-resultados}
 
-Este capítulo presenta los resultados obtenidos con los datos experimentales conservados. Se distinguen las métricas registradas durante el entrenamiento del detector, la comparación de una trayectoria automática con anotaciones manuales y el análisis posterior de sus magnitudes de movimiento. Las pruebas controladas del capítulo~\ref{chap:implementacion-pruebas} verifican operaciones e integración; aquí se examina qué información aportan los datos reales y hasta dónde permiten evaluar el sistema desarrollado.
+Este capítulo presenta los resultados obtenidos con los datos experimentales conservados. Se distinguen las métricas registradas durante el entrenamiento del detector, la comparación de una trayectoria automática con anotaciones manuales y el análisis de sus magnitudes y categorías de movimiento. Las pruebas controladas del capítulo~\ref{chap:implementacion-pruebas} verifican operaciones e integración; aquí se examina qué información aportan los datos reales y hasta dónde permiten evaluar el sistema desarrollado.
 
-La evidencia cuantitativa de seguimiento se concentra en una trayectoria de referencia parcial. Por tanto, los resultados describen un caso experimental y no una estimación del desempeño sobre todos los microorganismos del video. La reconstrucción posterior de métricas y categorías se identifica como tal para distinguirla de los productos generados durante la ejecución original.
+La evidencia cuantitativa de seguimiento se concentra en una trayectoria de referencia parcial. Por tanto, los resultados describen un caso experimental y no una estimación del desempeño sobre todos los microorganismos del video. Las métricas y categorías se obtienen de las posiciones conservadas mediante las funciones de análisis del sistema desarrollado.
 
 \section{Material experimental y configuración de la prueba}
 
@@ -13,7 +13,7 @@ El Cuadro~\ref{tab:configuracion-experimental} reúne la configuración conserva
 
 \begin{table}[htbp]
  \centering
- \caption{Configuración documentada de la prueba y del análisis posterior.}
+ \caption{Configuración de la prueba y del análisis de trayectorias.}
  \label{tab:configuracion-experimental}
  \small
  \begin{tabularx}{\textwidth}{@{}p{0.39\textwidth}X@{}}
@@ -25,7 +25,7 @@ El Cuadro~\ref{tab:configuracion-experimental} reúne la configuración conserva
   Confianza e IoU de NMS & $0{,}4$ y $0{,}4$, respectivamente. \\
   Frecuencia de análisis & 30 FPS. \\
   Selección de trayectorias & Al menos 20 observaciones; filtro por cantidad de cuadros. \\
-  Clasificación en la corrida original & Desactivada. \\
+  Clasificación del movimiento & Reglas del capítulo~\ref{chap:clasificacion-movimiento}, con sus parámetros predeterminados. \\
   Suavizado reconstruido & Media móvil de 20 muestras de rapidez. \\
   Umbrales analíticos & Inactividad: 30 px/s; variación brusca de rapidez: $450$ px/s$^2$; régimen: diferencia de 30 px/s entre ventanas de 50 muestras. \\
   \bottomrule
@@ -38,7 +38,7 @@ Se conservaron el archivo de posiciones manuales exportado por Tracker, su norma
 
 El campo de video de la referencia normalizada conserva el nombre \texttt{prueba\_tracker.mp4}. Este nombre corresponde a un archivo distinto de \texttt{primer\_minuto.mp4}; no se utiliza como sinónimo. La identificación del caso se basa en el registro de procesamiento y en la aclaración del autor de las anotaciones de que las pruebas se realizaron sobre \texttt{primer\_minuto}. Se conserva la discrepancia de metadatos para su trazabilidad, sin reinterpretar el nombre original como prueba de identidad entre archivos.
 
-Los metadatos históricos registran Python 3.13.15, pero no las revisiones del código ni todas las versiones de las bibliotecas. El posprocesamiento de este capítulo utiliza los módulos consultados posteriormente, cuyas huellas se conservan junto con los resultados. Esta reconstrucción permite reproducir las operaciones sobre las posiciones disponibles; no certifica que todo el entorno coincida con el utilizado durante la inferencia original.
+Los metadatos de procesamiento registran Python 3.13.15, pero no las revisiones del código ni todas las versiones de las bibliotecas. El análisis de este capítulo utiliza los módulos del sistema desarrollado, cuyas huellas se conservan junto con los resultados. Para reproducir las operaciones se mantienen las posiciones, la configuración y la identificación de los módulos utilizados.
 
 \section{Resultados registrados del detector}
 
@@ -239,15 +239,15 @@ El error absoluto medio es de $14{,}0420$ px/s y el RMSE, de $17{,}2047$ px/s. L
 
 La comparación muestra que la semejanza espacial no implica idéntica precisión al derivar rapidez. Las diferencias entre posiciones de ambos extremos contribuyen al error del desplazamiento y se dividen por un intervalo que suele ser de un tercio de segundo. Además, omitir posiciones intermedias modifica la distancia acumulada: sobre los 93 cuadros comunes, la poligonal automática tiene aproximadamente $1146{,}76$ px, mientras que la referencia manual tiene $1300{,}70$ px. Estos valores corresponden a un tramo y un muestreo diferentes de los 929 puntos del Cuadro~\ref{tab:movimiento-experimental}. No se concluye, a partir de este caso, que la rapidez automática tenga exactitud física suficiente para cualquier uso experimental.
 
-\section{Clasificación posterior del movimiento}
+\section{Clasificación del movimiento}
 
-La clasificación estaba desactivada en la corrida original. Para examinar el comportamiento del módulo se aplicó posteriormente el clasificador del capítulo~\ref{chap:clasificacion-movimiento} a las posiciones conservadas, con 30 FPS y sus parámetros predeterminados. Este procedimiento genera una salida nueva de análisis; no se presenta como un archivo de clasificación producido durante aquella inferencia.
+Se aplicó el clasificador del capítulo~\ref{chap:clasificacion-movimiento} a las posiciones conservadas, con 30 FPS y sus parámetros predeterminados. Las características geométricas, las puntuaciones y la categoría se obtuvieron mediante las mismas funciones y reglas de decisión utilizadas por el sistema desarrollado.
 
 El Cuadro~\ref{tab:clasificacion-experimental} muestra las puntuaciones obtenidas sobre la trayectoria completa y sobre las dos secuencias restringidas a los 93 cuadros comunes. Las tres reciben la categoría direccional, aunque sus puntuaciones difieren. El contraste entre la trayectoria completa y su submuestreo muestra que la densidad temporal influye en las características utilizadas por las reglas.
 
 \begin{table}[htbp]
  \centering
- \caption{Puntuaciones del clasificador en el análisis posterior. $Q_D$: direccional; $Q_E$: errático; $Q_C$: circular u oscilatorio. Las puntuaciones son heurísticas, no probabilidades calibradas.}
+ \caption{Puntuaciones obtenidas con las reglas de clasificación del sistema desarrollado. $Q_D$: direccional; $Q_E$: errático; $Q_C$: circular u oscilatorio. Las puntuaciones son heurísticas, no probabilidades calibradas.}
  \label{tab:clasificacion-experimental}
  \small
  \begin{tabularx}{\textwidth}{@{}Xrccc@{}}
@@ -273,6 +273,6 @@ La presencia de huecos no impide obtener métricas con los tiempos reales, pero 
 
 Los registros de entrenamiento aportan evidencia sobre el detector en las evaluaciones conservadas; no sustituyen una medición de detección sobre el video completo. La referencia de un solo individuo tampoco permite evaluar de forma global conservación de identidad, cruces, oclusiones y fragmentación. La revisión visual específica de esos casos y la disponibilidad de posiciones de otras trayectorias permitirían ampliar la evaluación, sin que la ausencia de ese análisis en este capítulo demuestre ausencia de material experimental.
 
-La clasificación posterior produce resultados inspeccionables, pero su adecuación científica permanece pendiente de comparación con categorías independientes. Los umbrales de inactividad y de cambios de rapidez requieren asimismo una evaluación experimental de su significado, más allá de que el cálculo reproduzca las reglas implementadas.
+La clasificación produce resultados inspeccionables, pero su adecuación científica permanece pendiente de comparación con categorías independientes. Los umbrales de inactividad y de cambios de rapidez requieren asimismo una evaluación experimental de su significado, más allá de que el cálculo reproduzca las reglas implementadas.
 
 Las magnitudes se mantienen en px, px/s y px/s$^2$. La alineación con Tracker no determina una escala física. La conversión a micrómetros continúa \textbf{A DEFINIR}, de acuerdo con el alcance establecido en los capítulos metodológicos. Los resultados disponibles permiten documentar la ejecución, su consistencia numérica y una comparación experimental acotada; no justifican todavía generalizaciones a otras condiciones de adquisición o a toda la población de microorganismos.

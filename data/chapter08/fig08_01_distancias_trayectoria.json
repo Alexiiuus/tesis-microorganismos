@@ -1,0 +1,60 @@
+{
+  "source_csv": "data/chapter11/Track_145.csv",
+  "source_sha256": "6ddb83851f801b94932318ca0f3e98268070f0ad9c860cfb82c733957d8fafcd",
+  "source_url": "https://drive.google.com/file/d/14DrfsyfycHRRr2j3C__gff7aN8rCsqvc/view",
+  "original_trajectory_image_url": "https://drive.google.com/file/d/19CvMjL0DK5pJ4kehpPFECGC593ext034/view",
+  "observations": 929,
+  "first_frame": 0,
+  "last_frame": 984,
+  "start_xy_px": [
+    307.8892822265625,
+    1667.827880859375
+  ],
+  "end_xy_px": [
+    670.8221435546875,
+    947.2713623046876
+  ],
+  "total_distance_px": 1322.3331423061982,
+  "net_distance_px": 806.7973464653138,
+  "straightness": 0.6101316836529025,
+  "gap_connections": [
+    [
+      52,
+      54
+    ],
+    [
+      58,
+      64
+    ],
+    [
+      694,
+      700
+    ],
+    [
+      703,
+      722
+    ],
+    [
+      727,
+      747
+    ],
+    [
+      759,
+      762
+    ],
+    [
+      762,
+      764
+    ],
+    [
+      818,
+      820
+    ],
+    [
+      821,
+      826
+    ]
+  ],
+  "distance_rule": "Sum Euclidean distances over every consecutive pair of saved observations, including gaps.",
+  "plot_rule": "Equal spatial scale in X and Y; inverted image Y; dotted connections across gaps; dashed endpoint displacement; no interpolation or smoothing."
+}

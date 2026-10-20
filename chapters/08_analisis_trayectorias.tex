@@ -27,23 +27,12 @@ El índice de rectitud se obtiene como $S=D_N/D_T$, cuando $D_T>0$. Un valor pr�
 
 Esta propiedad geométrica se distingue de la continuidad temporal del capítulo~\ref{chap:seguimiento}. Una trayectoria con gaps puede ser rectilínea, y otra registrada en cuadros consecutivos puede presentar un recorrido curvo.
 
-% Incorporar la imagen en figures/chapter08/fig08_01_distancias_trayectoria.png.
-% Mostrar el recorrido, los extremos y el segmento recto que los une.
+La Figura~\ref{fig:distancias-trayectoria} ilustra estas magnitudes con las posiciones conservadas de \texttt{Track\_145}. El recorrido acumulado incluye sus cambios de dirección, mientras que el segmento entre inicio y fin representa únicamente el desplazamiento neto. El ejemplo se utiliza aquí para mostrar el cálculo geométrico; su evaluación experimental se desarrolla en el capítulo~\ref{chap:evaluacion-resultados}.
+
 \begin{figure}[H]
   \centering
-  \IfFileExists{figures/chapter08/fig08_01_distancias_trayectoria.png}{%
-    \includegraphics[width=0.80\textwidth,height=0.28\textheight,keepaspectratio]{figures/chapter08/fig08_01_distancias_trayectoria.png}
-  }{%
-    \fbox{%
-      \begin{minipage}[c][4cm][c]{0.78\textwidth}
-        \centering
-        \textit{Figura pendiente de incorporación}\\[0.6em]
-        Trayectoria, posición inicial, posición final\\
-        y segmento de desplazamiento neto.
-      \end{minipage}%
-    }
-  }
-  \caption{Comparación de la distancia acumulada de una trayectoria ($D_T$) y la distancia entre sus extremos ($D_N$).}
+  \includegraphics[width=0.90\textwidth]{figures/chapter08/fig08_01_distancias_trayectoria.pdf}
+  \caption{Distancia acumulada ($D_T$), distancia entre extremos ($D_N$) y rectitud ($S$) de \texttt{Track\_145}, calculadas sobre sus 929 observaciones. El círculo indica el inicio y el cuadrado, el fin. Los tramos punteados conectan observaciones separadas por gaps y contribuyen a $D_T$ mediante la separación entre sus extremos; la línea discontinua representa $D_N$. Los ejes conservan la misma escala espacial y la orientación vertical de la imagen.}
   \label{fig:distancias-trayectoria}
 \end{figure}
 
@@ -170,7 +159,10 @@ El resumen general ordena trayectorias por distancia acumulada, desviación est�
 
 Una función auxiliar permite graficar la media de rapideces agrupadas por el cuadro final de cada segmento. Ese promedio reúne solo los tracks con una rapidez asociada al cuadro correspondiente; no presupone un conjunto constante de individuos ni equivale a una media de trayectorias completas. Su disponibilidad se distingue de los productos activados por defecto en el procesamiento general.
 
-Los ejemplos experimentales y las comparaciones con referencias manuales se reservan para el capítulo de evaluación y resultados. Aquí se documentan la construcción y el significado de los productos.
+\begin{samepage}
+El ejemplo geométrico de la Figura~\ref{fig:distancias-trayectoria} ilustra la construcción y el significado de las distancias y la rectitud. La evaluación experimental y las comparaciones con referencias manuales se desarrollan en el capítulo~\ref{chap:evaluacion-resultados}.
+\par
+\end{samepage}
 
 \section{Consideraciones y limitaciones}
 

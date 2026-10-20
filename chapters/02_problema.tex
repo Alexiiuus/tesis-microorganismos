@@ -62,11 +62,40 @@ La unidad experimental es cada video microscópico obtenido bajo una determinada
 
 Cada grabación se encuentra asociada con una muestra, una temperatura y determinadas condiciones de adquisición. Dentro de un mismo video pueden detectarse y seguirse varios microorganismos, por lo que es posible obtener métricas individuales y posteriormente construir indicadores generales para la grabación.
 
-La relación entre las unidades de análisis puede resumirse de la siguiente manera:
+La Figura~\ref{fig:unidades-analisis} resume la relación entre las unidades de análisis y las métricas obtenidas para cada trayectoria.
 
-\begin{itemize}
-  \item Video microscópico → microorganismos detectados y seguidos → trayectorias individuales → métricas cuantitativas de movimiento.
-\end{itemize}
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    box/.style={thesisflow,text width=2.65cm,minimum height=1cm,font=\footnotesize},
+    heading/.style={align=center,text width=2.9cm,font=\footnotesize\bfseries},
+    every node/.style={outer sep=0pt}
+  ]
+    \node[heading] at (0,1.9) {Unidad\\experimental};
+    \node[heading] at (3.6,1.9) {Unidad\\primaria};
+    \node[heading] at (7.2,1.9) {Unidad\\secundaria};
+    \node[heading] at (10.8,1.9) {Magnitudes\\derivadas};
+
+    \node[box] (video) at (0,0) {Video\\microscópico};
+    \node[box] (organismo-a) at (3.6,0.7) {Microorganismo A};
+    \node[box] (organismo-b) at (3.6,-0.7) {Microorganismo B};
+    \node[box] (trayectoria-a) at (7.2,0.7) {Trayectoria A};
+    \node[box] (trayectoria-b) at (7.2,-0.7) {Trayectoria B};
+    \node[box] (metricas-a) at (10.8,0.7) {Métricas de A};
+    \node[box] (metricas-b) at (10.8,-0.7) {Métricas de B};
+
+    \draw[thesisarrow] (video.east) -- ++(0.25,0) |- (organismo-a.west);
+    \draw[thesisarrow] (video.east) -- ++(0.25,0) |- (organismo-b.west);
+    \draw[thesisarrow] (organismo-a.east) -- (trayectoria-a.west);
+    \draw[thesisarrow] (organismo-b.east) -- (trayectoria-b.west);
+    \draw[thesisarrow] (trayectoria-a.east) -- (metricas-a.west);
+    \draw[thesisarrow] (trayectoria-b.east) -- (metricas-b.west);
+  \end{tikzpicture}
+  \caption{Relación entre las unidades de análisis. Un mismo video permite observar varios microorganismos y obtener sus trayectorias y métricas individuales. Los individuos A y B se muestran a modo esquemático.}
+  \label{fig:unidades-analisis}
+\end{figure}
 
 \section{Variables y magnitudes de interés}
 
@@ -78,6 +107,7 @@ El estudio adopta un enfoque cuantitativo basado en variables asociadas con el d
 
 La posición representa la ubicación estimada de un microorganismo en un cuadro determinado del video. Para el cuadro $f_i$, se expresa mediante el par de coordenadas:
 
+\nopagebreak[4]
 \[
 \mathbf{p}_i=(x_i,y_i).
 \]

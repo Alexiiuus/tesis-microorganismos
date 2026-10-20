@@ -42,6 +42,11 @@ La elección se apoyó en la disponibilidad de pesos preentrenados, la facilidad
 La aplicación carga el archivo indicado por \texttt{path\_model} mediante \texttt{YOLO(path\_model)}. El entrenamiento se realizó previamente en Google Colab y no forma parte del procesamiento actual de videos. Por tanto, la ruta configurable determina qué pesos se utilizan en cada ejecución.
 
 \section{Preparación y adaptación del detector}
+\label{sec:preparacion-detector}
+
+El ajuste del detector comprendió dos experiencias de entrenamiento a partir de pesos preentrenados, realizadas con el material microscópico disponible. La posibilidad de ampliar ese material estuvo condicionada por la disponibilidad estacional de los microorganismos: su obtención se concentra en un período particular del año, cuando se reúnen las condiciones necesarias para su aparición. Durante 2026 no se observaron los microorganismos de interés, por lo que no fue posible incorporar nuevas capturas de ese período al conjunto de datos.
+
+Esta restricción limitó la ampliación del conjunto de imágenes originales y la incorporación de nuevas observaciones. Los aumentos de datos generan variantes de las imágenes disponibles, pero no equivalen a obtener nuevas muestras experimentales. Las dos experiencias de entrenamiento deben interpretarse dentro de esa disponibilidad de material.
 
 La construcción inicial se realizó en Roboflow con imágenes extraídas de un video de muestra. El primer informe documenta 100 imágenes anotadas: 40 manualmente y 60 con asistencia de un modelo preliminar, cuyas propuestas se corrigieron de forma manual. Esta cifra describe el conjunto inicial y no debe confundirse con las cantidades de las exportaciones posteriores.
 

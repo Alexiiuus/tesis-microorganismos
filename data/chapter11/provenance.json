@@ -49,10 +49,35 @@
     "entrenamiento_v2.csv": {
       "sha256": "835f814172a58678d0a44477860f1c69afaee5b69cd487ff4ba1e1d9f04d5e04",
       "url": "https://drive.google.com/file/d/1pbAcsIthuRlojRKUtKapJ3ETsiINFKIT/view"
+    },
+    "training_train_args.yaml": {
+      "sha256": "17a79238075d2377589ae1c2f5280e9c7442df170959c601248d5b6b051709ac",
+      "url": "https://drive.google.com/file/d/1xofe2GDmCAUgDQzyG1PNcLSfdiRst6_j/view"
+    },
+    "training_train2_args.yaml": {
+      "sha256": "9f49dd81f0fecc37d2f3388bca08bfa9f0a3b6acbcfe8e4bc787d645c7253765",
+      "url": "https://drive.google.com/file/d/14DvOdJth-CoLhQVrOikYKmK15-0n_2A3/view"
     }
   },
   "video_confirmed": "primer_minuto.mp4",
   "original_reference_video_label": "prueba_tracker.mp4",
   "relationship": "Different videos; author confirms tests on primer_minuto; source label retained.",
-  "analysis_date": "2026-10-19"
+  "analysis_date": "2026-10-19",
+  "training_runs": {
+    "train": {
+      "order": 1,
+      "local_results": "entrenamiento_v2.csv",
+      "recorded_data_path": "/content/Micro-2/data.yaml",
+      "first_functional_dataset_confirmed_by_author": "Micro.v2-poc_morg_v1.yolov11"
+    },
+    "train2": {
+      "order": 2,
+      "local_results": "entrenamiento_v1.csv",
+      "recorded_data_path": "/content/Micro-4/data.yaml",
+      "weights_used_for_video": true,
+      "exact_identity_with_Micro_v5_export": "not established"
+    }
+  },
+  "dataset_documentation": "dataset_sources.json",
+  "dataset_identification_corrected_on": "2026-10-20"
 }

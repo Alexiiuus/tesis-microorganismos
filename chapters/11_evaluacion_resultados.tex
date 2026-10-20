@@ -7,7 +7,7 @@ La evidencia cuantitativa de seguimiento se concentra en una trayectoria de refe
 
 \section{Material experimental y configuración de la prueba}
 
-La prueba analizada corresponde a \texttt{primer\_minuto.mp4}, un video de $1080\times2336$ píxeles, 30 cuadros por segundo y 1800 cuadros, equivalentes a 60 s de imagen. El archivo \texttt{run\_metadata.json} identifica este video y los pesos del modelo adaptado con la versión 1 del dataset. Las versiones y la preparación de los conjuntos de imágenes se describieron en el capítulo~\ref{chap:deteccion}.
+La prueba analizada corresponde a \texttt{primer\_minuto.mp4}, un video de $1080\times2336$ píxeles, 30 cuadros por segundo y 1800 cuadros, equivalentes a 60 s de imagen. El archivo \texttt{run\_metadata.json} identifica este video y los pesos \texttt{best.pt} de la segunda corrida, conservada en \texttt{train2}. La preparación y la función de las tres exportaciones de imágenes se describieron en el capítulo~\ref{chap:deteccion}; el conjunto sin aumentar \texttt{Micro.v6} no se identifica como el dataset del primer entrenamiento.
 
 El Cuadro~\ref{tab:configuracion-experimental} reúne la configuración conservada. Los umbrales de detección efectivos difieren de los valores predeterminados de la aplicación: la prueba utilizó $0{,}4$ tanto para confianza como para IoU de NMS. Este último parámetro no constituye un umbral de evaluación del seguimiento.
 
@@ -21,7 +21,7 @@ El Cuadro~\ref{tab:configuracion-experimental} reúne la configuración conserva
   Elemento & Configuración \\
   \midrule
   Video de la prueba & \texttt{primer\_minuto.mp4}. \\
-  Modelo & YOLO11x, pesos \texttt{best.pt} de la versión 1. \\
+  Modelo & YOLO11x, pesos \texttt{best.pt} de la segunda corrida (\texttt{train2}). \\
   Confianza e IoU de NMS & $0{,}4$ y $0{,}4$, respectivamente. \\
   Frecuencia de análisis & 30 FPS. \\
   Selección de trayectorias & Al menos 20 observaciones; filtro por cantidad de cuadros. \\
@@ -42,7 +42,7 @@ Los metadatos de procesamiento registran Python 3.13.15, pero no las revisiones 
 
 \section{Resultados registrados del detector}
 
-Se examinaron los archivos de resultados de los dos entrenamientos descritos en el capítulo~\ref{chap:deteccion}, ambos con 100 épocas. El Cuadro~\ref{tab:maximos-detector} resume los máximos individuales de precisión, sensibilidad y mAP. Cada máximo pertenece a su propia época: la fila de una versión no representa una evaluación única con los cuatro valores simultáneos.
+Se examinaron los archivos de resultados de los dos entrenamientos descritos en el capítulo~\ref{chap:deteccion}, ambos con 100 épocas: el primero se conserva en \texttt{train} y el segundo en \texttt{train2}. La primera versión funcional se obtuvo con \texttt{Micro.v2}. Los resultados se identifican por corrida para distinguirlos de las exportaciones de imágenes. El Cuadro~\ref{tab:maximos-detector} resume los máximos individuales de precisión, sensibilidad y mAP. Cada máximo pertenece a su propia época: la fila de una corrida no representa una evaluación única con los cuatro valores simultáneos.
 
 \begin{table}[htbp]
  \centering
@@ -51,15 +51,15 @@ Se examinaron los archivos de resultados de los dos entrenamientos descritos en 
  \small
  \begin{tabular}{@{}lcccc@{}}
   \toprule
-  Dataset & Precisión & Sensibilidad & mAP@0,50 & mAP@0,50:0,95 \\
+  Corrida & Precisión & Sensibilidad & mAP@0,50 & mAP@0,50:0,95 \\
   \midrule
-  Versión 1 & $0{,}98293$ (79) & $0{,}98913$ (83) & $0{,}99216$ (93) & $0{,}76435$ (96) \\
-  Versión 2 & $1{,}00000$ (56) & $0{,}95652$ (16) & $0{,}99106$ (58) & $0{,}75651$ (72) \\
+  Primera & $1{,}00000$ (56) & $0{,}95652$ (16) & $0{,}99106$ (58) & $0{,}75651$ (72) \\
+  Segunda & $0{,}98293$ (79) & $0{,}98913$ (83) & $0{,}99216$ (93) & $0{,}76435$ (96) \\
   \bottomrule
  \end{tabular}
 \end{table}
 
-Para mostrar métricas simultáneas, el Cuadro~\ref{tab:filas-detector} toma la fila completa de la época con mayor mAP@0,50:0,95 de cada entrenamiento. La versión 1 alcanza en esa fila un valor ligeramente superior al de la versión 2. La diferencia describe estos registros; no demuestra una ventaja general de una versión ni permite atribuir causalmente el resultado a los aumentos de datos. No se dispone de repeticiones que cuantifiquen la variabilidad entre entrenamientos y tampoco se ha establecido la independencia temporal de las imágenes de las particiones.
+Para mostrar métricas simultáneas, el Cuadro~\ref{tab:filas-detector} toma la fila completa de la época con mayor mAP@0,50:0,95 de cada entrenamiento. La segunda corrida alcanza en esa fila un valor ligeramente superior al de la primera. La diferencia describe estos registros; no demuestra una ventaja general de un modelo ni permite atribuir causalmente el resultado a los aumentos de datos. No se dispone de repeticiones que cuantifiquen la variabilidad entre entrenamientos y tampoco se ha establecido la independencia temporal de las imágenes de las particiones. La comparación no constituye un experimento entre datos aumentados y datos sin aumentar.
 
 \begin{table}[htbp]
  \centering
@@ -68,10 +68,10 @@ Para mostrar métricas simultáneas, el Cuadro~\ref{tab:filas-detector} toma la 
  \small
  \begin{tabular}{@{}lrcccc@{}}
   \toprule
-  Dataset & Época & Precisión & Sensibilidad & mAP@0,50 & mAP@0,50:0,95 \\
+  Corrida & Época & Precisión & Sensibilidad & mAP@0,50 & mAP@0,50:0,95 \\
   \midrule
-  Versión 1 & 96 & $0{,}96178$ & $0{,}97283$ & $0{,}99136$ & $0{,}76435$ \\
-  Versión 2 & 72 & $0{,}96921$ & $0{,}94783$ & $0{,}98568$ & $0{,}75651$ \\
+  Primera & 72 & $0{,}96921$ & $0{,}94783$ & $0{,}98568$ & $0{,}75651$ \\
+  Segunda & 96 & $0{,}96178$ & $0{,}97283$ & $0{,}99136$ & $0{,}76435$ \\
   \bottomrule
  \end{tabular}
 \end{table}
@@ -81,11 +81,11 @@ La Figura~\ref{fig:curvas-detector} muestra la evolución de las dos métricas d
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=\textwidth]{figures/chapter11/fig11_01_metricas_detector.pdf}
- \caption{Evolución de mAP en los registros de entrenamiento de las dos versiones. Cada punto corresponde a una época. Los registros no constituyen una evaluación adicional del video experimental ni una nueva medición sobre la partición de prueba.}
+ \caption{Evolución de mAP en los registros de las dos corridas de entrenamiento: primera (\texttt{train}) y segunda (\texttt{train2}). Cada punto corresponde a una época. Los registros no constituyen una evaluación adicional del video experimental ni una nueva medición sobre la partición de prueba.}
  \label{fig:curvas-detector}
 \end{figure}
 
-Se detectaron valores no numéricos en al menos una pérdida de validación de 11 épocas de la versión 1 y 20 de la versión 2. Las cuatro métricas de detección examinadas contienen valores finitos. Esta incidencia debe conservarse al interpretar el entrenamiento: no se imputaron las pérdidas ni se dedujo su causa a partir del CSV. La información disponible tampoco permite identificar de forma concluyente la época efectiva de \texttt{best.pt}; los cuadros anteriores no se presentan como métricas verificadas de ese archivo de pesos.
+Se detectaron valores no numéricos en al menos una pérdida de validación de 20 épocas de la primera corrida y 11 de la segunda. Las cuatro métricas de detección examinadas contienen valores finitos. Esta incidencia debe conservarse al interpretar el entrenamiento: no se imputaron las pérdidas ni se dedujo su causa a partir del CSV. La información disponible tampoco permite identificar de forma concluyente la época efectiva de \texttt{best.pt}; los cuadros anteriores no se presentan como métricas verificadas de ese archivo de pesos.
 
 \section{Referencia manual y correspondencia temporal}
 
@@ -271,7 +271,7 @@ El caso permite vincular una referencia manual parcial con una trayectoria autom
 
 La presencia de huecos no impide obtener métricas con los tiempos reales, pero limita lo que esas métricas representan. La distancia y la rapidez describen conexiones entre observaciones, sin reconstruir el movimiento durante las ausencias. El contraste temporal con Tracker muestra discrepancias de rapidez mayores que las que podría sugerir la superposición visual. Por ello, la validación de posición y la de magnitudes derivadas deben conservarse como evaluaciones diferenciadas.
 
-Los resultados favorables registrados durante el entrenamiento respaldan la viabilidad de adaptar un modelo preentrenado al material disponible. Su alcance debe interpretarse considerando las dos experiencias de entrenamiento y la disponibilidad estacional de muestras descritas en la sección~\ref{sec:preparacion-detector}. Ampliar el conjunto con imágenes originales más diversas y representativas constituye una línea concreta para evaluar mejoras del detector; su efecto deberá comprobarse experimentalmente con datos independientes.
+Los resultados favorables de las dos corridas respaldan la viabilidad de adaptar un modelo preentrenado al material disponible. La segunda, utilizada en la prueba, alcanza un máximo de mAP@0,50:0,95 ligeramente mayor. Estos resultados deben interpretarse considerando la disponibilidad estacional descrita en la sección~\ref{sec:preparacion-detector}. La exportación sin aumentar \texttt{Micro.v6} tiene un uso posterior y no representa otro entrenamiento. Un conjunto de imágenes originales más diverso y representativo permitiría evaluar mejoras, cuyo efecto deberá comprobarse con datos independientes.
 
 Los registros de entrenamiento aportan evidencia sobre el detector en las evaluaciones conservadas; no sustituyen una medición de detección sobre el video completo. La referencia de un solo individuo tampoco permite evaluar de forma global conservación de identidad, cruces, oclusiones y fragmentación. La revisión visual específica de esos casos y la disponibilidad de posiciones de otras trayectorias permitirían ampliar la evaluación, sin que la ausencia de ese análisis en este capítulo demuestre ausencia de material experimental.
 

@@ -10,6 +10,23 @@ Las fuentes se conservan sin modificar. El autor confirmó que las pruebas corre
 | `entrenamiento_v1.csv` (carpeta `train2`) | https://drive.google.com/file/d/1gm2NWY6_W7YFaEAd-H4Fc8UJirTQOa_M/view |
 | `entrenamiento_v2.csv` (carpeta `train`) | https://drive.google.com/file/d/1pbAcsIthuRlojRKUtKapJ3ETsiINFKIT/view |
 
+## Identificación de datasets y corridas
+
+Los sufijos de los CSV y las claves `v1`/`v2` de `results.json` se conservan por compatibilidad con los archivos ya publicados. Son identificadores históricos, no versiones de Roboflow ni orden cronológico. No se modificaron los CSV originales.
+
+| Corrida | Carpeta conservada | CSV local | Ruta de datos registrada en `args.yaml` |
+|---|---|---|---|
+| Primera | `train` | `entrenamiento_v2.csv` | `/content/Micro-2/data.yaml` |
+| Segunda, pesos usados en la prueba | `train2` | `entrenamiento_v1.csv` | `/content/Micro-4/data.yaml` |
+
+| Exportación | Imágenes train/valid/test | Función |
+|---|---|---|
+| `Micro.v2-poc_morg_v1.yolov11` | 100 / 6 / 4 | Primer entrenamiento funcional, confirmado por el autor. Incluye aumentos; clase `Morg`. |
+| `Micro.v5-poc_morg_v3.yolov11` | 580 / 71 / 34 | Conjunto ampliado conservado con aumentos; clase `E`. |
+| `Micro.v6-poc_datasetv1.yolov11` | 58 / 71 / 34 | Imágenes sin aumentar para el uso posterior de sus detecciones; clase `E`. No es el dataset del primer entrenamiento. |
+
+La segunda corrida registra `Micro-4`; esa ruta no demuestra identidad exacta con la exportación `Micro.v5` conservada. Las tablas y curvas identifican los resultados por corrida. La comparación no representa un experimento entre una exportación sin aumentos y otra con aumentos. La composición y los archivos descriptivos consultados se registran en `dataset_sources.json`.
+
 ## Reproducción
 
 Se utilizó el sistema en la revisión `cf1db739a9e22a2201c9bad20ab9baa328194f54`. La revisión de la ejecución histórica no consta en sus metadatos. El script verifica las huellas Git de los nueve módulos utilizados antes de ejecutar el posprocesamiento.

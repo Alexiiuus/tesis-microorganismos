@@ -79,6 +79,8 @@ El material experimental comprende videos microscópicos proporcionados por el G
 
 Como resume la Figura~\ref{fig:datos-unidades}, las imágenes anotadas se utilizaron en la adaptación previa del detector; los videos constituyen la entrada del sistema; las trayectorias reconstruidas con Tracker sirven como referencia manual; y la escala micrométrica se utiliza para establecer la relación entre píxeles y distancia física.
 
+Los conjuntos de imágenes se distinguen también por su finalidad. La exportación \texttt{Micro.v2} se utilizó para entrenar la primera versión funcional del detector; \texttt{Micro.v5} conserva un conjunto ampliado con aumentos; y \texttt{Micro.v6} reúne imágenes sin aumentar para el uso posterior de sus detecciones. Este último conjunto no corresponde al primer entrenamiento. Su composición y la identificación de las corridas se detallan en la sección~\ref{sec:preparacion-detector}.
+
 Las unidades de análisis mantienen la organización definida en el capítulo 2: el video constituye la unidad experimental, el microorganismo seguido la unidad primaria de observación y su secuencia de posiciones la trayectoria analizada. El identificador es computacional, por lo que una fragmentación puede representar a un mismo microorganismo mediante más de un ID.
 
 Para preservar la trazabilidad, los procedimientos manual y automático deben utilizar el mismo archivo de video y conservar la información necesaria para identificarlo, junto con la configuración de procesamiento y los productos derivados.

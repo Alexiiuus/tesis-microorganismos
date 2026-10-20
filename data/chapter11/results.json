@@ -2736,6 +2736,8 @@
   },
   "training": {
     "v1": {
+      "run_folder": "train2",
+      "run_order": 2,
       "individual_maxima": {
         "metrics/precision(B)": {
           "value": 0.98293,
@@ -2764,6 +2766,8 @@
       "epochs_with_nan_validation_loss": 11
     },
     "v2": {
+      "run_folder": "train",
+      "run_order": 1,
       "individual_maxima": {
         "metrics/precision(B)": {
           "value": 1.0,

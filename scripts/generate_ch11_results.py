@@ -129,7 +129,8 @@ def main():
         t.columns = t.columns.str.strip()
         assert len(t) == 100 and np.isfinite(t[columns]).all().all()
         best = t.loc[t[columns[-1]].idxmax()]
-        training[version] = {"curve": t,
+        run_folder, run_order = {"v1": ("train2", 2), "v2": ("train", 1)}[version]
+        training[version] = {"curve": t, "run_folder": run_folder, "run_order": run_order,
             "individual_maxima": {col: {"value": float(t[col].max()), "epoch": int(t.loc[t[col].idxmax(), "epoch"])} for col in columns},
             "row_at_maximum_map50_95": {col: float(best[col]) for col in ["epoch"]+columns},
             "epochs_with_nan_validation_loss": int(t[["val/box_loss", "val/cls_loss", "val/dfl_loss"]].isna().any(axis=1).sum())}
@@ -166,9 +167,10 @@ def main():
     decimal = FuncFormatter(lambda value, _: f"{value:g}".replace(".", ","))
     fig, axes = plt.subplots(1, 2, figsize=(6.3, 2.75), layout="constrained")
     for ax, metric, title in zip(axes, columns[-2:], ["A. mAP@0,50", "B. mAP@0,50:0,95"]):
-        for v, style in [("v1", "-"), ("v2", "--")]:
+        for v, style in [("v2", "--"), ("v1", "-")]:
             curve = training[v]["curve"]
-            ax.plot(curve.epoch, curve[metric], style, lw=1, label=f"Versión {v[-1]}")
+            label = "Primera (train)" if training[v]["run_order"] == 1 else "Segunda (train2)"
+            ax.plot(curve.epoch, curve[metric], style, lw=1, label=label)
         ax.set(title=title, xlabel="Época", ylim=(0, 1.03), xlim=(1, 100))
         ax.yaxis.set_major_formatter(decimal)
         ax.grid(alpha=.2)

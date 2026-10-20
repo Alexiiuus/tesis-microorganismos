@@ -1,0 +1,49 @@
+{
+  "verified_on": "2026-10-20",
+  "author_clarification": {
+    "first_functional_training_dataset": "Micro.v2-poc_morg_v1.yolov11",
+    "unaugmented_dataset_role": "Micro.v6-poc_datasetv1.yolov11: images without augmentation for later use of detections, not the first training dataset."
+  },
+  "datasets": [
+    {
+      "name": "Micro.v2-poc_morg_v1.yolov11",
+      "folder_url": "https://drive.google.com/drive/folders/126kOf58vg-DPiyTB54shrw3cDsykyd2R",
+      "partition_counts": {
+        "train": 100,
+        "valid": 6,
+        "test": 4,
+        "total": 110
+      },
+      "class_name": "Morg",
+      "readme_url": "https://drive.google.com/file/d/1WiulJZog6zpaA1zYP34Hm16ZDUq698Dj/view",
+      "readme_text": "\nMicro - v2 POC_MORG_V1\n==============================\n\nThis dataset was exported via roboflow.com on February 17, 2026 at 10:01 PM GMT\n\nRoboflow is an end-to-end computer vision platform that helps you\n* collaborate with your team on computer vision projects\n* collect & organize images\n* understand and search unstructured image data\n* annotate, and create datasets\n* export, train, and deploy computer vision models\n* use active learning to improve your dataset over time\n\nFor state of the art Computer Vision training notebooks you can use with this dataset,\nvisit https://github.com/roboflow/notebooks\n\nTo find over 100k other datasets and pre-trained models, visit https://universe.roboflow.com\n\nThe dataset includes 110 images.\nMorg are annotated in YOLOv11 format.\n\nThe following pre-processing was applied to each image:\n* Auto-orientation of pixel data (with EXIF-orientation stripping)\n* Resize to 512x512 (Stretch)\n\nThe following augmentation was applied to create 10 versions of each source image:\n* 50% probability of horizontal flip\n* Equal probability of one of the following 90-degree rotations: none, clockwise, counter-clockwise\n* Random rotation of between -15 and +15 degrees\n* Random Gaussian blur of between 0 and 1.4 pixels\n* Salt and pepper noise was applied to 0.1 percent of pixels\n\n\n"
+    },
+    {
+      "name": "Micro.v5-poc_morg_v3.yolov11",
+      "folder_url": "https://drive.google.com/drive/folders/1BOm8oY_sdL3f1iG02OEi2v6W73P-b5si",
+      "partition_counts": {
+        "train": 580,
+        "valid": 71,
+        "test": 34,
+        "total": 685
+      },
+      "class_name": "E",
+      "readme_url": "https://drive.google.com/file/d/104Gk70S48qGlokicAe4JgDeRzK_4nfaP/view",
+      "readme_text": "\nMicro - v5 POC_MORG_V3\n==============================\n\nThis dataset was exported via roboflow.com on February 26, 2026 at 12:45 AM GMT\n\nRoboflow is an end-to-end computer vision platform that helps you\n* collaborate with your team on computer vision projects\n* collect & organize images\n* understand and search unstructured image data\n* annotate, and create datasets\n* export, train, and deploy computer vision models\n* use active learning to improve your dataset over time\n\nFor state of the art Computer Vision training notebooks you can use with this dataset,\nvisit https://github.com/roboflow/notebooks\n\nTo find over 100k other datasets and pre-trained models, visit https://universe.roboflow.com\n\nThe dataset includes 685 images.\nMorg are annotated in YOLOv11 format.\n\nThe following pre-processing was applied to each image:\n* Auto-orientation of pixel data (with EXIF-orientation stripping)\n* Resize to 512x512 (Stretch)\n\nThe following augmentation was applied to create 10 versions of each source image:\n* 50% probability of horizontal flip\n* Equal probability of one of the following 90-degree rotations: none, clockwise, counter-clockwise\n* Random rotation of between -15 and +15 degrees\n* Random Gaussian blur of between 0 and 1.4 pixels\n* Salt and pepper noise was applied to 0.1 percent of pixels\n\n\n"
+    },
+    {
+      "name": "Micro.v6-poc_datasetv1.yolov11",
+      "folder_url": "https://drive.google.com/drive/folders/1UJD8d0jMRE1C9245mKJ1WQHf9IDbYsuY",
+      "partition_counts": {
+        "train": 58,
+        "valid": 71,
+        "test": 34,
+        "total": 163
+      },
+      "class_name": "E",
+      "readme_url": "https://drive.google.com/file/d/1Ait5XqX4uyE6koaldb4XZ4IIZKrVc4SQ/view",
+      "readme_text": "\nMicro - v6 POC_DATASETV1\n==============================\n\nThis dataset was exported via roboflow.com on March 2, 2026 at 6:43 PM GMT\n\nRoboflow is an end-to-end computer vision platform that helps you\n* collaborate with your team on computer vision projects\n* collect & organize images\n* understand and search unstructured image data\n* annotate, and create datasets\n* export, train, and deploy computer vision models\n* use active learning to improve your dataset over time\n\nFor state of the art Computer Vision training notebooks you can use with this dataset,\nvisit https://github.com/roboflow/notebooks\n\nTo find over 100k other datasets and pre-trained models, visit https://universe.roboflow.com\n\nThe dataset includes 163 images.\nMorg are annotated in YOLOv11 format.\n\nThe following pre-processing was applied to each image:\n* Auto-orientation of pixel data (with EXIF-orientation stripping)\n\nNo image augmentation techniques were applied.\n\n\n"
+    }
+  ],
+  "run_identification_note": "train is the first run; train2 is the second and provides the weights used for primer_minuto. The second args.yaml records /content/Micro-4/data.yaml; exact identity with the preserved Micro.v5 export is not established."
+}

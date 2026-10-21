@@ -48,9 +48,9 @@ Por indicación del autor, el borrador no incluye guardas ni separadores en blan
 
 ## Continuación de la escritura
 
-Los capítulos 12 (discusión) y 13 (conclusiones y trabajo futuro) siguen pendientes; su ausencia no se atribuye a una exigencia de esta resolución. El capítulo 2 anuncia objetivos y preguntas, pero todavía no contiene apartados que los formalicen. Antes de evaluar su cumplimiento en el capítulo 12, recuperar su formulación aprobada de las fuentes del proyecto y validarla con el autor, sin reconstruirla a partir de los resultados.
+La organización prevista comprende doce capítulos. El capítulo 11 integra evaluación experimental, resultados y discusión; su sección 11.10 concentra la interpretación de los resultados, sus aportes y sus limitaciones. El capítulo 12 se reserva para «Conclusiones y trabajo futuro» y permanece pendiente de redacción. Se descarta el capítulo independiente de discusión.
 
-Esquema propuesto para el capítulo 12: relación con los objetivos; interpretación del detector y seguimiento; confiabilidad de las magnitudes; alcance de la clasificación; aportes al trabajo experimental; limitaciones y validez. Usar un cuadro de objetivo, evidencia, alcance y pendiente, una vez verificados los objetivos. Evitar duplicar la discusión de 11.10 y no cuantificar ahorro de tiempo sin mediciones comparables.
+Por decisión del autor, las preguntas de investigación se eliminaron de los capítulos iniciales para reducir su extensión; no deben recuperarse como requisito para continuar. Se corrigieron los anuncios de apartados de preguntas, objetivos y justificación que no figuran en el capítulo 2. La discusión utiliza la propuesta y el alcance ya escritos, las pruebas y los resultados disponibles. La reducción del tiempo de trabajo sigue pendiente de mediciones comparables.
 
 ## Verificación inicial de la adecuación (antes de retirar las páginas en blanco)
 

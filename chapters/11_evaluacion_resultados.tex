@@ -1,9 +1,9 @@
-\chapter{Evaluación experimental y resultados}
+\chapter{Evaluación experimental, resultados y discusión}
 \label{chap:evaluacion-resultados}
 
 Este capítulo presenta los resultados obtenidos con los datos experimentales conservados. Se distinguen las métricas registradas durante el entrenamiento del detector, la comparación de una trayectoria automática con anotaciones manuales y el análisis de sus magnitudes y categorías de movimiento. Las pruebas controladas del capítulo~\ref{chap:implementacion-pruebas} verifican operaciones e integración; aquí se examina qué información aportan los datos reales y hasta dónde permiten evaluar el sistema desarrollado.
 
-La evidencia cuantitativa de seguimiento se concentra en una trayectoria de referencia parcial. Por tanto, los resultados describen un caso experimental y no una estimación del desempeño sobre todos los microorganismos del video. Las métricas y categorías se obtienen de las posiciones conservadas mediante las funciones de análisis del sistema desarrollado.
+La evidencia cuantitativa de seguimiento se concentra en una trayectoria de referencia parcial. Por tanto, los resultados describen un caso experimental y no una estimación del desempeño sobre todos los microorganismos del video. Las métricas y categorías se obtienen de las posiciones conservadas mediante las funciones de análisis del sistema desarrollado. La sección final discute los aportes de la herramienta y el alcance de la evidencia reunida.
 
 \section{Material experimental y configuración de la prueba}
 
@@ -267,6 +267,8 @@ La coincidencia de categoría entre las coordenadas manuales y automáticas apor
 
 \section{Discusión y alcance de los resultados}
 
+En relación con la propuesta del trabajo, la implementación reúne detección, seguimiento, filtrado y análisis en un flujo que conserva posiciones y productos inspeccionables. Las pruebas del capítulo~\ref{chap:implementacion-pruebas} respaldan la consistencia de los cálculos y la integración en los casos cubiertos, mientras que la comparación experimental permite examinar su comportamiento sobre un recorrido real. Esta distinción entre funcionalidad implementada, verificación numérica y evaluación experimental delimita el alcance de lo conseguido: la integración del procedimiento y la comparación realizada constituyen aportes comprobables, cuya extensión a otros individuos y videos requiere ampliar la evaluación.
+
 El caso permite vincular una referencia manual parcial con una trayectoria automática y reconstruir sus productos de análisis. La inversión de Y y el anclaje inicial reducen una discrepancia dominada por sistemas de coordenadas incompatibles. Manteniendo fija la transformación, los puntos posteriores conservan una separación media de $5{,}33$ px. Esta evidencia respalda la similitud espacial del par examinado, con las restricciones introducidas por el registro respecto del modelo.
 
 La presencia de huecos no impide obtener métricas con los tiempos reales, pero limita lo que esas métricas representan. La distancia y la rapidez describen conexiones entre observaciones, sin reconstruir el movimiento durante las ausencias. El contraste temporal con Tracker muestra discrepancias de rapidez mayores que las que podría sugerir la superposición visual. Por ello, la validación de posición y la de magnitudes derivadas deben conservarse como evaluaciones diferenciadas.
@@ -276,5 +278,7 @@ Los resultados favorables de las dos corridas respaldan la viabilidad de adaptar
 Los registros de entrenamiento aportan evidencia sobre el detector en las evaluaciones conservadas; no sustituyen una medición de detección sobre el video completo. La referencia de un solo individuo tampoco permite evaluar de forma global conservación de identidad, cruces, oclusiones y fragmentación. La revisión visual específica de esos casos y la disponibilidad de posiciones de otras trayectorias permitirían ampliar la evaluación, sin que la ausencia de ese análisis en este capítulo demuestre ausencia de material experimental.
 
 La clasificación produce resultados inspeccionables, pero su adecuación científica permanece pendiente de comparación con categorías independientes. Los umbrales de inactividad y de cambios de rapidez requieren asimismo una evaluación experimental de su significado, más allá de que el cálculo reproduzca las reglas implementadas.
+
+Para el Grupo de Física de la Atmósfera, disponer de posiciones, métricas y visualizaciones vinculadas con una misma ejecución ofrece una base para revisar trayectorias y organizar su análisis con criterios explícitos. En relación con Tracker, TrackMate y CellProfiler, revisados en el capítulo 3, el aporte específico se sitúa en la adaptación del flujo y de sus productos al material experimental del grupo. Esa comparación es conceptual; evaluar ventajas de precisión o eficiencia entre herramientas requeriría procesar casos equivalentes bajo condiciones documentadas. La posible reducción de la intervención manual permanece como una utilidad por cuantificar mediante mediciones que incluyan la preparación, el procesamiento y la revisión de resultados.
 
 Las magnitudes se mantienen en px, px/s y px/s$^2$. La alineación con Tracker no determina una escala física. La conversión a micrómetros continúa \textbf{A DEFINIR}, de acuerdo con el alcance establecido en los capítulos metodológicos. Los resultados disponibles permiten documentar la ejecución, su consistencia numérica y una comparación experimental acotada; no justifican todavía generalizaciones a otras condiciones de adquisición o a toda la población de microorganismos.

@@ -1,13 +1,13 @@
 \chapter{Conclusiones y trabajo futuro}
 \label{chap:conclusiones}
 
-El trabajo abordó el desarrollo de una herramienta para obtener información cuantitativa del movimiento de microorganismos acuáticos a partir de videos microscópicos del Grupo de Física de la Atmósfera. Este capítulo sintetiza los aportes de la implementación y de su evaluación, y presenta las líneas que permitirían ampliar su aplicación experimental. La discusión de los resultados y de sus limitaciones se desarrolló en el capítulo~\ref{chap:evaluacion-resultados}.
+El trabajo abordó el desarrollo de un sistema de visión por computadora para obtener información cuantitativa del movimiento de microorganismos acuáticos a partir de videos adquiridos mediante microscopía óptica en una línea experimental del GFA. Este capítulo sintetiza los aportes de la implementación y de su evaluación, y presenta las líneas que permitirían ampliar su aplicación experimental. La discusión de los resultados y de sus limitaciones se desarrolló en el capítulo~\ref{chap:evaluacion-resultados}.
 
 \section{Conclusiones}
 
 Se integraron en un mismo procedimiento la detección mediante un modelo preentrenado adaptado al material disponible, la asociación temporal de las detecciones, la selección de trayectorias y el cálculo de magnitudes de movimiento. Sobre las posiciones registradas se incorporaron visualizaciones, herramientas de inspección individual y una clasificación de patrones basada en reglas. Esta integración permite reutilizar las trayectorias en distintos análisis y conservar los parámetros principales del procesamiento, sin volver a ejecutar la inferencia para cada consulta.
 
-El aporte del sistema se sitúa en la adaptación de ese procedimiento a los videos y necesidades del grupo experimental. La representación de cada trayectoria mediante cuadros y posiciones hace explícita la información utilizada para calcular distancias, rapidez y continuidad temporal. La separación de responsabilidades entre seguimiento, análisis e inspección facilita revisar tanto los resultados como las decisiones de cálculo que los producen. Los productos generados ofrecen una base organizada para la revisión posterior por parte de los investigadores.
+El aporte del sistema se sitúa en la adaptación de ese procedimiento a los videos y necesidades de esta línea experimental. La representación de cada trayectoria mediante cuadros y posiciones hace explícita la información utilizada para calcular distancias, rapidez y continuidad temporal. La separación de responsabilidades entre seguimiento, análisis e inspección facilita revisar tanto los resultados como las decisiones de cálculo que los producen. Los productos generados ofrecen una base organizada para la revisión posterior por parte de los investigadores.
 
 Las pruebas controladas aportaron evidencia de consistencia numérica y de integración en los casos cubiertos. En particular, se verificó que la rapidez utiliza el tiempo real entre observaciones cuando existen cuadros ausentes. Este resultado es relevante porque tratar como consecutivas posiciones separadas por un gap modificaría las magnitudes temporales. La conservación de los índices originales permite además identificar los intervalos cuya información está incompleta y distinguirlos del recorrido efectivamente observado.
 
@@ -17,11 +17,11 @@ Los resultados de entrenamiento respaldan la viabilidad de adaptar el detector a
 
 La clasificación incorpora una descripción computacional inspeccionable de las trayectorias. Sus puntuaciones permiten revisar la decisión obtenida y relacionarla con las características del recorrido. El alcance comprobado corresponde a la aplicación consistente de las reglas implementadas; su adecuación para distinguir comportamientos de interés experimental requiere categorías de referencia independientes. Del mismo modo, los umbrales de inactividad y de cambios de rapidez conservan un carácter operativo.
 
-En conjunto, el trabajo proporciona una implementación y evidencia de su funcionamiento sobre datos controlados y un caso experimental acotado. La herramienta puede apoyar la organización y revisión de mediciones del movimiento, manteniendo la intervención de los especialistas para interpretar su significado físico o biológico. La comparación cuantitativa del esfuerzo respecto del procedimiento manual queda pendiente. Las magnitudes presentadas se conservan en px, px/s y px/s$^2$; la calibración espacial y la conversión a unidades físicas permanecen \textbf{A DEFINIR}.
+En conjunto, el trabajo proporciona una implementación y evidencia de su funcionamiento sobre datos controlados y un caso experimental acotado. El sistema puede apoyar la organización y revisión de mediciones del movimiento, manteniendo la intervención de los especialistas para interpretar su significado físico o biológico. La comparación cuantitativa del esfuerzo respecto del procedimiento manual queda pendiente. Las magnitudes presentadas se conservan en px, px/s y px/s$^2$; la calibración espacial y la conversión a unidades físicas permanecen \textbf{A DEFINIR}.
 
 \section{Trabajo futuro}
 
-Las siguientes líneas se organizan según su relación con los límites identificados durante la evaluación. Su desarrollo permitiría ampliar la evidencia y precisar las condiciones de uso de la herramienta.
+Las siguientes líneas se organizan según su relación con los límites identificados durante la evaluación. Su desarrollo permitiría ampliar la evidencia y precisar las condiciones de uso del sistema.
 
 \begin{enumerate}
   \item \textbf{Calibración espacial y conversión a unidades físicas: A DEFINIR.} La definición del procedimiento, el factor de conversión y su aplicación a las mediciones quedan pendientes de resolución con la dirección del trabajo.

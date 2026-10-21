@@ -42,8 +42,8 @@ La Figura~\ref{fig:distancias-trayectoria} ilustra estas magnitudes con las posi
 
 Para $n\geq2$ observaciones, la rapidez de cada segmento se calcula como
 \begin{equation}
-  v_i=\frac{\lVert\mathbf{p}_{i+1}-\mathbf{p}_i\rVert}{\Delta t_i},
-  \qquad \mathbf{p}_i=(x_i,y_i),\quad i=1,\ldots,n-1.
+  v_i=\frac{\lVert\vec{p}_{i+1}-\vec{p}_i\rVert}{\Delta t_i},
+  \qquad \vec{p}_i=(x_i,y_i),\quad i=1,\ldots,n-1.
   \label{eq:rapidez-segmento-implementada}
 \end{equation}
 El resultado se asocia con el cuadro final $f_{i+1}$. Es una estimación escalar sobre el intervalo entre posiciones observadas, no una medición instantánea de todo el movimiento ocurrido en su interior. Aunque algunas interfaces utilicen la palabra \emph{velocidad}, aquí se emplea \emph{rapidez} para conservar esta distinción.

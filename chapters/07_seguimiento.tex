@@ -9,7 +9,7 @@ La detección localiza microorganismos en cada cuadro; el seguimiento relaciona 
 
 La proximidad espacial resulta ambigua durante cruces, solapamientos o pérdidas de detección. Por ello, el sistema utiliza el seguimiento integrado en Ultralytics. Los fundamentos del seguimiento basado en detecciones se desarrollaron en el capítulo 3.
 
-Un identificador expresa una hipótesis computacional de continuidad. Su conservación no garantiza que todas las observaciones pertenezcan al mismo microorganismo, y la aparición de un nuevo ID no implica necesariamente la entrada de otro individuo al campo visual.
+Un identificador expresa una hipótesis computacional de continuidad. Su conservación no garantiza que todos los registros pertenezcan al mismo microorganismo, y la aparición de un nuevo ID no implica necesariamente la entrada de otro individuo al campo visual.
 
 \section{Método de seguimiento e integración}
 
@@ -17,7 +17,7 @@ El componente de seguimiento invoca \texttt{model.track} sobre el video con los 
 
 La llamada no especifica un archivo de configuración del tracker. En el entorno de referencia, que fija Ultralytics en la versión \texttt{8.3.213}, se hereda la configuración predeterminada \texttt{botsort.yaml}, correspondiente a BoT-SORT. Su configuración mantiene desactivada la reidentificación por apariencia (\texttt{with\_reid=False}). Por tanto, no corresponde atribuir a esta ejecución un modelo adicional de reconocimiento visual de individuos.
 
-En esta configuración, BoT-SORT utiliza un filtro de Kalman para predecir el estado de las cajas y realiza la asociación mediante su superposición y la confianza de las detecciones. También incorpora compensación del movimiento global mediante flujo óptico disperso. Estas operaciones internas del tracker se distinguen del almacenamiento de observaciones realizado por la aplicación.
+En esta configuración, BoT-SORT utiliza un filtro de Kalman para predecir la ubicación y el tamaño de las cajas en el cuadro siguiente. La asociación contrasta esa predicción con las nuevas detecciones mediante la superposición de cajas, expresada por IoU, y su confianza. El estado temporal permite conservar hipótesis de seguimiento durante pérdidas breves, dentro de los límites de la configuración. También incorpora compensación del movimiento global mediante flujo óptico disperso. Estas operaciones pertenecen al tracker de la biblioteca; la aplicación registra las posiciones devueltas y aplica después los filtros de trayectorias descritos en este capítulo.
 
 La asignación, actualización y eventual recuperación de un ID después de una pérdida dependen del tracker y de su configuración. La aplicación no implementa por separado esas operaciones. El umbral \texttt{iou} suministrado a \texttt{model.track} pertenece al posprocesamiento de las detecciones y no sustituye los parámetros internos de asociación temporal.
 
@@ -31,7 +31,7 @@ El identificador se convierte en un entero y se utiliza como clave de un diccion
 
 El contador de cuadros comienza en cero y avanza por cada resultado, incluso cuando faltan cajas o identificadores. En esos casos no se agrega una posición. Así, dos observaciones separadas por cuadros sin registro conservan sus índices originales. El conjunto resultante agrupa posiciones observadas por ID; no completa posiciones ausentes ni une trayectorias con identificadores distintos.
 
-La trayectoria permite reutilizar las observaciones en los módulos de análisis e inspección sin repetir la inferencia. Sus coordenadas permanecen en píxeles, y su conversión a unidades físicas requiere la calibración espacial descrita en la metodología.
+La trayectoria permite reutilizar las observaciones en los módulos de análisis e inspección sin repetir la inferencia. Sus coordenadas permanecen en píxeles, y la calibración espacial y su conversión a unidades físicas permanecen \textbf{A DEFINIR}.
 
 \section{Continuidad temporal y observaciones ausentes}
 
@@ -67,7 +67,7 @@ El denominador incluye todos los cuadros entre la primera y la última observaci
     \node[font=\small] at (2.5,0.85) {$d_i=3$: dos cuadros sin observación};
     \node[font=\small] at (2.5,-1.05) {Índice de cuadro};
   \end{tikzpicture}
-  \caption{Ejemplo esquemático de continuidad temporal. Los puntos llenos representan observaciones y los vacíos, cuadros sin registro. Cuatro observaciones en seis cuadros dan una cobertura de $4/6$; el intervalo mayor tiene diferencia de tres cuadros.}
+  \caption{Ejemplo esquemático de continuidad temporal. Los puntos llenos representan posiciones registradas y los vacíos, cuadros sin registro. Cuatro posiciones en seis cuadros dan una cobertura de $4/6$; el intervalo mayor tiene diferencia de tres cuadros.}
   \label{fig:gap-seguimiento}
 \end{figure}
 
@@ -126,6 +126,6 @@ La revisión visual permite examinar pérdidas, cruces y posibles cambios de ide
 
 Una pérdida de detección puede dejar un gap dentro del mismo ID o producir fragmentación si el seguimiento continúa con otro identificador. Un cambio de identidad, en cambio, puede mezclar posiciones de individuos distintos dentro de una trayectoria. El sistema conserva la asociación devuelta por la biblioteca y no realiza una corrección automática posterior de esos casos.
 
-La similitud visual, los cruces, las oclusiones y las entradas o salidas del campo microscópico dificultan la continuidad. Además, los falsos positivos pueden persistir y superar los filtros temporales. Por ello, la cantidad de IDs no debe interpretarse directamente como un conteo de microorganismos distintos.
+El seguimiento trabaja sobre la proyección bidimensional de la imagen. Dos individuos pueden superponerse en esa proyección aunque ocupen distintas posiciones en profundidad, y los cambios de enfoque o las oclusiones pueden ocultar temporalmente sus contornos. La similitud visual, los cruces, los desplazamientos rápidos y las entradas o salidas del campo de observación dificultan la asociación. La predicción de Kalman orienta la búsqueda, pero no garantiza recuperar la identidad después de esos eventos. Además, los falsos positivos pueden persistir y superar los filtros temporales. Por ello, la cantidad de IDs no debe interpretarse directamente como un conteo de microorganismos distintos.
 
 Los gaps limitan la reconstrucción del recorrido, y los errores de identidad pueden alterar las métricas y la clasificación. El filtrado selecciona registros según criterios explícitos, pero su interpretación requiere evaluar la calidad del seguimiento.

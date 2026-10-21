@@ -1,12 +1,12 @@
 \chapter{Diseño general del sistema computacional}
 
-Este capítulo describe la organización general de la herramienta desarrollada y la forma en que circula la información entre sus componentes. El objetivo no es detallar todavía cada algoritmo, sino presentar la arquitectura que integra la detección, el seguimiento, la reconstrucción de trayectorias, el cálculo de métricas, la clasificación y la generación de resultados.
+Este capítulo describe la organización general de el sistema y la forma en que circula la información entre sus componentes. El objetivo no es detallar todavía cada algoritmo, sino presentar la arquitectura que integra la detección, el seguimiento, la reconstrucción de trayectorias, el cálculo de métricas, la clasificación y la generación de resultados.
 
 La descripción se mantiene en un nivel funcional para evitar repetir los fundamentos teóricos del capítulo 3 y los procedimientos metodológicos del capítulo 4. Los capítulos siguientes profundizan en cada componente cuando resulta necesario.
 
 \section{Requerimientos funcionales y no funcionales}
 
-Los requerimientos se derivan del problema planteado: transformar videos microscópicos en trayectorias analizables y resultados reproducibles. La Tabla~\ref{tab:requerimientos-sistema} resume los requerimientos principales implementados en la versión actual.
+Los requerimientos se derivan del problema planteado: transformar videos adquiridos mediante microscopía óptica en trayectorias analizables y resultados reproducibles. La Tabla~\ref{tab:requerimientos-sistema} resume los requerimientos principales implementados en la versión actual.
 
 \begin{table}[H]
   \centering
@@ -19,7 +19,7 @@ Los requerimientos se derivan del problema planteado: transformar videos microsc
     \toprule
     \textbf{ID} & \textbf{Tipo} & \textbf{Requerimiento} \\
     \midrule
-    RF01 & Funcional & Procesar un video microscópico utilizando un modelo de detección y seguimiento. \\
+    RF01 & Funcional & Procesar un video adquirido mediante microscopía óptica utilizando un modelo de detección y seguimiento. \\
     RF02 & Funcional & Reconstruir una trayectoria por cada identificador de seguimiento y conservar cuadro y posición. \\
     RF03 & Funcional & Filtrar trayectorias por cantidad de observaciones o por consistencia temporal. \\
     RF04 & Funcional & Calcular métricas de movimiento y generar visualizaciones por trayectoria. \\
@@ -35,7 +35,7 @@ Los pesos del detector y los videos se suministran mediante rutas externas. Esta
 
 \section{Arquitectura general del sistema}
 
-La herramienta se organiza como un pipeline cuyo punto de entrada coordina el procesamiento completo. La Figura~\ref{fig:arquitectura-sistema} muestra los componentes principales y sus dependencias. El video, el modelo y la configuración se reciben como entradas; a partir de ellos se obtienen tracks, métricas, clasificaciones y artefactos de salida.
+El sistema se organiza como un pipeline cuyo punto de entrada coordina el procesamiento completo. La Figura~\ref{fig:arquitectura-sistema} muestra los componentes principales y sus dependencias. El video, el modelo y la configuración se reciben como entradas; a partir de ellos se obtienen tracks, métricas, clasificaciones y artefactos de salida.
 
 \begin{figure}[H]
   \centering
@@ -161,7 +161,7 @@ La implementación separa las responsabilidades principales en módulos específ
     \midrule
     Orquestación del pipeline & Recibir configuración, ejecutar el flujo y coordinar salidas. \\
     Detección y seguimiento & Procesar el video y construir tracks a partir de detecciones asociadas temporalmente. \\
-    Análisis temporal y geométrico & Calcular distancias, rapidez, aceleración, continuidad e indicadores derivados. \\
+    Análisis temporal y geométrico & Calcular distancias, rapidez, variación de rapidez, continuidad e indicadores derivados. \\
     Inspección y visualización & Consultar una trayectoria individual y producir gráficos de trayectoria y comportamiento temporal. \\
     Clasificación de movimiento & Calcular métricas interpretables, construir scores heurísticos y asignar una categoría de movimiento. \\
     Validación & Comparar trayectorias automáticas con referencias manuales revisadas y resumir errores y cobertura. \\

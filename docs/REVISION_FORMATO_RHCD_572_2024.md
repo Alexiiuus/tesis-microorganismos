@@ -22,7 +22,7 @@ El Anexo II corresponde a la Licenciatura. El Anexo I corresponde a Profesorados
 | Art. 1: castellano, estilo especializado | Capítulos escritos en castellano, ecuaciones, referencias y terminología técnica. | Se conserva. La revisión editorial integral excede esta comprobación de formato. |
 | Art. 1: resumen castellano e inglés | `frontmatter/resumen.tex` y `frontmatter/abstract.tex`. | Presentes e incluidos. Su actualización con los resultados definitivos queda para el cierre de la escritura. |
 | Arts. 2 y 3 / Anexo II: carátula | Logos, título, autor y dirección presentes; el grado se expresaba como carrera. Faltaba la licencia y la fecha era provisional. | Ajustada la presentación y la denominación a “Licenciado en Ciencias de la Computación”, conservando título y nombres registrados. La fecha se declara pendiente de la defensa oficial. |
-| Art. 4: guarda anterior y posterior | Ausentes. | Se agrega una hoja completa en blanco al principio y otra al final: dos carillas por hoja, sin número ni encabezado. La carátula se mantiene en recto. |
+| Art. 4: guarda anterior y posterior | Ausentes. | Preparadas para la entrega final. Por indicación posterior del autor, el borrador se genera sin guardas; `ThesisFinalLayouttrue` incorpora una hoja completa (dos carillas) al principio y otra al final, sin número ni encabezado. |
 | Art. 4: última hoja de aval con al menos dos firmas | Ausente. | Se agrega `backmatter/aval_tribunal.tex` después de la bibliografía, antes de la guarda final; incluye tres espacios y advierte que está pendiente. No acredita aprobación ni firmas. |
 | Art. 5 / Anexo II: licencia, logo y enlace | Ausentes. | Pendiente de elección del autor. La carátula reserva el bloque mediante `ThesisLicense`; no se aplica una licencia sin esa decisión. La Biblioteca publica CC Atribución 4.0 Internacional como referencia. Una vez definida, incorporar el icono oficial, denominación y enlace. |
 | Art. 5: autorización de incorporación al RDU y catálogo | No documentada. | Pendiente de completar y firmar el formulario institucional; no se sustituye por una declaración automática dentro de la tesis. |
@@ -36,7 +36,7 @@ Los artículos 6 y 7 son disposiciones derogatorias y administrativas, sin ajust
 
 Se mantienen los márgenes existentes (interior 30 mm, exterior 25 mm, superior e inferior 25 mm), las citas numéricas, los resultados experimentales y las figuras. La norma solo exige 12 pt para el cuerpo: títulos, pies y ecuaciones conservan su jerarquía tipográfica. Las fórmulas y el código pueden usar fuentes específicas; el texto corrido usa la fuente exigida.
 
-Las hojas en blanco insertadas por `cleardoublepage` permiten mantener el comienzo de las secciones preliminares y el aval en recto. No deben eliminarse al preparar la impresión a doble cara. Las guardas completas forman parte de este mismo PDF, para conservar la identidad entre la copia electrónica y la impresa.
+Por indicación del autor, el borrador no incluye guardas ni separadores en blanco. En `config/metadata.tex`, `ThesisFinalLayoutfalse` mantiene esta presentación; al preparar la entrega final, cambiar a `ThesisFinalLayouttrue` para incorporar las guardas y recuperar los inicios en recto. Esa versión final deberá conservar la identidad entre el ejemplar impreso y el electrónico.
 
 ## Pendientes de cierre
 
@@ -52,7 +52,7 @@ Los capítulos 12 (discusión) y 13 (conclusiones y trabajo futuro) siguen pendi
 
 Esquema propuesto para el capítulo 12: relación con los objetivos; interpretación del detector y seguimiento; confiabilidad de las magnitudes; alcance de la clasificación; aportes al trabajo experimental; limitaciones y validez. Usar un cuadro de objetivo, evidencia, alcance y pendiente, una vez verificados los objetivos. Evitar duplicar la discusión de 11.10 y no cuantificar ahorro de tiempo sin mediciones comparables.
 
-## Verificación de la versión corregida
+## Verificación inicial de la adecuación (antes de retirar las páginas en blanco)
 
 - Compilación completa con LuaLaTeX y Biber 2.19: PDF de 96 páginas, incluidas las guardas.
 - Sin errores, advertencias de LaTeX, citas o referencias sin resolver, caracteres faltantes ni cajas desbordadas.
@@ -63,3 +63,9 @@ Esquema propuesto para el capítulo 12: relación con los objetivos; interpretac
 - Los valores experimentales y los datos de origen permanecen sin cambios. No se aplicó licencia ni se firmó o envió ningún documento.
 
 El entorno de esta revisión requirió añadir los paquetes de BibLaTeX, LuaLaTeX, español y siunitx, Biber y las fuentes Times New Roman. La compilación se ejecutó en una carpeta temporal limpia para evitar auxiliares incompletos del directorio compartido. En una instalación local completa se utiliza el comando del README.
+
+## Ajuste posterior solicitado por el autor
+
+Se retiran del borrador todas las páginas en blanco, incluidas las guardas y los separadores a recto. El cumplimiento de ese requisito se pospone a la preparación de la entrega final. La configuración queda centralizada en `ThesisFinalLayout`, inicialmente desactivada. El contenido escrito y el resto del formato se conservan.
+
+Verificación de este ajuste: PDF de 90 páginas, sin páginas en blanco, errores ni advertencias de compilación.

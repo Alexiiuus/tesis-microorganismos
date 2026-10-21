@@ -4,10 +4,17 @@
 \input{config/packages}
 \input{config/commands}
 
+% El borrador no incorpora páginas de guarda ni separadores en blanco.
+\ifThesisFinalLayout\else
+  \let\cleardoublepage\clearpage
+\fi
+
 \begin{document}
 
-\hypersetup{pageanchor=false}
-\thesisguardleaf
+\ifThesisFinalLayout
+  \hypersetup{pageanchor=false}
+  \thesisguardleaf
+\fi
 \frontmatter
 \hypersetup{pageanchor=true}
 \input{frontmatter/titlepage}
@@ -37,7 +44,9 @@
 \cleardoublepage
 \input{backmatter/aval_tribunal}
 \cleardoublepage
-\hypersetup{pageanchor=false}
-\thesisguardleaf
+\ifThesisFinalLayout
+  \hypersetup{pageanchor=false}
+  \thesisguardleaf
+\fi
 
 \end{document}

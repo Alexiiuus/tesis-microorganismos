@@ -14,7 +14,7 @@ En Windows puede usarse MiKTeX, VS Code y LaTeX Workshop con la receta **LuaLaTe
 
 ## Formato y entrega
 
-A4, cuerpo de 12 pt, espacio simple y preparación a doble cara. El PDF incluye las guardas, la carátula del Anexo II y una hoja de aval pendiente de firma. La fecha de defensa y la licencia se completan en `config/metadata.tex` antes de la entrega final. El borrador no acredita aprobación del tribunal ni autorización para su depósito.
+A4, cuerpo de 12 pt, espacio simple y preparación a doble cara. El borrador incluye la carátula del Anexo II y una hoja de aval pendiente de firma, sin guardas ni páginas de separación en blanco. Para preparar la entrega final, cambiar `\ThesisFinalLayoutfalse` por `\ThesisFinalLayouttrue` en `config/metadata.tex`; esto incorpora las guardas y restablece los inicios en recto. La fecha de defensa y la licencia se completan en `config/metadata.tex` antes de la entrega final. El borrador no acredita aprobación del tribunal ni autorización para su depósito.
 
 La matriz de requisitos, cambios y pendientes está en [docs/REVISION_FORMATO_RHCD_572_2024.md](docs/REVISION_FORMATO_RHCD_572_2024.md).
 

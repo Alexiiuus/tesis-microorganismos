@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-09-09T03:24:51.491595+00:00",
+  "status": "success",
+  "input": {
+    "video_path": "/content/drive/MyDrive/ESTUDIOS/FAMAF/TESIS/Videos_prueba/primer_minuto.mp4",
+    "video_filename": "primer_minuto.mp4"
+  },
+  "model": {
+    "model_path": "/content/drive/MyDrive/ESTUDIOS/FAMAF/TESIS/Modelos/DetectorE/train2/weights/best.pt",
+    "confidence_threshold": 0.4,
+    "iou_threshold": 0.4
+  },
+  "analysis": {
+    "analysis_fps": 30.0,
+    "time_reference": null,
+    "time_axis_mode": "context",
+    "thresholds": {
+      "inactivity_speed_threshold": 30.0,
+      "acceleration_threshold": 450.0,
+      "regime_window": 50,
+      "regime_threshold": 30.0
+    }
+  },
+  "pipeline": {
+    "type_filter": "by_frames",
+    "save_video": true,
+    "save_tracks": true,
+    "save_speeds": true,
+    "classify_movements": false,
+    "save_movement_classification": false,
+    "filter_temporal": {
+      "min_frames": 20
+    }
+  },
+  "outputs": {
+    "tracks_requested": true,
+    "speeds_requested": true,
+    "video_requested": true,
+    "classification_requested": false
+  },
+  "environment": {
+    "python_version": "3.13.15",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+    "git_commit": null,
+    "git_dirty": null
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "system_version": "cf1db739a9e22a2201c9bad20ab9baa328194f54",
+  "system_files": {
+    "Utils/Cls/MovementClassifier.py": {
+      "github_blob_sha": "e24fa19168302b921bf4f11213d6d1ad27344c96"
+    },
+    "Utils/Cls/SpeedMorg.py": {
+      "github_blob_sha": "f03d669afb662391bd66fa62e199965c60212570"
+    },
+    "Utils/Cls/TrackInspector.py": {
+      "github_blob_sha": "adbd29aa0465ef9902a866c51e83ae1eae4ffc91"
+    },
+    "Utils/Cls/MoveMorg.py": {
+      "github_blob_sha": "5edbf5751ff20ad1ec833eddf73e6201b20b6136"
+    },
+    "Utils/Constants.py": {
+      "github_blob_sha": "ffe6d3fd62dde36e6dd2f21e8ed48270a128e8d1"
+    },
+    "Utils/Speed.py": {
+      "github_blob_sha": "196f818aaa57f3e4fa8a538640dda784c76b49b6"
+    },
+    "Utils/Move.py": {
+      "github_blob_sha": "d8e9fc0c7d1433441698dd1ff9aa5e16d97d0ecf"
+    },
+    "Utils/Temporal.py": {
+      "github_blob_sha": "add69385dadd7abb89635ee01dbb12d6befbb9b3"
+    },
+    "Utils/Graphics.py": {
+      "github_blob_sha": "77962ce36ae0b74738d45ddeebcbb055caf6d550"
+    }
+  },
+  "inputs": {
+    "Track_145.csv": {
+      "sha256": "6ddb83851f801b94932318ca0f3e98268070f0ad9c860cfb82c733957d8fafcd",
+      "url": "https://drive.google.com/file/d/14DrfsyfycHRRr2j3C__gff7aN8rCsqvc/view"
+    },
+    "ground_truth.json": {
+      "sha256": "a8b14ff923a74cc60818058d7d10fe0a2c706a278fc68d18111524013cda3ed7",
+      "url": "https://drive.google.com/file/d/1VdYd5gH2abKwyzww-9sGW6XiiQ7SCQZ5/view"
+    },
+    "run_metadata.json": {
+      "sha256": "39c86ae2667573b6e67921a67853eae6349bffda093950894c85034abe1a89f6",
+      "url": "https://drive.google.com/file/d/1b_ThoNKzHPOIHy6tq-rz183aDG-gNhez/view"
+    },
+    "entrenamiento_v1.csv": {
+      "sha256": "91e3b22440ef43e2f2810e2cd58b899906dd5a334f7f05a4185862640aea1691",
+      "url": "https://drive.google.com/file/d/1gm2NWY6_W7YFaEAd-H4Fc8UJirTQOa_M/view"
+    },
+    "entrenamiento_v2.csv": {
+      "sha256": "835f814172a58678d0a44477860f1c69afaee5b69cd487ff4ba1e1d9f04d5e04",
+      "url": "https://drive.google.com/file/d/1pbAcsIthuRlojRKUtKapJ3ETsiINFKIT/view"
+    },
+    "training_train_args.yaml": {
+      "sha256": "17a79238075d2377589ae1c2f5280e9c7442df170959c601248d5b6b051709ac",
+      "url": "https://drive.google.com/file/d/1xofe2GDmCAUgDQzyG1PNcLSfdiRst6_j/view"
+    },
+    "training_train2_args.yaml": {
+      "sha256": "9f49dd81f0fecc37d2f3388bca08bfa9f0a3b6acbcfe8e4bc787d645c7253765",
+      "url": "https://drive.google.com/file/d/14DvOdJth-CoLhQVrOikYKmK15-0n_2A3/view"
+    }
+  },
+  "video_confirmed": "primer_minuto.mp4",
+  "original_reference_video_label": "prueba_tracker.mp4",
+  "relationship": "Different videos; author confirms tests on primer_minuto; source label retained.",
+  "analysis_date": "2026-10-19",
+  "training_runs": {
+    "train": {
+      "order": 1,
+      "local_results": "entrenamiento_v2.csv",
+      "recorded_data_path": "/content/Micro-2/data.yaml",
+      "first_functional_dataset_confirmed_by_author": "Micro.v2-poc_morg_v1.yolov11"
+    },
+    "train2": {
+      "order": 2,
+      "local_results": "entrenamiento_v1.csv",
+      "recorded_data_path": "/content/Micro-4/data.yaml",
+      "weights_used_for_video": true,
+      "exact_identity_with_Micro_v5_export": "not established"
+    }
+  },
+  "dataset_documentation": "dataset_sources.json",
+  "dataset_identification_corrected_on": "2026-10-20"
+}

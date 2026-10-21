@@ -1,0 +1,99 @@
+\usepackage[english,spanish,es-nodecimaldot,es-lcroman]{babel}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{fontspec}
+% RHCD 572/2024, art. 1: no sustituir silenciosamente la fuente exigida.
+\IfFontExistsTF{Times New Roman}{
+  \setmainfont{Times New Roman}
+}{
+  \IfFontExistsTF{Arial}{
+    \setmainfont{Arial}
+  }{
+    \PackageError{tesis}{Instale Times New Roman o Arial}{La RHCD 572/2024 exige una de estas fuentes.}
+  }
+}
+\usepackage{microtype}
+\setlength{\emergencystretch}{3em}
+\usepackage[a4paper,left=30mm,right=25mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{emptypage}
+\usepackage{setspace}
+\singlespacing
+
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{listings}
+\lstdefinestyle{thesiscode}{
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  frame=single,
+  framerule=0.3pt,
+  xleftmargin=3mm,
+  xrightmargin=3mm,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\hypersetup{
+  hidelinks,
+  pdftitle={\ThesisTitle},
+  pdfauthor={\ThesisAuthor}
+}
+
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=none,
+  maxbibnames=99,
+  giveninits=true
+]{biblatex}
+\addbibresource{bibliography/references.bib}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\LARGE\raggedright}
+  {\chaptertitlename\ \thechapter}
+  {0.5em}
+  {\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\raggedright}
+  {\thesection}{1em}{}
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{4.5em}{3.2em}}
+\makeatother
+\titleformat{\subsubsection}
+  {\normalfont\bfseries\normalsize}
+  {}
+  {0pt}
+  {}
+
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+
+% Evita estirar los espacios entre bloques para igualar la altura de las páginas.
+\raggedbottom

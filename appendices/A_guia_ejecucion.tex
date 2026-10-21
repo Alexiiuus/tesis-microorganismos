@@ -1,0 +1,157 @@
+\chapter{Guía de ejecución y reproducción de resultados}
+\label{ap:guia-ejecucion}
+
+Este apéndice reúne instrucciones prácticas de la implementación y de los scripts que respaldan las figuras de la tesis. Las llamadas se contrastaron con la revisión \nolinkurl{cf1db739a9e22a2201c9bad20ab9baa328194f54} del sistema, disponible en su repositorio de código\footnote{\url{https://github.com/Alexiiuus/Detection-Morg}}. Esa identificación fija la versión consultada para esta guía y para el análisis reproducible. Los fundamentos de los cálculos y su interpretación se desarrollan en los capítulos~\ref{chap:seguimiento}, \ref{chap:analisis-trayectorias}, \ref{chap:clasificacion-movimiento} y \ref{chap:implementacion-pruebas}.
+
+\section{Entorno y archivos necesarios}
+
+El entorno de referencia utiliza Python 3.12 y el perfil de dependencias CPU conservado en \nolinkurl{requirements-lock-cpu.txt}. Desde la raíz de una copia del repositorio del sistema, la preparación en Linux puede realizarse con:
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}[style=thesiscode]
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-lock-cpu.txt
+python scripts/verify_environment.py
+\end{lstlisting}
+\end{minipage}\par
+
+En Windows puede crearse el entorno con \verb|py -3.12 -m venv .venv| y activarse desde Git Bash mediante \verb|source .venv/Scripts/activate|. La instalación posterior utiliza los mismos archivos de dependencias. El perfil de Colab se conserva por separado en \nolinkurl{requirements-colab.txt}; no se debe sustituir automáticamente su entorno de aceleración por el perfil CPU.
+
+El procesamiento requiere el video y un archivo de pesos compatible con YOLO. Las anotaciones manuales se necesitan para la comparación experimental, pero no para obtener trayectorias automáticas. Las rutas de estos archivos se proporcionan explícitamente; los ejemplos siguientes utilizan nombres ilustrativos que deben reemplazarse por ubicaciones existentes.
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}[style=thesiscode]
+python scripts/verify_environment.py \
+  --require-inputs \
+  --model /ruta/externa/best.pt \
+  --video /ruta/externa/video.mp4 \
+  --json-output output/environment_verified.json
+\end{lstlisting}
+\end{minipage}\par
+
+El verificador comprueba el entorno, los imports y, para las entradas, la existencia y las extensiones admitidas. La inspección del contenido del video, de los pesos y de las anotaciones sigue siendo necesaria. Toda la calibración espacial y la conversión a unidades físicas permanecen \textbf{A DEFINIR}; las instrucciones conservan posiciones en píxeles y tiempos derivados de los cuadros y los FPS de análisis.
+
+\section{Ejecución del procesamiento}
+
+El punto de entrada se invoca desde Python. Puede utilizarse en un notebook o en un script ejecutado desde la raíz del sistema. Los fragmentos de esta sección y de las dos siguientes continúan en la misma sesión y reutilizan las variables definidas previamente.
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}[style=thesiscode,language=Python]
+from main import process_video_general
+
+fps = 30.0
+tracks = process_video_general(
+    path_video="/ruta/externa/video.mp4",
+    path_model="/ruta/externa/best.pt",
+    output_dir="output/run_001",
+    analysis_fps=fps,
+    conf=0.4,
+    iou=0.4,
+    type_filter="by_frames",
+    save_video=False,
+    save_tracks=False,
+    save_speeds=False,
+    show_move_summary=False,
+    classify_movements=True,
+    save_movement_classification=True,
+)
+\end{lstlisting}
+\end{minipage}\par
+
+El ejemplo fija 30 cuadros/s para el análisis y umbrales de confianza e IoU de NMS de 0,4. Los FPS deben corresponder al material que se analiza; estos parámetros son operativos y no se presentan como una configuración óptima general. El filtro \verb|by_frames| conserva al menos 20 observaciones en la revisión documentada. Las alternativas son \verb|not_filter| y \verb|by_temporal_consistency|, descritas en el capítulo~\ref{chap:seguimiento}.
+
+La función devuelve un diccionario de trayectorias y escribe los metadatos en \nolinkurl{output/run_001/run_metadata.json}. La activación conjunta de clasificación y guardado produce, además, \nolinkurl{output/run_001/movement_classification.json}. Los gráficos generales se desactivan en este ejemplo para seleccionar después una trayectoria de interés. Conviene utilizar un directorio distinto para cada ejecución, ya que no se garantiza la limpieza de productos anteriores o parciales.
+
+\section{Inspección de trayectorias y resultados}
+
+El listado de identificadores permite seleccionar una trayectoria existente. En el ejemplo se toma el menor ID disponible; para revisar un individuo concreto debe cambiarse esa selección después de examinar el video. El identificador no constituye una identidad biológica permanente.
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}[style=thesiscode,language=Python]
+from Utils.Cls.TrackInspector import TrackInspector
+
+print(sorted(tracks))
+if not tracks:
+    raise RuntimeError("No tracks selected")
+track_id = min(tracks)
+inspector = TrackInspector(tracks, track_id, analysis_fps=fps)
+info = inspector.get_info(window_size=20, vel_min=30.0)
+inspector.plot_all(
+    output_dir=f"output/run_001/track_{track_id}",
+    show=False,
+)
+print(info["total_distance_px"])
+print(info["trajectory_average_speed"])
+\end{lstlisting}
+\end{minipage}\par
+
+La inspección permite consultar las posiciones, las series y la clasificación sin repetir el seguimiento. El método \verb|get_info| devuelve, entre otros datos, la cantidad de observaciones, los extremos temporales, las distancias y dos promedios de rapidez. \verb|mean_segment_speed| es la media de las rapideces por segmento y \verb|trajectory_average_speed| es el cociente entre distancia acumulada y tiempo transcurrido. El campo \verb|inactivity_percentage| contiene una fracción de muestras suavizadas, pese a su nombre; no representa directamente un porcentaje de tiempo.
+
+El método \verb|plot_all| guarda las visualizaciones de la trayectoria, rapidez, inactividad y cambios de comportamiento cuando dispone de datos suficientes. Para reconstruir un video individual se utiliza \verb|inspector.render_video| con el video original y una ruta de salida, por ejemplo \nolinkurl{output/run_001/track_seleccionado.mp4}. Sus argumentos incluyen \verb|trail_length| y \verb|show_activity|. Esta inspección complementa el video general que Ultralytics produce al activar \verb|save_video=True|, cuyo destino se gestiona por separado del directorio general de resultados.
+
+\section{Formatos y trazabilidad}
+
+Cada entrada del diccionario asocia un ID entero con observaciones \verb|(frame, x, y)|. El cuadro es un índice entero desde cero y las coordenadas son las del centro de la detección en píxeles. Los cuadros deben conservar un orden estrictamente creciente y sus separaciones originales, incluidos los gaps.
+
+La opción \verb|save_tracks| genera gráficos de trayectorias; no constituye una exportación automática de las posiciones a CSV. Para conservar la trayectoria seleccionada puede utilizarse la biblioteca estándar de Python:
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}[style=thesiscode,language=Python]
+import csv
+
+with open(
+    f"output/run_001/Track_{track_id}.csv",
+    "w", newline="", encoding="utf-8",
+) as stream:
+    writer = csv.writer(stream)
+    writer.writerow(["frame", "x_px", "y_px"])
+    writer.writerows(tracks[track_id])
+\end{lstlisting}
+\end{minipage}\par
+
+Este archivo conserva una fila por observación y no rellena cuadros ausentes. La correspondencia entre el archivo, el video, los pesos y la configuración debe mantenerse al archivar los resultados. La conservación de todos los tracks puede realizarse repitiendo la exportación para cada identificador.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Bloques principales de \texttt{run\_metadata.json}.}
+  \label{tab:apendice-metadatos}
+  \begin{tabularx}{\textwidth}{@{}l X@{}}
+    \toprule
+    Bloque & Información registrada \\
+    \midrule
+    \texttt{input} & Ruta y nombre del video. \\
+    \texttt{model} & Ruta de los pesos y umbrales de confianza e IoU de NMS. \\
+    \texttt{analysis} & FPS de análisis, modo temporal y umbrales analíticos. \\
+    \texttt{pipeline} & Opciones del flujo y configuración del filtrado. \\
+    \texttt{outputs} & Marcas de los productos solicitados. \\
+    \texttt{environment} & Plataforma, versiones y estado del código cuando se recupera. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+El registro contiene también fecha y estado de ejecución. No incluye las posiciones ni todos los parámetros del clasificador, y las marcas de salida no certifican la existencia o validez de cada producto. Por ello, se deben conservar los archivos efectivamente generados y la configuración complementaria utilizada. En la clasificación JSON, cada ID se asocia con categoría, puntuaciones, métricas y explicación; la confianza informada corresponde a una puntuación heurística.
+
+\section{Reproducción de las verificaciones y figuras}
+
+Desde la raíz del sistema, \verb|python -m pytest -q| ejecuta la suite con las dependencias de prueba disponibles. Su configuración sustituye la interfaz de YOLO; el capítulo~\ref{chap:implementacion-pruebas} explica el alcance de los casos controlados y su diferencia respecto de la evaluación experimental.
+
+Los comandos siguientes se ejecutan desde la raíz del repositorio de la tesis\footnote{\url{https://github.com/Alexiiuus/tesis-microorganismos}}, con NumPy, Matplotlib y Pandas disponibles. Se supone una copia del sistema en la revisión documentada, situada en el directorio contiguo \verb|Detection-Morg|. La ruta debe ajustarse si su ubicación es otra.
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}[style=thesiscode]
+python -m pip install pandas==2.2.3
+python scripts/generate_ch08_distance_figure.py
+python scripts/generate_ch10_speed_test.py \
+  --system-root ../Detection-Morg \
+  --system-version cf1db739a9e22a2201c9bad20ab9baa328194f54
+python scripts/generate_ch11_results.py \
+  --system-root ../Detection-Morg
+\end{lstlisting}
+\end{minipage}\par
+
+Los scripts regeneran, respectivamente, el ejemplo geométrico del capítulo~\ref{chap:analisis-trayectorias}, la prueba controlada de rapidez del capítulo~\ref{chap:implementacion-pruebas} y las comparaciones y tres figuras del capítulo~\ref{chap:evaluacion-resultados}. El argumento \verb|--system-version| del segundo script registra la versión declarada; el tercero verifica huellas de entradas y módulos y contrasta los cálculos.
+
+La procedencia de las entradas está en \nolinkurl{data/chapter11/provenance.json}. Los scripts escriben productos derivados en el repositorio: deben ejecutarse en una copia que permita comparar los cambios. Trabajan con posiciones y registros conservados, sin entrenamiento ni inferencia del video. La calibración y la conversión a unidades físicas permanecen \textbf{A DEFINIR}.

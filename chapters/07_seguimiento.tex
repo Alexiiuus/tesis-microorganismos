@@ -1,0 +1,131 @@
+\chapter[Seguimiento y reconstrucción de trayectorias]{Seguimiento y reconstrucción\\de trayectorias}
+\label{chap:seguimiento}
+
+Este capítulo describe la asociación temporal de las detecciones y la construcción de trayectorias individuales. Se presentan el método integrado en el sistema, el registro de observaciones, los criterios de continuidad y las opciones de filtrado que determinan qué trayectorias se utilizan en el análisis posterior.
+
+\section{Asociación temporal de detecciones}
+
+La detección localiza microorganismos en cada cuadro; el seguimiento relaciona esas observaciones a lo largo del video. Cuando varios individuos pertenecen a la clase \texttt{E}, su clase no permite distinguirlos entre sí. Para construir trayectorias individuales se requieren identificadores que representen la asociación temporal realizada por el algoritmo.
+
+La proximidad espacial resulta ambigua durante cruces, solapamientos o pérdidas de detección. Por ello, el sistema utiliza el seguimiento integrado en Ultralytics. Los fundamentos del seguimiento basado en detecciones se desarrollaron en el capítulo 3.
+
+Un identificador expresa una hipótesis computacional de continuidad. Su conservación no garantiza que todas las observaciones pertenezcan al mismo microorganismo, y la aparición de un nuevo ID no implica necesariamente la entrada de otro individuo al campo visual.
+
+\section{Método de seguimiento e integración}
+
+El componente de seguimiento invoca \texttt{model.track} sobre el video con los pesos y umbrales de detección descritos en el capítulo~\ref{chap:deteccion}. La opción \texttt{stream=True} permite recorrer los resultados de la secuencia, mientras que \texttt{persist=True} mantiene el estado del seguimiento. La biblioteca realiza la detección y la asociación; el sistema desarrollado recupera los identificadores y registra las posiciones \cite{jocher2024}.
+
+La llamada no especifica un archivo de configuración del tracker. En el entorno de referencia, que fija Ultralytics en la versión \texttt{8.3.213}, se hereda la configuración predeterminada \texttt{botsort.yaml}, correspondiente a BoT-SORT. Su configuración mantiene desactivada la reidentificación por apariencia (\texttt{with\_reid=False}). Por tanto, no corresponde atribuir a esta ejecución un modelo adicional de reconocimiento visual de individuos.
+
+En esta configuración, BoT-SORT utiliza un filtro de Kalman para predecir el estado de las cajas y realiza la asociación mediante su superposición y la confianza de las detecciones. También incorpora compensación del movimiento global mediante flujo óptico disperso. Estas operaciones internas del tracker se distinguen del almacenamiento de observaciones realizado por la aplicación.
+
+La asignación, actualización y eventual recuperación de un ID después de una pérdida dependen del tracker y de su configuración. La aplicación no implementa por separado esas operaciones. El umbral \texttt{iou} suministrado a \texttt{model.track} pertenece al posprocesamiento de las detecciones y no sustituye los parámetros internos de asociación temporal.
+
+La selección de BoT-SORT se heredó de la biblioteca, sin una comparación experimental con otros métodos. Su identificación queda vinculada al entorno de referencia.
+
+\section{Construcción de trayectorias individuales}
+
+Para cada resultado con cajas e identificadores, el programa obtiene $(x,y,w,h)$ y registra el centro $(x,y)$ en píxeles. Esta posición proviene de la caja delimitadora, como se precisó en el capítulo anterior.
+
+El identificador se convierte en un entero y se utiliza como clave de un diccionario. A su lista de observaciones se agrega la tupla $(\texttt{frame\_idx},x,y)$, conservando la representación definida en el capítulo 5. El ancho, el alto, la clase y la confianza de la caja no se almacenan en esa estructura.
+
+El contador de cuadros comienza en cero y avanza por cada resultado, incluso cuando faltan cajas o identificadores. En esos casos no se agrega una posición. Así, dos observaciones separadas por cuadros sin registro conservan sus índices originales. El conjunto resultante agrupa posiciones observadas por ID; no completa posiciones ausentes ni une trayectorias con identificadores distintos.
+
+La trayectoria permite reutilizar las observaciones en los módulos de análisis e inspección sin repetir la inferencia. Sus coordenadas permanecen en píxeles, y su conversión a unidades físicas requiere la calibración espacial descrita en la metodología.
+
+\section{Continuidad temporal y observaciones ausentes}
+
+Para una trayectoria con $n\geq2$ observaciones, sean $f_1,\ldots,f_n$ sus índices de cuadro. Las funciones de análisis temporal exigen que estos sean estrictamente crecientes. Un orden inválido produce un error; no se corrige mediante reordenamiento o eliminación automática de puntos.
+
+La diferencia entre observaciones consecutivas se define como
+\begin{equation}
+  d_i=f_{i+1}-f_i,\qquad i=1,\ldots,n-1.
+\end{equation}
+Si $d_i=1$, las observaciones pertenecen a cuadros consecutivos. Si $d_i>1$, existe un intervalo con $d_i-1$ cuadros sin posición registrada, denominado \textit{gap}. La implementación calcula el máximo y la media de estas diferencias, además de contar aquellas que superan un umbral configurable.
+
+La cobertura temporal utilizada para el filtrado es
+\begin{equation}
+  C=\frac{n}{f_n-f_1+1}.
+  \label{eq:cobertura-track}
+\end{equation}
+El denominador incluye todos los cuadros entre la primera y la última observación. Esta cobertura describe la densidad del registro dentro del intervalo del track, no la proporción del video completo durante la cual se observó al microorganismo. Una trayectoria breve y continua puede tener cobertura igual a uno.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1.25cm,y=1cm]
+    \draw[gray] (0,0) -- (5,0);
+    \foreach \x/\f in {0/10,1/11,2/12,3/13,4/14,5/15} {
+      \node[font=\small] at (\x,-0.45) {$\f$};
+    }
+    \foreach \x in {0,1,4,5} {
+      \fill (\x,0) circle (3pt);
+    }
+    \foreach \x in {2,3} {
+      \draw[gray,fill=white] (\x,0) circle (3pt);
+    }
+    \draw[thesisarrow] (1,0.45) -- (4,0.45);
+    \node[font=\small] at (2.5,0.85) {$d_i=3$: dos cuadros sin observación};
+    \node[font=\small] at (2.5,-1.05) {Índice de cuadro};
+  \end{tikzpicture}
+  \caption{Ejemplo esquemático de continuidad temporal. Los puntos llenos representan observaciones y los vacíos, cuadros sin registro. Cuatro observaciones en seis cuadros dan una cobertura de $4/6$; el intervalo mayor tiene diferencia de tres cuadros.}
+  \label{fig:gap-seguimiento}
+\end{figure}
+
+El ejemplo de la Figura~\ref{fig:gap-seguimiento} distingue la diferencia entre índices de la cantidad de cuadros ausentes. Esta distinción permite interpretar correctamente los umbrales. El registro conserva la ausencia de observaciones y no reconstruye el recorrido ocurrido durante el intervalo. El tratamiento de esas diferencias en las magnitudes de movimiento se desarrolla en el capítulo siguiente.
+
+\section{Selección y filtrado de trayectorias}
+
+El filtrado se aplica después del seguimiento y antes de generar los análisis posteriores. La opción \texttt{type\_filter} admite tres estrategias: conservar todas las trayectorias (\texttt{not\_filter}, valor predeterminado), exigir una cantidad mínima de observaciones (\texttt{by\_frames}) o combinar ese requisito con criterios de continuidad (\texttt{by\_temporal\_consistency}).
+
+El filtro por cantidad de observaciones conserva los tracks con $n\geq n_{\min}$. Aunque el parámetro se denomina \texttt{min\_frames}, cuenta puntos registrados; no mide el intervalo entre el primer y el último cuadro ni exige que las observaciones sean consecutivas.
+
+El filtro temporal conserva una trayectoria únicamente cuando satisface todas las condiciones:
+\begin{equation}
+  n\geq n_{\min},\qquad
+  \max_i d_i\leq d_{\max},\qquad
+  \#\{i:d_i>q\}\leq G_{\max},\qquad
+  C\geq C_{\min},
+\end{equation}
+donde $q$ determina qué diferencias se cuentan como intervalos grandes. El Cuadro~\ref{tab:filtros-seguimiento} presenta los valores predeterminados utilizados por el procesamiento general.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Parámetros operativos del filtrado de trayectorias.}
+  \label{tab:filtros-seguimiento}
+  \begin{tabularx}{\textwidth}{@{}l c X@{}}
+    \toprule
+    Parámetro & Valor & Interpretación \\
+    \midrule
+    $n_{\min}$ & 20 & Cantidad mínima de observaciones. \\
+    $d_{\max}$ & 5 & Diferencia máxima entre índices consecutivos del track. \\
+    $G_{\max}$ & 3 & Cantidad máxima de intervalos con $d_i>q$. \\
+    $C_{\min}$ & $0{,}8$ & Cobertura mínima dentro del intervalo del track. \\
+    $q$ & 1 & Umbral para contar intervalos con cuadros ausentes. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Con estos valores, una diferencia de cinco cuadros admite cuatro cuadros intermedios sin observación. El límite de tres gaps cuenta intervalos, no la cantidad total de cuadros ausentes. Los límites son inclusivos: una trayectoria que alcanza exactamente alguno de ellos puede conservarse si cumple las demás condiciones.
+
+Estas estrategias permiten seleccionar registros según su extensión y continuidad, pero no verifican por sí mismas la identidad del microorganismo. Un falso positivo persistente o una trayectoria con un cambio de identidad pueden satisfacer los criterios. A su vez, un registro breve puede representar un movimiento válido y quedar excluido por el mínimo de puntos. Los umbrales son valores operativos cuya comparación experimental se reserva para el capítulo de evaluación.
+
+\section{Inspección visual del seguimiento}
+
+La inspección dispone de dos productos distintos. La opción \texttt{save\_video} guarda el video anotado por Ultralytics durante la inferencia. Como ese guardado precede al filtrado, el video puede mostrar identificadores cuyas trayectorias se excluyan posteriormente del conjunto de análisis.
+
+Para revisar un individuo, el componente de inspección permite seleccionar un ID y renderizar su trayectoria sobre el video original. En los cuadros con observación se dibujan el centro y los segmentos que conectan los puntos recientes. La longitud de la estela se configura por cantidad de observaciones, con un valor predeterminado de 50; no representa necesariamente 50 cuadros consecutivos.
+
+El renderizado individual puede unir gráficamente puntos separados por un gap, aunque no incorpore posiciones intermedias a los datos. Por tanto, una línea dibujada no demuestra que se haya observado todo ese recorrido. En los cuadros sin posición registrada para el ID, el renderizador no dibuja una nueva localización del individuo.
+
+También existe una variante que añade rapidez suavizada e indicaciones de actividad. Esos valores derivan del análisis posterior y no constituyen criterios de asociación del tracker. Su cálculo y sus umbrales se presentan en el capítulo siguiente.
+
+La revisión visual permite examinar pérdidas, cruces y posibles cambios de identidad, contrastando el ID con los individuos visibles antes y después de una interrupción. Es un procedimiento de inspección; la evaluación cuantitativa y la comparación con referencias manuales se desarrollan en el capítulo de evaluación y resultados.
+
+\section{Consideraciones y limitaciones}
+
+Una pérdida de detección puede dejar un gap dentro del mismo ID o producir fragmentación si el seguimiento continúa con otro identificador. Un cambio de identidad, en cambio, puede mezclar posiciones de individuos distintos dentro de una trayectoria. El sistema conserva la asociación devuelta por la biblioteca y no realiza una corrección automática posterior de esos casos.
+
+La similitud visual, los cruces, las oclusiones y las entradas o salidas del campo microscópico dificultan la continuidad. Además, los falsos positivos pueden persistir y superar los filtros temporales. Por ello, la cantidad de IDs no debe interpretarse directamente como un conteo de microorganismos distintos.
+
+Los gaps limitan la reconstrucción del recorrido, y los errores de identidad pueden alterar las métricas y la clasificación. El filtrado selecciona registros según criterios explícitos, pero su interpretación requiere evaluar la calidad del seguimiento.

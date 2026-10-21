@@ -1,0 +1,56 @@
+\documentclass[12pt,a4paper,twoside,openany]{book}
+
+\input{config/metadata}
+\input{config/packages}
+\input{config/commands}
+
+% El borrador no incorpora páginas de guarda ni separadores en blanco.
+\ifThesisFinalLayout\else
+  \let\cleardoublepage\clearpage
+\fi
+
+\begin{document}
+
+\ifThesisFinalLayout
+  \hypersetup{pageanchor=false}
+  \thesisguardleaf
+\fi
+\frontmatter
+\hypersetup{pageanchor=true}
+\input{frontmatter/titlepage}
+\input{frontmatter/resumen}
+\input{frontmatter/abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\mainmatter
+\include{chapters/01_introduccion}
+\include{chapters/02_problema}
+\include{chapters/03_marco_teorico}
+\include{chapters/04_metodologia}
+\include{chapters/05_diseno_sistema}
+\include{chapters/06_deteccion}
+\include{chapters/07_seguimiento}
+\include{chapters/08_analisis_trayectorias}
+\include{chapters/09_clasificacion_movimiento}
+\include{chapters/10_implementacion_pruebas}
+\include{chapters/11_evaluacion_resultados}
+\include{chapters/12_conclusiones}
+
+\appendix
+\include{appendices/A_guia_ejecucion}
+
+\backmatter
+\printbibliography[heading=bibintoc,title={Bibliografía}]
+
+\cleardoublepage
+\input{backmatter/aval_tribunal}
+\cleardoublepage
+\ifThesisFinalLayout
+  \hypersetup{pageanchor=false}
+  \thesisguardleaf
+\fi
+
+\end{document}

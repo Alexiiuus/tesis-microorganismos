@@ -1,0 +1,19 @@
+flowchart TD
+    A[Material experimental]
+
+    A --> B[Imágenes anotadas]
+    A --> C[Videos microscópicos]
+    A --> D[Trayectorias manuales de Tracker]
+    A --> E[Escala micrométrica]
+
+    B --> B1[Adaptación y evaluación del detector]
+
+    C --> C1[Video<br/>Unidad experimental]
+    C1 --> C2[Microorganismo seguido<br/>Unidad primaria de observación]
+    C2 --> C3[Trayectoria reconstruida<br/>Unidad de análisis computacional]
+
+    D --> D1[Referencia manual para validación]
+    D1 --> C3
+
+    E --> E1[Referencia para calibración espacial]
+    E1 --> C3

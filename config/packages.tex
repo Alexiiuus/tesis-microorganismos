@@ -1,10 +1,22 @@
-\usepackage[english,spanish,es-nodecimaldot]{babel}
+\usepackage[english,spanish,es-nodecimaldot,es-lcroman]{babel}
 \usepackage{amsmath,amssymb,mathtools}
-\usepackage{libertinus}
+\usepackage{fontspec}
+% RHCD 572/2024, art. 1: no sustituir silenciosamente la fuente exigida.
+\IfFontExistsTF{Times New Roman}{
+  \setmainfont{Times New Roman}
+}{
+  \IfFontExistsTF{Arial}{
+    \setmainfont{Arial}
+  }{
+    \PackageError{tesis}{Instale Times New Roman o Arial}{La RHCD 572/2024 exige una de estas fuentes.}
+  }
+}
 \usepackage{microtype}
+\setlength{\emergencystretch}{3em}
 \usepackage[a4paper,left=30mm,right=25mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{emptypage}
 \usepackage{setspace}
-\setstretch{1.18}
+\singlespacing
 
 \usepackage{siunitx}
 \sisetup{output-decimal-marker={,}}
@@ -41,10 +53,17 @@
 
 \usepackage{titlesec}
 \titleformat{\chapter}[display]
-  {\normalfont\bfseries\LARGE}
+  {\normalfont\bfseries\LARGE\raggedright}
   {\chaptername\ \thechapter}
   {0.5em}
   {\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\raggedright}
+  {\thesection}{1em}{}
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{4.5em}{3.2em}}
+\makeatother
 \titleformat{\subsubsection}
   {\normalfont\bfseries\normalsize}
   {}
@@ -59,3 +78,7 @@
 \fancyhf{}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
+
+
+% Evita estirar los espacios entre bloques para igualar la altura de las páginas.
+\raggedbottom

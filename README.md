@@ -1,100 +1,34 @@
 # Tesis — Microorganismos
 
-Código fuente LaTeX de la tesis de Licenciatura en Ciencias de la Computación.
+Código LaTeX del Trabajo Especial de Licenciatura en Ciencias de la Computación. La rama `feature/latex-initial-migration` contiene el borrador con resumen, abstract y capítulos 1 a 11. Los capítulos 12 y 13 permanecen pendientes.
 
-## Estado
+## Compilación
 
-La rama \`feature/latex-initial-migration\` contiene la primera migración del borrador de Google Docs a LaTeX.
+Requiere LuaLaTeX, Biber, BibLaTeX, soporte de español (incluidos sus patrones de separación de palabras), siunitx y Times New Roman o Arial instaladas legalmente en el sistema. Se prioriza Times New Roman. La compilación falla si faltan ambas fuentes, para evitar una sustitución que incumpla la RHCD 572/2024.
 
-Se trasladaron:
+```bash
+latexmk -lualatex -interaction=nonstopmode -halt-on-error main.tex
+```
 
-- portada base;
-- resumen y abstract;
-- capítulos 1 a 4;
-- referencias bibliográficas a BibLaTeX/Biber;
-- fuentes Mermaid de las Figuras 4.1–4.3;
-- configuración inicial para VS Code + LaTeX Workshop.
+En Windows puede usarse MiKTeX, VS Code y LaTeX Workshop con la receta **LuaLaTeX + Biber + LuaLaTeX x2**. Si las citas aparecen como claves, comprobar `biber --version`, limpiar auxiliares y recompilar. El estilo bibliográfico es numérico, con orden de aparición.
 
-## Compilación local
+## Formato y entrega
 
-Configuración recomendada en Windows:
+A4, cuerpo de 12 pt, espacio simple y preparación a doble cara. El PDF incluye las guardas, la carátula del Anexo II y una hoja de aval pendiente de firma. La fecha de defensa y la licencia se completan en `config/metadata.tex` antes de la entrega final. El borrador no acredita aprobación del tribunal ni autorización para su depósito.
 
-1. MiKTeX;
-2. VS Code;
-3. extensión **LaTeX Workshop**.
+La matriz de requisitos, cambios y pendientes está en [docs/REVISION_FORMATO_RHCD_572_2024.md](docs/REVISION_FORMATO_RHCD_572_2024.md).
 
-Abrir este repositorio y compilar \`main.tex\`.
-
-Desde terminal:
-
-\`\`\`bash
-latexmk -lualatex main.tex
-\`\`\`
-
-La bibliografía utiliza Biber y el estilo numérico IEEE.
-
-## Logos institucionales
-
-Agregar los archivos oficiales:
-
-\`\`\`text
-assets/logos/unc.pdf
-assets/logos/famaf.pdf
-\`\`\`
-
-Mientras no estén presentes, la portada muestra placeholders y el documento sigue siendo compilable.
-
-## Figuras Mermaid
-
-Los fuentes editables están en \`figures/chapter04/\`.
-
-Para generar las versiones PDF vectoriales:
-
-\`\`\`bash
-npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_01_metodologia.mmd -o figures/chapter04/fig04_01_metodologia.pdf
-npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_02_datos_unidades.mmd -o figures/chapter04/fig04_02_datos_unidades.pdf
-npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_03_calibracion.mmd -o figures/chapter04/fig04_03_calibracion.pdf
-npx -p @mermaid-js/mermaid-cli mmdc -i figures/chapter04/fig04_04_procedimiento.mmd -o figures/chapter04/fig04_04_procedimiento.pdf
-\`\`\`
-
-Los PDF renderizados de las cuatro figuras del capítulo 4 también están versionados en el repositorio. Los archivos `.mmd` se conservan como fuente editable.
+Los logos usados son `assets/logos/unc.png` y `assets/logos/famaf.png`. Las figuras PDF están versionadas; se conservan fuentes Mermaid y scripts de generación donde corresponde.
 
 ## Organización
 
-\`\`\`text
-main.tex
-config/
-frontmatter/
-chapters/
-figures/
-assets/
-bibliography/
-\`\`\`
+- `main.tex`: orden de lectura.
+- `config/`: metadatos, paquetes y comandos.
+- `frontmatter/`: carátula y resúmenes.
+- `chapters/`: capítulos escritos.
+- `backmatter/`: hoja de aval del tribunal.
+- `bibliography/`: referencias BibLaTeX.
+- `figures/`, `data/` y `scripts/`: figuras y respaldo reproducible.
+- `docs/`: revisión de requisitos editoriales.
 
-## Migración
-
-La fuente de contenido es la pestaña **version 2** del Google Docs de trabajo.
-
-Antes de fusionar esta primera migración, revisar \`MIGRATION_NOTES.md\`, especialmente la comparación de ecuaciones con el documento original.
-
-
-## Si las citas aparecen como claves
-
-Si en el PDF aparece algo como `mader2006` en lugar de `[1]`, significa que Biber no se ejecutó o que quedaron archivos auxiliares de una compilación anterior.
-
-En ese caso:
-
-```bash
-biber --version
-```
-
-debe responder correctamente. Luego limpiar los archivos auxiliares y recompilar con la receta **LuaLaTeX + Biber + LuaLaTeX x2**.
-
-En VS Code:
-
-1. `Ctrl+Shift+P`;
-2. **LaTeX Workshop: Clean up auxiliary files**;
-3. **LaTeX Workshop: Build with recipe**;
-4. elegir **LuaLaTeX + Biber + LuaLaTeX x2**.
-
-La bibliografía se imprime automáticamente al final del documento mediante `\printbibliography`.
+La procedencia y los límites de los resultados experimentales están documentados en `data/chapter11/README.md` y `data/chapter11/provenance.json`. La información histórica de la migración se conserva en `MIGRATION_NOTES.md`.

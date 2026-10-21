@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper,openany]{book}
+\documentclass[12pt,a4paper,twoside,openany]{book}
 
 \input{config/metadata}
 \input{config/packages}
@@ -6,7 +6,10 @@
 
 \begin{document}
 
+\hypersetup{pageanchor=false}
+\thesisguardleaf
 \frontmatter
+\hypersetup{pageanchor=true}
 \input{frontmatter/titlepage}
 \input{frontmatter/resumen}
 \input{frontmatter/abstract}
@@ -30,5 +33,11 @@
 
 \backmatter
 \printbibliography[heading=bibintoc,title={Bibliografía}]
+
+\cleardoublepage
+\input{backmatter/aval_tribunal}
+\cleardoublepage
+\hypersetup{pageanchor=false}
+\thesisguardleaf
 
 \end{document}

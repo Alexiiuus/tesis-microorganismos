@@ -37,3 +37,11 @@
     inner sep=5pt
   }
 }
+
+
+% Una hoja de guarda equivale a dos carillas sin impresión.
+\newcommand{\thesisguardleaf}{%
+  \clearpage
+  \null\thispagestyle{empty}\newpage
+  \null\thispagestyle{empty}\newpage
+}

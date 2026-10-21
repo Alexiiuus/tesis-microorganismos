@@ -33,7 +33,7 @@ Una utilidad comprueba Python, dependencias y, opcionalmente, existencia y exten
 
 \section{Integración y ejecución del procesamiento}
 
-El procesamiento general se invoca desde Python mediante la función \texttt{process\_video\_general}. Recibe las rutas del video y los pesos, el directorio de salida y las opciones de análisis. Las entradas se conservan fuera del código: utilizar otro video o modelo no requiere modificar las funciones de cálculo.
+El procesamiento general se invoca desde Python mediante la función \nolinkurl{process_video_general}. Recibe las rutas del video y los pesos, el directorio de salida y las opciones de análisis. Las entradas se conservan fuera del código: utilizar otro video o modelo no requiere modificar las funciones de cálculo.
 
 La función coordina el seguimiento, el filtrado y los productos solicitados. Devuelve el diccionario de trayectorias, incluso al habilitar la clasificación o los gráficos. Las interfaces de inspección reutilizan ese diccionario para consultar métricas y generar productos individuales sin repetir la inferencia.
 

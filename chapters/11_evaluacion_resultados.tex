@@ -36,7 +36,7 @@ Los umbrales analíticos proceden de los metadatos. La ventana de suavizado se r
 
 Se conservaron el archivo de posiciones manuales exportado por Tracker, su normalización en JSON, un CSV de posiciones automáticas y gráficos de trayectoria y movimiento. La referencia normalizada contiene 101 observaciones de un individuo; el CSV automático seleccionado contiene 929 posiciones y se identifica como \texttt{Track\_145.csv}. Los identificadores dependen de cada ejecución y no constituyen identidades biológicas permanentes. El número 2 que aparece en otra salida del notebook no se adopta como identificador equivalente mediante una regla numérica.
 
-El campo de video de la referencia normalizada conserva el nombre \texttt{prueba\_tracker.mp4}. Este nombre corresponde a un archivo distinto de \texttt{primer\_minuto.mp4}; no se utiliza como sinónimo. La identificación del caso se basa en el registro de procesamiento y en la aclaración del autor de las anotaciones de que las pruebas se realizaron sobre \texttt{primer\_minuto}. Se conserva la discrepancia de metadatos para su trazabilidad, sin reinterpretar el nombre original como prueba de identidad entre archivos.
+El campo de video de la referencia normalizada conserva el nombre \nolinkurl{prueba_tracker.mp4}. Este nombre corresponde a un archivo distinto de \texttt{primer\_minuto.mp4}; no se utiliza como sinónimo. La identificación del caso se basa en el registro de procesamiento y en la aclaración del autor de las anotaciones de que las pruebas se realizaron sobre \texttt{primer\_minuto}. Se conserva la discrepancia de metadatos para su trazabilidad, sin reinterpretar el nombre original como prueba de identidad entre archivos.
 
 Los metadatos de procesamiento registran Python 3.13.15, pero no las revisiones del código ni todas las versiones de las bibliotecas. El análisis de este capítulo utiliza los módulos del sistema desarrollado, cuyas huellas se conservan junto con los resultados. Para reproducir las operaciones se mantienen las posiciones, la configuración y la identificación de los módulos utilizados.
 
@@ -99,7 +99,7 @@ La comparación utiliza coincidencia exacta de índice de cuadro. No se asigna u
 
 Tracker permite definir un origen, una orientación y una escala para transformar posiciones de imagen en coordenadas de análisis \cite{tracker2026}. Por eso, dos recorridos de forma semejante pueden conservar coordenadas numéricas distintas. En el caso estudiado, la coordenada vertical manual aumenta mientras que la coordenada de imagen del modelo disminuye. La semejanza visual se examinó mediante una inversión del sentido de Y y una traslación fijada con el primer par de observaciones.
 
-Las coordenadas iniciales son $(307{,}2;660{,}9)$ para la referencia manual y $(307{,}889282;1667{,}827881)$ para el modelo. Se aplica a todas las anotaciones la transformación
+Para la referencia manual, las coordenadas iniciales son $(307{,}2;660{,}9)$. Para el modelo son $(307{,}889282;1667{,}827881)$. Se aplica a todas las anotaciones la transformación
 \begin{equation}
  x^{\mathrm{al}}_k=x^{\mathrm{man}}_k,
  \qquad

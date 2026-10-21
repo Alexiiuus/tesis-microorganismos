@@ -1,6 +1,6 @@
 # Revisión de edición — RHCD 572/2024
 
-Revisión del borrador escrito (capítulos 1 a 11), sobre la rama `feature/latex-initial-migration`, a partir de `b410bfa6d1a6ecaeaa7a0c4bf47f59bdfb0fbd06`. No se encontraron commits posteriores al iniciar la revisión. Este informe distingue el formato corregible de los trámites propios de una entrega final aprobada.
+Revisión inicial del borrador escrito (capítulos 1 a 11), sobre la rama `feature/latex-initial-migration`, a partir de `b410bfa6d1a6ecaeaa7a0c4bf47f59bdfb0fbd06`. No se encontraron commits posteriores al iniciar la revisión. Este informe distingue el formato corregible de los trámites propios de una entrega final aprobada.
 
 ## Fuentes
 
@@ -48,7 +48,7 @@ Por indicación del autor, el borrador no incluye guardas ni separadores en blan
 
 ## Continuación de la escritura
 
-La organización prevista comprende doce capítulos. El capítulo 11 integra evaluación experimental, resultados y discusión; su sección 11.10 concentra la interpretación de los resultados, sus aportes y sus limitaciones. El capítulo 12 se reserva para «Conclusiones y trabajo futuro» y permanece pendiente de redacción. Se descarta el capítulo independiente de discusión.
+La tesis comprende doce capítulos y un apéndice. El capítulo 11 integra evaluación experimental, resultados y discusión; su sección 11.10 concentra la interpretación de los resultados, sus aportes y sus limitaciones. El capítulo 12 desarrolla «Conclusiones y trabajo futuro» y el Apéndice A reúne la guía de ejecución y reproducción de resultados. Se descarta el capítulo independiente de discusión.
 
 Por decisión del autor, las preguntas de investigación se eliminaron de los capítulos iniciales para reducir su extensión; no deben recuperarse como requisito para continuar. Se corrigieron los anuncios de apartados de preguntas, objetivos y justificación que no figuran en el capítulo 2. La discusión utiliza la propuesta y el alcance ya escritos, las pruebas y los resultados disponibles. La reducción del tiempo de trabajo sigue pendiente de mediciones comparables.
 
@@ -69,3 +69,11 @@ El entorno de esta revisión requirió añadir los paquetes de BibLaTeX, LuaLaTe
 Se retiran del borrador todas las páginas en blanco, incluidas las guardas y los separadores a recto. El cumplimiento de ese requisito se pospone a la preparación de la entrega final. La configuración queda centralizada en `ThesisFinalLayout`, inicialmente desactivada. El contenido escrito y el resto del formato se conservan.
 
 Verificación de este ajuste: PDF de 90 páginas, sin páginas en blanco, errores ni advertencias de compilación.
+
+## Redacción del cierre y el apéndice
+
+Se incorporaron el capítulo 12 y el Apéndice A. La calibración y toda conversión a unidades físicas permanecen A DEFINIR por indicación del autor, sin factores ni procedimientos añadidos. La guía se contrastó con los archivos reales del sistema en `cf1db739a9e22a2201c9bad20ab9baa328194f54`: entradas, firma del procesamiento, inspección, guardado, metadatos y verificador de entorno. La ejecución del pipeline requiere pesos y video externos; el apéndice diferencia los ejemplos de uso de la reconstrucción de resultados a partir de posiciones conservadas.
+
+Verificación de esta redacción: compilación LuaLaTeX/Biber de 97 páginas, sin advertencias, referencias pendientes, caracteres faltantes ni cajas desbordadas; sin páginas en blanco. Revisión visual de los capítulos nuevos, índice y referencias cruzadas. Los bloques de código se mantienen completos entre páginas y el encabezado identifica «Apéndice A».
+
+Los argumentos del ejemplo de procesamiento se contrastaron con la firma real, sin ejecutar inferencia sobre videos. Los ejemplos de inspección y exportación se ejecutaron sobre las 929 observaciones conservadas de Track_145: cuatro gráficos y un CSV con correspondencia de filas verificada. Los tres scripts de figuras se ejecutaron en una copia temporal de los datos, con Python 3.12.14, NumPy 2.3.5, Matplotlib 3.10.8 y Pandas 2.2.3; las huellas de los módulos coinciden con la revisión documentada. La reconstrucción reprodujo el error medio de posición, las discrepancias de rapidez y la categoría informados en el capítulo 11. No se modificaron las entradas, resultados ni figuras ya versionados de ese capítulo.

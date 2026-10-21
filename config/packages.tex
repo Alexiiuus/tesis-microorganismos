@@ -23,6 +23,21 @@
 
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{listings}
+\lstdefinestyle{thesiscode}{
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  frame=single,
+  framerule=0.3pt,
+  xleftmargin=3mm,
+  xrightmargin=3mm,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{tabularx}
@@ -54,7 +69,7 @@
 \usepackage{titlesec}
 \titleformat{\chapter}[display]
   {\normalfont\bfseries\LARGE\raggedright}
-  {\chaptername\ \thechapter}
+  {\chaptertitlename\ \thechapter}
   {0.5em}
   {\Huge}
 \titleformat{\section}

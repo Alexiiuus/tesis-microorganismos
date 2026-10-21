@@ -1,6 +1,6 @@
 # Tesis — Microorganismos
 
-Código LaTeX del Trabajo Especial de Licenciatura en Ciencias de la Computación. La rama `feature/latex-initial-migration` contiene el borrador con resumen, abstract y capítulos 1 a 11. El capítulo 11 integra la evaluación experimental, los resultados y su discusión. El capítulo 12, «Conclusiones y trabajo futuro», permanece pendiente de redacción; la organización prevista comprende doce capítulos.
+Código LaTeX del Trabajo Especial de Licenciatura en Ciencias de la Computación. La rama `feature/latex-initial-migration` contiene el borrador con resumen, abstract y capítulos 1 a 12 y un apéndice. El capítulo 11 integra la evaluación experimental, los resultados y su discusión; el 12 reúne las conclusiones y el trabajo futuro. El Apéndice A documenta ejecución, inspección, formatos y reproducción de resultados. La calibración espacial y la conversión a unidades físicas permanecen **A DEFINIR**.
 
 ## Compilación
 
@@ -25,7 +25,8 @@ Los logos usados son `assets/logos/unc.png` y `assets/logos/famaf.png`. Las figu
 - `main.tex`: orden de lectura.
 - `config/`: metadatos, paquetes y comandos.
 - `frontmatter/`: carátula y resúmenes.
-- `chapters/`: capítulos escritos.
+- `chapters/`: capítulos 1 a 12.
+- `appendices/`: guía de ejecución y reproducción de resultados.
 - `backmatter/`: hoja de aval del tribunal.
 - `bibliography/`: referencias BibLaTeX.
 - `figures/`, `data/` y `scripts/`: figuras y respaldo reproducible.

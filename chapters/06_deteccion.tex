@@ -114,7 +114,7 @@ El parámetro \texttt{iou} se transmite a la biblioteca para el posprocesamiento
 
 Durante el procesamiento se dispone de cajas, clases y valores de confianza. La asociación temporal añade identificadores. La aplicación conserva por cada ID únicamente observaciones $(\texttt{frame\_idx},x,y)$, compatibles con la representación de trayectorias del capítulo 5. El ancho y el alto de la caja, la clase y la confianza no forman parte de la representación canónica almacenada.
 
-Esta separación permite distinguir la información necesaria para localizar un objeto de la utilizada para analizar su movimiento. Una caja sin identificador no se incorpora como trayectoria, y el registro conserva solamente las posiciones observadas, sin interpolar las ausencias. Las coordenadas se almacenan en píxeles; la calibración espacial y su conversión a unidades físicas permanecen \textbf{A DEFINIR}.
+Esta separación permite distinguir la información necesaria para localizar un objeto de la utilizada para analizar su movimiento. Una caja sin identificador no se incorpora como trayectoria, y el registro conserva solamente las posiciones observadas, sin interpolar las ausencias. Las coordenadas se almacenan en píxeles; la calibración del sistema óptico y la conversión a unidades físicas corresponden a una etapa externa al alcance de esta tesis.
 
 \IfFileExists{figures/chapter06/fig06_02_deteccion_real.png}{%
   \begin{figure}[htbp]

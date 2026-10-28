@@ -84,7 +84,7 @@ La posición representa la ubicación estimada de un microorganismo en un cuadro
 
 donde $x_i$ e $y_i$ corresponden al centro de la caja delimitadora obtenida mediante el detector.
 
-Las coordenadas se expresan en píxeles, unidad espacial de la imagen. La calibración y su conversión a unidades físicas permanecen \textbf{A DEFINIR}.
+Las coordenadas se expresan en píxeles, unidad espacial de la imagen. La calibración óptica y la conversión a unidades físicas quedan fuera del alcance de esta tesis.
 
 \subsubsection{Relación entre cuadro y tiempo}
 
@@ -377,7 +377,7 @@ D_{\mu m}=s\,D_{px}.
   \item $s$: escala espacial o factor de calibración, expresado en $\mu m/px$.
 \end{itemize}
 
-En los resultados de esta tesis, las posiciones y distancias se conservan en píxeles, la rapidez en píxeles por segundo y su variación temporal en píxeles por segundo cuadrado. La relación anterior describe la conversión conceptual; el procedimiento de calibración y el factor aplicable permanecen \textbf{A DEFINIR}.
+En los resultados de esta tesis, las posiciones y distancias se conservan en píxeles, la rapidez en píxeles por segundo y su variación temporal en píxeles por segundo cuadrado. La relación anterior describe una conversión conceptual que no se aplica a los resultados presentados. Su uso requiere una calibración externa del sistema óptico, fuera del alcance de esta tesis; no se adopta aquí un factor de conversión.
 
 \section{Alcance del estudio}
 
@@ -412,7 +412,7 @@ El sistema parte de videos previamente adquiridos y no incluye el control autom�
 
 La calidad de las mediciones depende además de las condiciones de adquisición de los videos. Factores como el enfoque, el contraste, la estabilidad de la cámara, la resolución, la iluminación y el movimiento del sistema de captura pueden afectar la detección de los microorganismos y la reconstrucción de sus trayectorias.
 
-Las mediciones se expresan en px, px/s y px/s$^2$, de acuerdo con la representación de las posiciones y sus tiempos. La calibración espacial y la conversión a unidades físicas permanecen \textbf{A DEFINIR}. La comparación del esfuerzo de análisis respecto del procedimiento manual constituye una línea de evaluación pendiente.
+Las mediciones se expresan en px, px/s y px/s$^2$, de acuerdo con la representación de las posiciones y sus tiempos. La calibración óptica y la conversión a unidades físicas son externas al alcance del trabajo. La comparación del esfuerzo de análisis respecto del procedimiento manual constituye una línea de evaluación pendiente.
 
 Finalmente, no se pretende garantizar una generalización directa a cualquier tipo de microorganismo, microscopio o condición experimental. La evaluación se realiza sobre los videos y las categorías visuales disponibles en esta línea experimental del GFA. Su aplicación en otros escenarios podría requerir nuevos datos de entrenamiento, ajustes de parámetros o modificaciones en los métodos utilizados.
 

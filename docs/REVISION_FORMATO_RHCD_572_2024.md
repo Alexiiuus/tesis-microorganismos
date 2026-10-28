@@ -72,7 +72,7 @@ Verificación de este ajuste: PDF de 90 páginas, sin páginas en blanco, errore
 
 ## Redacción del cierre y el apéndice
 
-Se incorporaron el capítulo 12 y el Apéndice A. La calibración y toda conversión a unidades físicas permanecen A DEFINIR por indicación del autor, sin factores ni procedimientos añadidos. La guía se contrastó con los archivos reales del sistema en `cf1db739a9e22a2201c9bad20ab9baa328194f54`: entradas, firma del procesamiento, inspección, guardado, metadatos y verificador de entorno. La ejecución del pipeline requiere pesos y video externos; el apéndice diferencia los ejemplos de uso de la reconstrucción de resultados a partir de posiciones conservadas.
+Se incorporaron el capítulo 12 y el Apéndice A. La indicación inicial de calibración pendiente fue sustituida por la decisión del autor del 28/10/2026: evaluación en píxeles y calibración óptica externa al alcance, sin factores ni procedimientos añadidos. La guía se contrastó con los archivos reales del sistema en `cf1db739a9e22a2201c9bad20ab9baa328194f54`: entradas, firma del procesamiento, inspección, guardado, metadatos y verificador de entorno. La ejecución del pipeline requiere pesos y video externos; el apéndice diferencia los ejemplos de uso de la reconstrucción de resultados a partir de posiciones conservadas.
 
 Verificación de esta redacción: compilación LuaLaTeX/Biber de 97 páginas, sin advertencias, referencias pendientes, caracteres faltantes ni cajas desbordadas; sin páginas en blanco. Revisión visual de los capítulos nuevos, índice y referencias cruzadas. Los bloques de código se mantienen completos entre páginas y el encabezado identifica «Apéndice A».
 

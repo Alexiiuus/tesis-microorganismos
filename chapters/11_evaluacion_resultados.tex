@@ -89,7 +89,7 @@ Se detectaron valores no numéricos en al menos una pérdida de validación de 2
 
 \section{Referencia manual y correspondencia temporal}
 
-Las 101 posiciones manuales corresponden a los cuadros 0, 10, 20, hasta 1000. Con 30 FPS, la separación nominal entre anotaciones es de $10/30$ s, aproximadamente $0{,}333$ s. La frecuencia de anotación se distingue de la frecuencia del video. Las filas sin marcación del archivo exportado no se convierten en posiciones ni se rellenan mediante interpolación.
+Las 101 posiciones manuales corresponden a los cuadros 0, 10, 20, hasta 1000. Con 30 FPS, la separación nominal entre anotaciones es de $10/30$ s, aproximadamente $0{,}333$ s. La frecuencia de anotación se distingue de la frecuencia del video. Las filas sin marcación del archivo exportado no se convierten en posiciones ni se rellenan mediante interpolación. El criterio exacto del punto elegido por el anotador no quedó documentado en los archivos conservados: no puede suponerse que coincida con el centro de la caja automática, con el centro geométrico o con el centro de masa del microorganismo.
 
 La trayectoria automática abarca los cuadros 0 a 984, con 929 observaciones. La intersección de índices con la referencia contiene 93 cuadros, desde 0 hasta 980. Los cuadros manuales sin posición automática correspondiente son 60, 710, 720, 730, 740, 760, 990 y 1000. Los dos últimos quedan fuera del tramo automático conservado. Las ausencias restantes se encuentran dentro de ese tramo.
 
@@ -150,7 +150,7 @@ La Figura~\ref{fig:comparacion-tracker} muestra la superposición y las discrepa
  \label{fig:comparacion-tracker}
 \end{figure}
 
-El resultado respalda la similitud geométrica de este par después de la alineación. La comparación directa previa no debe interpretarse como un error de localización de cientos de píxeles atribuible al seguimiento. Aun después del registro persisten diferencias que pueden combinar imprecisión manual, variación del centro de la caja y errores del procesamiento. Una sola anotación por cuadro no permite separar esas contribuciones ni estimar variabilidad entre anotadores.
+El resultado respalda la similitud geométrica de este par después de la alineación. La comparación directa previa no debe interpretarse como un error de localización de cientos de píxeles atribuible al seguimiento. Aun después del registro persisten diferencias que pueden combinar el criterio no documentado del punto manual, imprecisión de anotación, variación del centro de la caja y errores del procesamiento. La media de $5{,}33$ px no estima exclusivamente error de detección o seguimiento. Una sola anotación por cuadro no permite separar esas contribuciones ni estimar variabilidad entre anotadores.
 
 \section{Continuidad de la trayectoria y observaciones ausentes}
 

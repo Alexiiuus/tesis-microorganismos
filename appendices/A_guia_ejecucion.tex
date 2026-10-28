@@ -138,20 +138,29 @@ El registro contiene también fecha y estado de ejecución. No incluye las posic
 
 Desde la raíz del sistema, \verb|python -m pytest -q| ejecuta la suite con las dependencias de prueba disponibles. Su configuración sustituye la interfaz de YOLO; el capítulo~\ref{chap:implementacion-pruebas} explica el alcance de los casos controlados y su diferencia respecto de la evaluación experimental.
 
-Los comandos siguientes se ejecutan desde la raíz del repositorio de la tesis\footnote{\url{https://github.com/Alexiiuus/tesis-microorganismos}}, con NumPy, Matplotlib y Pandas disponibles. Se supone una copia del sistema en la revisión documentada, situada en el directorio contiguo \verb|Detection-Morg|. La ruta debe ajustarse si su ubicación es otra.
+Los comandos siguientes se ejecutan desde la raíz del repositorio de la tesis\footnote{\url{https://github.com/Alexiiuus/tesis-microorganismos}}, con NumPy, Matplotlib y Pandas disponibles. Para reconstruir el capítulo~\ref{chap:evaluacion-resultados} debe crearse una copia independiente del sistema, fijada al commit documentado. Se requiere Git, acceso de lectura al repositorio y un directorio de destino que todavía no exista:
 
 \noindent\begin{minipage}{\linewidth}
 \begin{lstlisting}[style=thesiscode]
-python -m pip install pandas==2.2.3
+git clone https://github.com/Alexiiuus/Detection-Morg.git ../Detection-Morg-ch11
+git -C ../Detection-Morg-ch11 checkout --detach \
+  cf1db739a9e22a2201c9bad20ab9baa328194f54
+git -C ../Detection-Morg-ch11 rev-parse HEAD
+git -C ../Detection-Morg-ch11 status --short
+python -m pip install numpy==2.2.6 pandas==2.2.3 matplotlib==3.10.8
 python scripts/generate_ch08_distance_figure.py
 python scripts/generate_ch10_speed_test.py \
-  --system-root ../Detection-Morg \
+  --system-root ../Detection-Morg-ch11 \
   --system-version cf1db739a9e22a2201c9bad20ab9baa328194f54
 python scripts/generate_ch11_results.py \
-  --system-root ../Detection-Morg
+  --system-root ../Detection-Morg-ch11
 \end{lstlisting}
 \end{minipage}\par
+
+El comando \verb|rev-parse| debe devolver el commit indicado y \verb|status --short| no debe mostrar modificaciones. El estado \textit{detached HEAD} mantiene la copia en esa revisión sin alterar la instalación actual. La guía de \nolinkurl{data/chapter11/README.md} incluye la creación de un entorno aislado para este posprocesamiento, que no necesita YOLO ni PyTorch.
 
 Los scripts regeneran, respectivamente, el ejemplo geométrico del capítulo~\ref{chap:analisis-trayectorias}, la prueba controlada de rapidez del capítulo~\ref{chap:implementacion-pruebas} y las comparaciones y tres figuras del capítulo~\ref{chap:evaluacion-resultados}. El argumento \verb|--system-version| del segundo script registra la versión declarada; el tercero verifica huellas de entradas y módulos y contrasta los cálculos.
 
 La procedencia de las entradas está en \nolinkurl{data/chapter11/provenance.json}. Los scripts escriben productos derivados en el repositorio: deben ejecutarse en una copia que permita comparar los cambios. Trabajan con posiciones y registros conservados, sin entrenamiento ni inferencia del video. Las operaciones se realizan en coordenadas de imagen; la calibración óptica y la conversión a unidades físicas corresponden a una etapa externa al alcance.
+
+La versión actual contiene correcciones posteriores de presentación. Una diferencia de huellas impide atribuir una ejecución a la revisión documentada, pero no demuestra por sí sola una discrepancia científica; se debe revisar la ruta y utilizar la copia histórica, sin reemplazar sus huellas. El commit fijado identifica la reconstrucción de los resultados y no la inferencia original, cuya revisión exacta no quedó conservada.

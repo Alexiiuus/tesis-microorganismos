@@ -51,7 +51,12 @@ def main():
     for name, details in provenance["system_files"].items():
         content = (args.system_root / name).read_bytes()
         if git_blob_sha(content) != details["github_blob_sha"]:
-            raise ValueError(f"System source differs from the documented version: {name}")
+            raise ValueError(
+                f"System source differs from the documented version: {name}. "
+                f"Use a separate copy at commit {provenance['postprocessing']['source_commit']}; "
+                "see data/chapter11/README.md. A hash mismatch alone does not "
+                "demonstrate a scientific discrepancy. Do not replace historical hashes."
+            )
         source_hashes[name] = hashlib.sha256(content).hexdigest()
     sys.path.insert(0, str(args.system_root.resolve()))
     from Utils.Cls.TrackInspector import TrackInspector

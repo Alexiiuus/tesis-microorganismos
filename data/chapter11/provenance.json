@@ -61,7 +61,7 @@
   },
   "video_confirmed": "primer_minuto.mp4",
   "original_reference_video_label": "prueba_tracker.mp4",
-  "relationship": "Different videos; author confirms tests on primer_minuto; source label retained.",
+  "relationship": "The author confirms primer_minuto.mp4 as the evaluation video. The reference metadata retains an incorrect historical label; the video files are not equivalent.",
   "analysis_date": "2026-10-19",
   "training_runs": {
     "train": {
@@ -79,5 +79,47 @@
     }
   },
   "dataset_documentation": "dataset_sources.json",
-  "dataset_identification_corrected_on": "2026-10-20"
+  "dataset_identification_corrected_on": "2026-10-20",
+  "video_identity": {
+    "evaluation_video": "primer_minuto.mp4",
+    "confirmation_basis": "Explicit author confirmation; reconfirmed in the correction instructions.",
+    "confirmation_recorded_on": "2026-10-28",
+    "historical_reference_label": "prueba_tracker.mp4",
+    "original_reference_preserved": true,
+    "original_video_identity_independently_verified": false,
+    "original_video_sha256": null,
+    "limitation": "No independent matching of the original video, Tracker project and model weights was performed in this correction."
+  },
+  "historical_inference": {
+    "metadata_file": "run_metadata.json",
+    "recorded_input_video": {
+      "video_path": "/content/drive/MyDrive/ESTUDIOS/FAMAF/TESIS/Videos_prueba/primer_minuto.mp4",
+      "video_filename": "primer_minuto.mp4"
+    },
+    "recorded_model": {
+      "model_path": "/content/drive/MyDrive/ESTUDIOS/FAMAF/TESIS/Modelos/DetectorE/train2/weights/best.pt",
+      "confidence_threshold": 0.4,
+      "iou_threshold": 0.4
+    },
+    "git_commit": null,
+    "recorded_environment": {
+      "python_version": "3.13.15",
+      "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+      "git_commit": null,
+      "git_dirty": null
+    },
+    "model_weights_sha256": null,
+    "inference_repeated_for_this_correction": false,
+    "not_recoverable": [
+      "Exact inference commit",
+      "Complete package versions",
+      "Hash of the original video and model weights"
+    ]
+  },
+  "postprocessing": {
+    "source_commit": "cf1db739a9e22a2201c9bad20ab9baa328194f54",
+    "module_integrity": "system_files records Git blob SHAs; scripts reject changed inputs and modules.",
+    "scope": "Reconstruction from preserved positions and training records; no detector inference or retraining.",
+    "does_not_identify_historical_inference_commit": true
+  }
 }

@@ -31,7 +31,7 @@ python scripts/verify_environment.py \
 \end{lstlisting}
 \end{minipage}\par
 
-El verificador comprueba el entorno, los imports y, para las entradas, la existencia y las extensiones admitidas. La inspección del contenido del video, de los pesos y de las anotaciones sigue siendo necesaria. Toda la calibración espacial y la conversión a unidades físicas permanecen \textbf{A DEFINIR}; las instrucciones conservan posiciones en píxeles y tiempos derivados de los cuadros y los FPS de análisis.
+El verificador comprueba el entorno, los imports y, para las entradas, la existencia y las extensiones admitidas. La inspección del contenido del video, de los pesos y de las anotaciones sigue siendo necesaria. La calibración óptica y la conversión a unidades físicas quedan fuera del alcance de esta tesis; las instrucciones conservan posiciones en píxeles y tiempos derivados de los cuadros y los FPS de análisis.
 
 \section{Ejecución del procesamiento}
 
@@ -154,4 +154,4 @@ python scripts/generate_ch11_results.py \
 
 Los scripts regeneran, respectivamente, el ejemplo geométrico del capítulo~\ref{chap:analisis-trayectorias}, la prueba controlada de rapidez del capítulo~\ref{chap:implementacion-pruebas} y las comparaciones y tres figuras del capítulo~\ref{chap:evaluacion-resultados}. El argumento \verb|--system-version| del segundo script registra la versión declarada; el tercero verifica huellas de entradas y módulos y contrasta los cálculos.
 
-La procedencia de las entradas está en \nolinkurl{data/chapter11/provenance.json}. Los scripts escriben productos derivados en el repositorio: deben ejecutarse en una copia que permita comparar los cambios. Trabajan con posiciones y registros conservados, sin entrenamiento ni inferencia del video. La calibración y la conversión a unidades físicas permanecen \textbf{A DEFINIR}.
+La procedencia de las entradas está en \nolinkurl{data/chapter11/provenance.json}. Los scripts escriben productos derivados en el repositorio: deben ejecutarse en una copia que permita comparar los cambios. Trabajan con posiciones y registros conservados, sin entrenamiento ni inferencia del video. Las operaciones se realizan en coordenadas de imagen; la calibración óptica y la conversión a unidades físicas corresponden a una etapa externa al alcance.

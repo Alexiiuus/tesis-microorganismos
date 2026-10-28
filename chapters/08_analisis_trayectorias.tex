@@ -13,9 +13,9 @@ El cálculo de duración e intervalos conserva la separación entre los índices
 
 El procesamiento conserva las coordenadas del seguimiento en píxeles. Las salidas actuales expresan posiciones y distancias en px, rapidez en px/s y variación de rapidez en px/s$^2$. Los indicadores de rectitud e inactividad son adimensionales.
 
-\subsection{Calibración y conversión a micrómetros}
+\subsection{Alcance de las unidades espaciales}
 
-\textbf{A DEFINIR}
+Los resultados describen el movimiento en el plano de la imagen. Su conversión a micrómetros requeriría una calibración externa del sistema óptico, bajo las mismas condiciones de adquisición. Esa etapa está fuera del alcance del trabajo y no se incorpora al procesamiento ni a la evaluación presentada.
 
 \section{Distancias y rectitud de la trayectoria}
 
@@ -42,8 +42,8 @@ La Figura~\ref{fig:distancias-trayectoria} ilustra estas magnitudes con las posi
 
 Para $n\geq2$ observaciones, la rapidez de cada segmento se calcula como
 \begin{equation}
-  v_i=\frac{\lVert\mathbf{p}_{i+1}-\mathbf{p}_i\rVert}{\Delta t_i},
-  \qquad \mathbf{p}_i=(x_i,y_i),\quad i=1,\ldots,n-1.
+  v_i=\frac{\lVert\vec{p}_{i+1}-\vec{p}_i\rVert}{\Delta t_i},
+  \qquad \vec{p}_i=(x_i,y_i),\quad i=1,\ldots,n-1.
   \label{eq:rapidez-segmento-implementada}
 \end{equation}
 El resultado se asocia con el cuadro final $f_{i+1}$. Es una estimación escalar sobre el intervalo entre posiciones observadas, no una medición instantánea de todo el movimiento ocurrido en su interior. Aunque algunas interfaces utilicen la palabra \emph{velocidad}, aquí se emplea \emph{rapidez} para conservar esta distinción.
@@ -155,7 +155,7 @@ La inspección individual reúne posiciones, distancias, rapideces y muestras ba
 
 En las curvas temporales individuales se insertan interrupciones gráficas ante gaps de la serie y se sombrean sus intervalos. Esto no elimina los segmentos calculados sobre observaciones separadas ni impide que el suavizado abarque esos intervalos. La trayectoria espacial, en cambio, une posiciones consecutivas de la lista, incluso cuando sus cuadros no son consecutivos.
 
-El resumen general ordena trayectorias por distancia acumulada, desviación estándar de las rapideces por segmento e índice de rectitud. La etiqueta de trayectorias más \emph{irregulares} utilizada en la salida se refiere a variabilidad de rapidez, no a irregularidad geométrica. Del mismo modo, el ordenamiento llamado más \emph{continuo} o lineal utiliza rectitud, no cobertura temporal. Se muestran hasta cinco ejemplos por criterio, según la configuración y la cantidad disponible.
+El resumen general ordena trayectorias por distancia acumulada, desviación estándar de las rapideces por segmento e índice de rectitud. La etiqueta de trayectorias más \emph{irregulares} utilizada en la salida se refiere a variabilidad de rapidez, no a irregularidad geométrica. El atributo histórico \texttt{n\_continuous} utiliza rectitud, no cobertura temporal; la corrección de etiquetas lo presenta como ranking de mayor rectitud. Se muestran hasta cinco ejemplos por criterio, según la configuración y la cantidad disponible.
 
 Una función auxiliar permite graficar la media de rapideces agrupadas por el cuadro final de cada segmento. Ese promedio reúne solo los tracks con una rapidez asociada al cuadro correspondiente; no presupone un conjunto constante de individuos ni equivale a una media de trayectorias completas. Su disponibilidad se distingue de los productos activados por defecto en el procesamiento general.
 
@@ -175,4 +175,4 @@ Los valores no definidos y las series vacías deben distinguirse de resultados f
 \par
 \end{samepage}
 
-La inspección ofrece una referencia temporal relativa para la curva, pero las marcas auxiliares de inicio, fin y gaps siguen calculándose en tiempo del video. Esta limitación de presentación exige distinguir ambas referencias al interpretar esa opción. La descripción principal de este capítulo utiliza el tiempo del video, que es la referencia predeterminada de los gráficos.
+En la revisión utilizada para reconstruir los resultados, la referencia relativa de la curva no se aplicaba a las marcas auxiliares de inicio, fin y gaps. La corrección de presentación utiliza los cuadros originales de las posiciones para incluir el gap inicial y expresa también las marcas auxiliares en la referencia elegida. Esa modificación conserva las muestras y los cálculos numéricos. La descripción principal de este capítulo utiliza el tiempo del video, que es la referencia predeterminada de los gráficos.

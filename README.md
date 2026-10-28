@@ -1,6 +1,6 @@
 # Tesis — Microorganismos
 
-Código LaTeX del Trabajo Especial de Licenciatura en Ciencias de la Computación. La rama `feature/latex-initial-migration` contiene el borrador con resumen, abstract y capítulos 1 a 12 y un apéndice. El capítulo 11 integra la evaluación experimental, los resultados y su discusión; el 12 reúne las conclusiones y el trabajo futuro. El Apéndice A documenta ejecución, inspección, formatos y reproducción de resultados. La calibración espacial y la conversión a unidades físicas permanecen **A DEFINIR**.
+Código LaTeX del Trabajo Especial de Licenciatura en Ciencias de la Computación. La rama `feature/latex-initial-migration` contiene el borrador con resumen, abstract y capítulos 1 a 12 y un apéndice. El capítulo 11 integra la evaluación experimental, los resultados y su discusión; el 12 reúne las conclusiones y el trabajo futuro. El Apéndice A documenta ejecución, inspección, formatos y reproducción de resultados. La evaluación se realiza en px, px/s y px/s². La calibración óptica y la conversión a unidades físicas corresponden a una etapa externa al alcance de esta tesis.
 
 ## Compilación
 

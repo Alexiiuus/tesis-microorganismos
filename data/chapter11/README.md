@@ -41,4 +41,9 @@ Genera tres figuras vectoriales en `figures/chapter11/`, las comparaciones por c
 
 `provenance.json` registra la revisión, las huellas y la identificación de las fuentes. La alineación vertical utiliza exclusivamente el primer par de posiciones: `y_aligned = y_model(0) + y_manual(0) - y_manual`. Las métricas de posición posteriores excluyen ese anclaje y conservan X. El contraste de rapidez utiliza los mismos extremos de los intervalos de ambas series y sí utiliza el primer punto como extremo inicial.
 
-La clasificación se calcula con los módulos del sistema desarrollado y sus parámetros predeterminados. Sus salidas no son etiquetas independientes de referencia. La escala física permanece **A DEFINIR**.
+La clasificación se calcula con los módulos del sistema desarrollado y sus parámetros predeterminados. Sus salidas no son etiquetas independientes de referencia. La calibración óptica y la conversión a unidades físicas son externas al alcance de la tesis; la evaluación permanece en píxeles.
+
+
+## Alcance de la identificación histórica
+
+El autor confirmó expresamente primer_minuto.mp4 como video de evaluación. No se realizó una comprobación independiente con el video original, el proyecto de Tracker y los pesos. ground_truth.json conserva su etiqueta histórica incorrecta prueba_tracker.mp4; las coordenadas y los archivos originales no se modifican. provenance.json distingue video_identity, historical_inference y postprocessing. El commit de reconstrucción no identifica la inferencia histórica; los hashes no disponibles del video y pesos permanecen nulos. Los umbrales conservados son 0,4/0,4 y el modelo registrado procede de train2.

@@ -1,14 +1,14 @@
 \chapter{Diseño metodológico}
 
-Este capítulo presenta el diseño metodológico utilizado para desarrollar y evaluar la herramienta propuesta. Se describen la organización de los datos experimentales, las unidades de análisis y los criterios empleados para obtener mediciones cuantitativas reproducibles.
+Este capítulo presenta el diseño metodológico utilizado para desarrollar y evaluar el sistema. Se describen la organización de los datos experimentales, las unidades de análisis y los criterios empleados para obtener mediciones cuantitativas reproducibles.
 
 A diferencia del capítulo anterior, centrado en los fundamentos conceptuales, aquí se especifican las decisiones que vinculan los videos experimentales con el procesamiento automático, la evaluación mediante referencias manuales y la interpretación de las mediciones.
 
-También se establecen los criterios de calibración temporal y espacial. Las secciones posteriores desarrollan el procedimiento general, la operacionalización de las magnitudes, el protocolo de evaluación y sus limitaciones.
+También se establece la referencia temporal. Las mediciones espaciales se mantienen en píxeles; la calibración óptica y la conversión a unidades físicas quedan fuera del alcance adoptado. Las secciones posteriores desarrollan el procedimiento general, la operacionalización de las magnitudes, el protocolo de evaluación y sus limitaciones.
 
 \section{Diseño metodológico general}
 
-El trabajo se plantea como una investigación aplicada, de enfoque principalmente cuantitativo, orientada al desarrollo y evaluación de una herramienta computacional. Su finalidad metodológica es obtener, a partir de videos microscópicos, trayectorias y mediciones cuantitativas mediante criterios uniformes y reproducibles, sin explicar las causas físicas o biológicas del movimiento.
+El trabajo se desarrolló como una investigación aplicada, de enfoque principalmente cuantitativo, orientada al desarrollo y evaluación del sistema. Su finalidad metodológica es obtener, a partir de videos adquiridos mediante microscopía óptica, trayectorias y mediciones cuantitativas mediante criterios uniformes y reproducibles, sin explicar las causas físicas o biológicas del movimiento.
 
 Como resume la Figura~\ref{fig:metodologia-general}, el diseño comprende dos componentes: el procesamiento automático de los videos —detección, seguimiento, reconstrucción de trayectorias, cálculo de métricas y clasificación— y la evaluación de los resultados mediante pruebas y referencias manuales.
 
@@ -41,7 +41,7 @@ Para favorecer la reproducibilidad, cada ejecución relevante conserva la identi
       line width=0.55pt
     }
   ]
-    \node[widebox] (video) at (0,0) {Videos microscópicos};
+    \node[widebox] (video) at (0,0) {Videos adquiridos mediante microscopía óptica};
 
     \node[box] (auto) at (-3.2,-1.8)
       {Procesamiento automático\\Detección y seguimiento};
@@ -75,15 +75,17 @@ Para favorecer la reproducibilidad, cada ejecución relevante conserva la identi
 
 \section{Conjunto de datos y unidades de análisis}
 
-El material experimental comprende videos microscópicos proporcionados por el Grupo de Física de la Atmósfera y materiales auxiliares utilizados durante el desarrollo, la validación y la calibración. Las condiciones de adquisición disponibles —como temperatura, FPS y resolución— se conservan como información contextual.
+El material experimental comprende videos adquiridos mediante microscopía óptica en la línea experimental del GFA y materiales auxiliares del desarrollo y la evaluación. Las condiciones de adquisición disponibles —como temperatura, FPS y resolución— se conservan como información contextual.
 
-Como resume la Figura~\ref{fig:datos-unidades}, las imágenes anotadas se utilizaron en la adaptación previa del detector; los videos constituyen la entrada del sistema; las trayectorias reconstruidas con Tracker sirven como referencia manual; y la escala micrométrica se utiliza para establecer la relación entre píxeles y distancia física.
+Como resume la Figura~\ref{fig:datos-unidades}, las imágenes anotadas se utilizaron en la adaptación previa del detector; los videos constituyen la entrada del sistema; las trayectorias reconstruidas con Tracker sirven como referencia manual. La calibración óptica externa no forma parte de los materiales utilizados para calcular los resultados en coordenadas de imagen.
 
 Los conjuntos de imágenes se distinguen también por su finalidad. La exportación \texttt{Micro.v2} se utilizó para entrenar la primera versión funcional del detector; \texttt{Micro.v5} conserva un conjunto ampliado con aumentos; y \texttt{Micro.v6} reúne imágenes sin aumentar para el uso posterior de sus detecciones. Este último conjunto no corresponde al primer entrenamiento. Su composición y la identificación de las corridas se detallan en la sección~\ref{sec:preparacion-detector}.
 
-Las unidades de análisis mantienen la organización definida en el capítulo 2: el video constituye la unidad experimental, el microorganismo seguido la unidad primaria de observación y su secuencia de posiciones la trayectoria analizada. El identificador es computacional, por lo que una fragmentación puede representar a un mismo microorganismo mediante más de un ID.
+Las unidades de análisis mantienen la organización definida en el capítulo 2: el video constituye la unidad experimental, el microorganismo seguido la unidad primaria de análisis y la trayectoria reconstruida la unidad secundaria. El identificador es computacional, por lo que una fragmentación puede representar a un mismo microorganismo mediante más de un ID.
 
 Para preservar la trazabilidad, los procedimientos manual y automático deben utilizar el mismo archivo de video y conservar la información necesaria para identificarlo, junto con la configuración de procesamiento y los productos derivados.
+
+Para nuevas adquisiciones se recomienda registrar la frecuencia de cuadros, la resolución, el aumento y la configuración de captura, y mantener estables el zoom, la cámara y el campo de observación durante la secuencia. Los cambios de encuadre o escala pueden generar desplazamientos aparentes; el desenfoque y el movimiento rápido pueden dificultar la detección. Estas recomendaciones orientan la preparación del material y no certifican las condiciones de todos los videos disponibles. Estas condiciones deben conservarse también si, en otro estudio, se realiza una calibración óptica externa.
 
 Los resultados se interpretan dentro del dominio experimental estudiado y no implican, por sí solos, generalización a otros microorganismos, configuraciones ópticas o condiciones de adquisición.
 
@@ -121,104 +123,57 @@ Los resultados se interpretan dentro del dominio experimental estudiado y no imp
       {Adaptación y evaluación del detector};
 
     \node[source] (i2) at (-3.8,-1.8)
-      {Videos microscópicos};
+      {Videos adquiridos mediante microscopía óptica};
     \node[role] (o2) at (3.0,-1.8)
-      {Video = unidad experimental\\Microorganismo = unidad primaria\\Trayectoria = unidad computacional};
+      {Video = unidad experimental\\Microorganismo = unidad primaria\\Trayectoria = unidad secundaria};
 
     \node[source] (i3) at (-3.8,-3.9)
       {Trayectorias manuales\\de Tracker};
     \node[role] (o3) at (3.0,-3.9)
       {Referencia manual para la validación};
 
-    \node[source] (i4) at (-3.8,-5.7)
-      {Escala micrométrica};
-    \node[role] (o4) at (3.0,-5.7)
-      {Referencia para la calibración espacial};
-
     \draw[arr] (i1) -- (o1);
     \draw[arr] (i2) -- (o2);
     \draw[arr] (i3) -- (o3);
-    \draw[arr] (i4) -- (o4);
   \end{tikzpicture}
-  \caption{Relación entre los materiales utilizados y su función metodológica dentro del estudio.}
+  \caption{Relación entre los materiales y su función metodológica. Las mediciones se obtienen en coordenadas de imagen, sin aplicar una conversión a unidades físicas.}
   \label{fig:datos-unidades}
 \end{figure}
 
-\section{Calibración espacial y temporal}
+\section{Referencia temporal y unidades espaciales}
 
-Cada trayectoria conserva el número de cuadro y la posición en píxeles. Como resume la Figura~\ref{fig:calibracion}, la conversión temporal se realiza mediante los FPS de análisis, mientras que la conversión espacial requiere una calibración micrométrica válida antes de expresar las magnitudes en unidades físicas.
+Cada trayectoria conserva el número de cuadro y la posición en píxeles. La Figura~\ref{fig:calibracion} resume cómo los FPS proporcionan la referencia temporal y cómo las coordenadas de imagen se utilizan en las magnitudes derivadas. La conversión a unidades físicas requeriría una calibración óptica externa y no se aplica en esta evaluación.
 
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[
-    x=1cm,
-    y=1cm,
-    box/.style={
-      draw,
-      rounded corners=2pt,
-      align=center,
-      text width=4.3cm,
-      minimum height=1.0cm,
-      inner sep=4pt,
-      font=\footnotesize
-    },
-    widebox/.style={
-      box,
-      text width=5.6cm
-    },
-    arr/.style={
-      -{Latex[length=2mm]},
-      line width=0.55pt
-    }
+    box/.style={draw,rounded corners=2pt,align=center,text width=4.3cm,
+                minimum height=1cm,inner sep=4pt,font=\footnotesize},
+    widebox/.style={box,text width=6.3cm},
+    arr/.style={-{Latex[length=2mm]},line width=0.55pt}
   ]
-    \node[widebox] (obs) at (0,0)
-      {Observación de una trayectoria};
-    \node[widebox] (repr) at (0,-1.6)
-      {Representación interna: cuadro, $x_{px}$, $y_{px}$};
-
-    \node[box] (temp1) at (-3.2,-3.4)
-      {Número de cuadro};
-    \node[box] (spat1) at (3.2,-3.4)
-      {Coordenadas en píxeles};
-
-    \node[box] (temp2) at (-3.2,-5.0)
-      {FPS de análisis};
-    \node[box] (spat2) at (3.2,-5.0)
-      {Escala micrométrica};
-
-    \node[box] (temp3) at (-3.2,-6.6)
-      {Tiempo e intervalos $\Delta t$};
-    \node[box] (spat3) at (3.2,-6.6)
-      {Factor $s$ ($\mu$m/px)};
-
-    \node[box] (spat4) at (3.2,-8.2)
-      {Posiciones y distancias\\en $\mu$m};
-
-    \node[widebox] (derived) at (0,-10.0)
-      {Magnitudes derivadas\\por ejemplo, rapidez en $\mu$m/s};
-
-    \draw[arr] (obs) -- (repr);
-
-    \draw[arr] (repr.south) -- ++(0,-0.35) -| (temp1.north);
-    \draw[arr] (repr.south) -- ++(0,-0.35) -| (spat1.north);
-
-    \draw[arr] (temp1) -- (temp2);
-    \draw[arr] (temp2) -- (temp3);
-
-    \draw[arr] (spat1) -- (spat2);
-    \draw[arr] (spat2) -- (spat3);
-    \draw[arr] (spat3) -- (spat4);
-
-    \draw[arr] (temp3.south) |- (derived.west);
-    \draw[arr] (spat4.south) |- (derived.east);
+    \node[widebox] (record) at (0,0)
+      {Registro de trayectoria: cuadro, $x_{px}$, $y_{px}$};
+    \node[box] (time) at (-3.2,-1.8) {Cuadros y FPS de análisis};
+    \node[box] (space) at (3.2,-1.8) {Posiciones en píxeles};
+    \node[box] (seconds) at (-3.2,-3.4) {Tiempo e intervalos en segundos};
+    \node[box] (distance) at (3.2,-3.4) {Distancias en px};
+    \node[widebox] (metrics) at (0,-5.2)
+      {Rapidez en px/s y variación de rapidez en px/s$^2$};
+    \draw[arr] (record.south) -- ++(0,-0.35) -| (time.north);
+    \draw[arr] (record.south) -- ++(0,-0.35) -| (space.north);
+    \draw[arr] (time) -- (seconds);
+    \draw[arr] (space) -- (distance);
+    \draw[arr] (seconds.south) |- (metrics.west);
+    \draw[arr] (distance.south) |- (metrics.east);
   \end{tikzpicture}
-  \caption{Relación entre la representación interna de una trayectoria y las conversiones temporal y espacial. La información temporal se obtiene a partir de los cuadros y los FPS de análisis; la conversión espacial se aplica una vez validado el factor de calibración.}
+  \caption{Referencia temporal y unidades utilizadas en la evaluación. Los cálculos conservan las coordenadas de imagen y los intervalos reales entre cuadros. La calibración óptica y la conversión a unidades físicas pertenecen a una etapa externa al alcance del trabajo.}
   \label{fig:calibracion}
 \end{figure}
 
 \subsection{Calibración temporal}
 
-La referencia temporal se obtiene a partir de la frecuencia de cuadros utilizada para el análisis, expresada en cuadros por segundo (FPS). Para dos observaciones consecutivas de una misma trayectoria, registradas en los cuadros $f_i$ y $f_{i+1}$, el intervalo temporal se calcula como:
+La referencia temporal se obtiene a partir de la frecuencia de cuadros utilizada para el análisis, expresada en cuadros por segundo (FPS, del inglés \emph{frames per second}). Para dos observaciones consecutivas de una misma trayectoria, registradas en los cuadros $f_i$ y $f_{i+1}$, el intervalo temporal se calcula como:
 
 \[
 \Delta t_i=\frac{f_{i+1}-f_i}{FPS}.
@@ -226,13 +181,15 @@ La referencia temporal se obtiene a partir de la frecuencia de cuadros utilizada
 
 Si existen \textit{gaps}, el intervalo temporal se calcula con los cuadros realmente transcurridos; no se asume un valor fijo de $1/FPS$.
 
-Cuando el origen temporal se fija en el inicio del video, el instante asociado con un cuadro $f_i$ puede expresarse como $t_i=(f_i-f_0)/FPS$. Esta referencia permite conservar el momento real de aparición de cada trayectoria dentro de la grabación. Para visualizaciones específicas puede mostrarse únicamente una ventana alrededor del intervalo donde existe información, sin modificar los valores absolutos de tiempo.
+Con cuadros numerados desde cero y el origen temporal en el inicio del video, el instante asociado con $f_i$ es $t_i=f_i/FPS$. La expresión $t_i=(f_i-f_0)/FPS$ se reserva para un origen desplazado al cuadro $f_0$. Esta referencia permite conservar el momento real de aparición de cada trayectoria dentro de la grabación. Para visualizaciones específicas puede mostrarse únicamente una ventana alrededor del intervalo donde existe información, sin modificar los valores absolutos de tiempo.
 
 El FPS de análisis debe corresponder a la adquisición o definirse explícitamente y mantenerse separado del FPS utilizado solo para escribir el video de salida.
 
-\subsection{Calibración espacial}
+\subsection{Alcance de las unidades espaciales}
 
-[ ========== A definir ========== ]
+La evaluación se realiza en coordenadas de imagen: posiciones y distancias en px, rapidez en px/s y variación temporal de rapidez en px/s$^2$. La rectitud y los indicadores definidos como proporciones son adimensionales.
+
+La conversión a micrómetros requiere una calibración del sistema óptico realizada externamente, bajo condiciones de adquisición compatibles. Esa etapa queda fuera del alcance de esta tesis. No se utiliza un factor $\mu$m/px ni se presentan los resultados como mediciones de distancia física. La conversión temporal mediante FPS sí forma parte del procesamiento desarrollado.
 
 \section{Procedimiento general}
 
@@ -332,19 +289,19 @@ s \\
 
 Distancia total &
 Suma de las distancias euclídeas entre posiciones consecutivas. &
-px; $\mu$m tras calibración \\
+px \\
 
 Desplazamiento neto &
 Distancia entre la primera y la última posición de la trayectoria. &
-px; $\mu$m tras calibración \\
+px \\
 
 Rapidez &
 Distancia de cada segmento dividida por su intervalo temporal; para la trayectoria completa, distancia total dividida por el tiempo transcurrido. &
-px/s; $\mu$m/s tras calibración \\
+px/s \\
 
-Variación de rapidez / aceleración &
+Variación temporal de rapidez &
 Cambio de rapidez entre intervalos sucesivos dividido por el tiempo transcurrido. &
-px/s$^2$; $\mu$m/s$^2$ tras calibración \\
+px/s$^2$ \\
 
 Rectitud &
 Relación entre desplazamiento neto y distancia total cuando la distancia total es mayor que cero. &
@@ -363,17 +320,17 @@ Clasificación heurística en direccional, browniano/errático, circular/oscilat
 Categórica \\
 
 Variables contextuales &
-Temperatura, FPS, resolución y escala espacial asociadas con el video y su adquisición. &
-$^\circ$C, fps, px, $\mu$m/px \\
+Temperatura, FPS y resolución asociados con el video y su adquisición. &
+$^\circ$C, fps, px \\
 
 \end{longtable}
 \endgroup
 
-La posición, las distancias y las magnitudes derivadas permanecen expresadas en píxeles mientras no se aplique una calibración espacial válida. Cuando dicha escala se encuentre establecida, las conversiones a micrómetros se realizan como una capa posterior, manteniendo los valores originales para conservar la trazabilidad.
+Las posiciones y distancias se conservan en px, la rapidez en px/s y su variación temporal en px/s$^2$. El cuadro utiliza las unidades efectivas del procesamiento. La conversión a unidades físicas queda fuera del alcance.
 
 \section{Protocolo y criterios de evaluación}
 
-La evaluación se organiza por niveles para distinguir errores de detección, seguimiento y análisis. En la etapa piloto se seleccionan entre tres y cinco videos con distinta dificultad, considerando densidad, cruces, oclusiones, entradas o salidas del campo visual y posibles fragmentaciones. Antes de comparar resultados se verifica que el video, el FPS, la resolución y el sistema de coordenadas sean compatibles entre Tracker y el procesamiento automático.
+La evaluación se organiza por niveles para distinguir errores de detección, seguimiento y análisis. El protocolo contempla ampliar la evaluación a videos con distinta dificultad, considerando densidad, cruces, oclusiones, entradas o salidas del campo visual y fragmentaciones. La evidencia experimental presentada se limita a una trayectoria con referencia manual parcial, como se detalla en el capítulo~\ref{chap:evaluacion-resultados}. Antes de comparar resultados se verifica que el video, el FPS, la resolución y el sistema de coordenadas sean compatibles entre Tracker y el procesamiento automático.
 
 \begingroup
 \footnotesize
@@ -424,7 +381,7 @@ Resumir primero por trayectoria, luego por video y finalmente de forma global; n
 
 Cuando el \textit{ground truth} es parcial, una trayectoria automática sin referencia manual no se considera por sí sola un falso positivo; los pares utilizados como evidencia deben quedar revisados y documentados. Las métricas se resumen primero por trayectoria y luego por video, conservando como no calculables aquellas magnitudes que no estén definidas.
 
-Los umbrales de confianza, filtrado, inactividad, aceleración y cambios de régimen se consideran parámetros operativos mientras no exista una validación experimental que permita tratarlos como valores óptimos.
+Los umbrales de confianza, filtrado, inactividad, variación de rapidez y cambios de régimen se consideran parámetros operativos mientras no exista una validación experimental que permita tratarlos como valores óptimos.
 
 \section{Limitaciones metodológicas y amenazas a la validez}
 

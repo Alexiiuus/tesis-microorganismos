@@ -10,7 +10,7 @@ Se priorizaron artículos científicos revisados por pares, trabajos metodológi
 
 Los antecedentes se organizaron en cuatro ejes. El primero reúne estudios experimentales sobre observación y cuantificación del movimiento de microorganismos. El segundo comprende métodos computacionales de detección y seguimiento, incluyendo la separación entre el reconocimiento de los microorganismos en cada imagen y la asociación de esas observaciones a lo largo del tiempo, distinción destacada también en revisiones recientes sobre análisis de motilidad \cite{dubay2023}. El tercero considera métricas y representaciones utilizadas para describir trayectorias. El cuarto reúne herramientas y enfoques de análisis que permiten transformar secuencias de imágenes en datos cuantitativos.
 
-Este criterio permite relacionar trabajos con objetivos biológicos o experimentales diferentes sin asumir que sus resultados son directamente transferibles a los microorganismos analizados en esta tesis. En particular, los valores de rapidez, los patrones de movimiento y la respuesta frente a cambios ambientales dependen del organismo, del medio, de la escala de observación y de las condiciones de adquisición. Por este motivo, los antecedentes se utilizan para fundamentar métodos y variables de análisis, pero no para establecer de antemano el comportamiento que deberían presentar las muestras del Grupo de Física de la Atmósfera.
+Este criterio permite relacionar trabajos con objetivos biológicos o experimentales diferentes sin asumir que sus resultados son directamente transferibles a los microorganismos analizados en esta tesis. En particular, los valores de rapidez, los patrones de movimiento y la respuesta frente a cambios ambientales dependen del organismo, del medio, de la escala de observación y de las condiciones de adquisición. Por este motivo, los antecedentes se utilizan para fundamentar métodos y variables de análisis, pero no para establecer de antemano el comportamiento que deberían presentar las muestras de esta línea experimental del GFA.
 
 \section{Análisis de microorganismos mediante video}
 
@@ -20,7 +20,7 @@ La microscopía combinada con adquisición de video permite observar el desplaza
 
 Bente et al. estudiaron bacterias magnetotácticas mediante videomicroscopía de alta velocidad y reconstrucción de trayectorias tridimensionales, utilizando el seguimiento para cuantificar características de una motilidad particularmente rápida \cite{bente2020}. Este trabajo muestra que el análisis de trayectorias puede utilizarse no solo para visualizar recorridos, sino también para estudiar cuantitativamente la rapidez y la geometría del movimiento. Al mismo tiempo, evidencia que una trayectoria observada en dos dimensiones constituye una proyección del movimiento real cuando este se desarrolla en tres dimensiones, aspecto que debe considerarse al interpretar resultados obtenidos sobre el plano de la imagen.
 
-Un antecedente metodológicamente más próximo al presente trabajo es el de Shunmugam et al., quienes analizaron el movimiento de Paramecium aurelia mediante videos de microscopía y un algoritmo de seguimiento de objetos \cite{shunmugam2021}. A partir de las posiciones registradas para cada organismo reconstruyeron trayectorias individuales y calcularon magnitudes como la distancia recorrida y la rapidez media. Estas mediciones fueron utilizadas posteriormente para comparar el comportamiento de los organismos bajo distintas condiciones del medio. El estudio constituye un ejemplo de cómo el seguimiento automático puede transformar videos microscópicos en datos cuantitativos utilizables para realizar comparaciones experimentales.
+Un antecedente metodológicamente más próximo al presente trabajo es el de Shunmugam et al., quienes analizaron el movimiento de Paramecium aurelia mediante videos de microscopía y un algoritmo de seguimiento de objetos \cite{shunmugam2021}. A partir de las posiciones registradas para cada organismo reconstruyeron trayectorias individuales y calcularon magnitudes como la distancia recorrida y la rapidez media. Estas mediciones fueron utilizadas posteriormente para comparar el comportamiento de los organismos bajo distintas condiciones del medio. El estudio constituye un ejemplo de cómo el seguimiento automático puede transformar videos adquiridos mediante microscopía óptica en datos cuantitativos utilizables para realizar comparaciones experimentales.
 
 Las revisiones metodológicas recientes muestran que este tipo de análisis requiere considerar de manera conjunta el sistema de adquisición y el procesamiento posterior. Dubay et al. distinguen explícitamente entre la detección de microorganismos en las imágenes, la vinculación de las detecciones para formar trayectorias y el análisis cuantitativo de esas trayectorias \cite{dubay2023}. Esta separación resulta relevante para la presente tesis, ya que un error en cualquiera de estas etapas puede propagarse hacia las métricas obtenidas posteriormente.
 
@@ -34,13 +34,13 @@ La relación entre temperatura y trayectoria también ha sido estudiada en otros
 
 Por lo tanto, la bibliografía no justifica asumir que una disminución de la temperatura producirá necesariamente una reducción determinada de la rapidez o un patrón específico de trayectoria en todos los microorganismos. Lo que sí establece es que la temperatura constituye una variable experimental capaz de acompañarse de cambios cuantificables en el movimiento y que su análisis requiere mediciones reproducibles de posición, trayectoria y tiempo.
 
-\subsection{Relación con el problema experimental del Grupo de Física de la Atmósfera}
+\subsection{Relación con la línea experimental del GFA}
 
 En el Grupo de Física de la Atmósfera, la línea de investigación que da origen a esta tesis estudia microorganismos presentes en muestras acuáticas y su comportamiento bajo condiciones térmicas cercanas al punto de congelación \cite{pedernera2024}. Las observaciones se realizan mediante una cámara acoplada a un microscopio óptico y, en las primeras etapas del trabajo, las trayectorias fueron reconstruidas manualmente para analizar el movimiento de los organismos.
 
 Los antecedentes revisados muestran que la videomicroscopía y el seguimiento de objetos permiten obtener trayectorias y métricas de movimiento en distintos microorganismos y condiciones experimentales \cite{shunmugam2021}, \cite{bente2020}, \cite{yamashita2024}, \cite{junge2003}. También muestran que la temperatura puede modificar las magnitudes observadas a través de mecanismos físicos y biológicos cuya importancia relativa depende del sistema estudiado \cite{beveridge2010}, \cite{nakaoka1977}. En consecuencia, resulta necesario separar la obtención de mediciones de su interpretación causal.
 
-La contribución de esta tesis se sitúa en esa primera etapa. El sistema desarrollado busca automatizar la detección, el seguimiento y la obtención de métricas a partir de los videos experimentales del grupo, de manera que las posiciones, trayectorias, rapidez y demás características del movimiento puedan calcularse mediante un procedimiento uniforme y reproducible. La comparación posterior entre condiciones térmicas puede apoyarse en estos datos, pero determinar las causas físicas o biológicas de las diferencias observadas permanece fuera del alcance del sistema.
+La contribución de esta tesis se sitúa en esa primera etapa. El sistema automatiza la detección, el seguimiento y la obtención de métricas a partir de los videos de esta línea experimental, de manera que las posiciones, trayectorias, rapidez y demás características del movimiento puedan calcularse mediante un procedimiento uniforme y reproducible. La comparación posterior entre condiciones térmicas puede apoyarse en estos datos, pero determinar las causas físicas o biológicas de las diferencias observadas permanece fuera del alcance del sistema.
 
 \section{Visión por computadora}
 
@@ -54,13 +54,13 @@ La segmentación busca determinar qué píxeles pertenecen a cada objeto y permi
 
 El seguimiento de objetos incorpora la dimensión temporal del video y tiene como finalidad asociar las detecciones obtenidas en cuadros sucesivos para conservar la identidad de un mismo objeto a lo largo del tiempo \cite{bewley2016}. De esta manera, las observaciones correspondientes a un mismo microorganismo pueden organizarse temporalmente y utilizarse posteriormente para reconstruir su movimiento.
 
-En el presente trabajo, la visión por computadora proporciona el marco necesario para transformar videos microscópicos en datos estructurados. La detección permite localizar los microorganismos en cada cuadro, mientras que el seguimiento permite vincular esas observaciones a lo largo del tiempo. A partir de los datos obtenidos mediante ambas etapas se realiza posteriormente el análisis cuantitativo del movimiento.
+En el presente trabajo, la visión por computadora proporciona el marco necesario para transformar videos adquiridos mediante microscopía óptica en datos estructurados. La detección permite localizar los microorganismos en cada cuadro, mientras que el seguimiento permite vincular esas observaciones a lo largo del tiempo. A partir de los datos obtenidos mediante ambas etapas se realiza posteriormente el análisis cuantitativo del movimiento.
 
 \section{Detección de objetos}
 
 La detección de objetos consiste en identificar y localizar instancias de determinadas categorías presentes en una imagen. A diferencia de la clasificación, que asigna una categoría general a una imagen completa, la detección debe determinar tanto qué objetos se encuentran presentes como dónde están ubicados \cite{redmon2016}.
 
-En esta tesis, la detección de objetos se utiliza para localizar los microorganismos visibles en cada cuadro de los videos microscópicos. Las detecciones obtenidas proporcionan la información espacial que posteriormente utiliza el método de seguimiento para asociar observaciones correspondientes a un mismo individuo a lo largo del tiempo.
+En esta tesis, la detección de objetos se utiliza para localizar los microorganismos visibles en cada cuadro de los videos adquiridos mediante microscopía óptica. Las detecciones obtenidas proporcionan la información espacial que posteriormente utiliza el método de seguimiento para asociar observaciones correspondientes a un mismo individuo a lo largo del tiempo.
 
 \subsection{Representación y confianza de las detecciones}
 
@@ -178,7 +178,7 @@ Por esta razón, los valores de mAP deben informarse junto con el criterio de Io
 
 YOLO, sigla de You Only Look Once, corresponde a una familia de modelos de aprendizaje profundo orientados a la detección de objetos en imágenes y videos. Su primera formulación propuso resolver la detección mediante un único modelo capaz de procesar una imagen y predecir directamente las cajas delimitadoras, las clases y los valores de confianza asociados con los objetos detectados \cite{redmon2016}.
 
-Desde su aparición, la familia YOLO ha evolucionado mediante distintas arquitecturas y estrategias de entrenamiento orientadas a mejorar la precisión y la eficiencia de la detección \cite{redmon2017}, \cite{redmon2018}. En esta tesis se utiliza YOLO11 mediante la biblioteca Ultralytics \cite{jocher2024}, adaptándolo al dominio de los videos microscópicos analizados.
+Desde su aparición, la familia YOLO ha evolucionado mediante distintas arquitecturas y estrategias de entrenamiento orientadas a mejorar la precisión y la eficiencia de la detección \cite{redmon2017}, \cite{redmon2018}. En esta tesis se utiliza YOLO11 mediante la biblioteca Ultralytics \cite{jocher2024}, adaptándolo al dominio de los videos adquiridos mediante microscopía óptica analizados.
 
 \subsection{Detectores de una etapa}
 
@@ -190,11 +190,11 @@ Esta característica es relevante para el análisis de video, ya que cada grabac
 
 YOLO11 dispone de variantes de diferente tamaño que establecen distintos compromisos entre capacidad de representación, velocidad de inferencia y costo computacional \cite{jocher2024}. La selección de una variante debe considerar las características del problema y evaluarse sobre los datos correspondientes al dominio de aplicación.
 
-En los videos microscópicos utilizados en este trabajo, esta evaluación resulta particularmente importante debido al tamaño reducido de algunos microorganismos, su posible bajo contraste respecto del fondo y las variaciones existentes entre las condiciones de adquisición. La variante finalmente utilizada y los criterios empleados para su selección se describen en los capítulos correspondientes a la metodología y evaluación del sistema.
+En los videos adquiridos mediante microscopía óptica utilizados en este trabajo, esta evaluación resulta particularmente importante debido al tamaño reducido de algunos microorganismos, su posible bajo contraste respecto del fondo y las variaciones existentes entre las condiciones de adquisición. La variante finalmente utilizada y los criterios empleados para su selección se describen en los capítulos correspondientes a la metodología y evaluación del sistema.
 
 \subsection{YOLO11 y aprendizaje por transferencia}
 
-En esta tesis se utiliza la implementación de YOLO11 proporcionada por Ultralytics \cite{jocher2024}. El modelo se adapta a los videos microscópicos mediante aprendizaje por transferencia, utilizando imágenes anotadas correspondientes a los microorganismos considerados en el estudio.
+En esta tesis se utiliza la implementación de YOLO11 proporcionada por Ultralytics \cite{jocher2024}. El modelo se adapta a los videos adquiridos mediante microscopía óptica mediante aprendizaje por transferencia, utilizando imágenes anotadas correspondientes a los microorganismos considerados en el estudio.
 
 El aprendizaje por transferencia permite partir de pesos previamente entrenados en lugar de inicializar completamente el modelo de manera aleatoria. Estos pesos proporcionan representaciones visuales generales que posteriormente pueden ajustarse mediante datos específicos del nuevo dominio.
 
@@ -234,7 +234,7 @@ Un cambio de identidad o ID switch ocurre cuando el identificador asociado con u
 
 La fragmentación ocurre cuando el seguimiento de un mismo individuo se interrumpe y posteriormente continúa mediante un nuevo identificador. Como consecuencia, un único recorrido real puede quedar representado mediante varias secuencias independientes, alterando su duración y las métricas calculadas posteriormente \cite{dendorfer2021}.
 
-Estos problemas son particularmente importantes en videos microscópicos, donde los microorganismos pueden ser pequeños y presentar características visuales similares. Un error de asociación puede producir saltos espaciales, dividir recorridos o combinar observaciones pertenecientes a distintos individuos. Por esta razón, la calidad del seguimiento debe considerarse antes de interpretar las métricas derivadas de las trayectorias.
+Estos problemas son particularmente importantes en videos adquiridos mediante microscopía óptica, donde los microorganismos pueden ser pequeños y presentar características visuales similares. Un error de asociación puede producir saltos espaciales, dividir recorridos o combinar observaciones pertenecientes a distintos individuos. Por esta razón, la calidad del seguimiento debe considerarse antes de interpretar las métricas derivadas de las trayectorias.
 
 \subsection{Métodos de seguimiento relacionados}
 
@@ -246,9 +246,9 @@ Deep SORT extiende este enfoque incorporando características visuales de aparie
 
 ByteTrack propone incorporar durante la asociación tanto detecciones de alta confianza como detecciones con valores menores de confianza \cite{zhang2022}. De esta forma, algunas observaciones que podrían ser descartadas inicialmente pueden utilizarse para mantener la continuidad de los seguimientos.
 
-Estos métodos constituyen antecedentes representativos de las estrategias disponibles para el seguimiento de múltiples objetos. Su desempeño depende de las características de los datos y del problema considerado. En el caso de los videos microscópicos de esta tesis, factores como el tamaño reducido de los microorganismos, su similitud visual y los cruces entre individuos hacen necesario evaluar el seguimiento específicamente sobre las condiciones experimentales disponibles.
+Estos métodos constituyen antecedentes representativos de las estrategias disponibles para el seguimiento de múltiples objetos. Su desempeño depende de las características de los datos y del problema considerado. En el caso de los videos adquiridos mediante microscopía óptica de esta tesis, factores como el tamaño reducido de los microorganismos, su similitud visual y los cruces entre individuos hacen necesario evaluar el seguimiento específicamente sobre las condiciones experimentales disponibles.
 
-La selección, configuración y evaluación del método de seguimiento utilizado en el sistema se describen posteriormente en los capítulos correspondientes al desarrollo y evaluación de la herramienta.
+La selección, configuración y evaluación del método de seguimiento utilizado en el sistema se describen posteriormente en los capítulos correspondientes al desarrollo y evaluación del sistema.
 
 \section{Análisis de trayectorias}
 
@@ -352,7 +352,7 @@ Permite definir sistemas de coordenadas, calibrar la escala espacial, registrar 
 
 La supervisión directa del usuario facilita la revisión y corrección de las posiciones cuando el seguimiento presenta errores. Sin embargo, cuando una grabación contiene numerosos microorganismos, el procedimiento debe repetirse para cada individuo y puede requerir una intervención considerable.
 
-En el Grupo de Física de la Atmósfera, Tracker constituye la herramienta utilizada previamente para reconstruir las trayectorias de los microorganismos. Por este motivo, proporciona una referencia directa para analizar las ventajas y limitaciones del procedimiento automático desarrollado en esta tesis.
+En esta línea experimental del GFA, Tracker constituye la herramienta utilizada previamente para reconstruir las trayectorias de los microorganismos. Por este motivo, proporciona una referencia directa para analizar las ventajas y limitaciones del procedimiento automático desarrollado en esta tesis.
 
 \subsection{TrackMate}
 
@@ -362,7 +362,7 @@ Su arquitectura modular permite combinar diferentes métodos de detección o seg
 
 TrackMate constituye un antecedente cercano a la propuesta de esta tesis, ya que integra varias etapas del análisis dentro de un mismo flujo. Sin embargo, su aplicación a los videos considerados requeriría seleccionar y validar configuraciones adecuadas para microorganismos pequeños, visualmente similares y registrados bajo condiciones particulares de microscopía.
 
-Asimismo, las métricas, criterios de filtrado y categorías de movimiento utilizadas en este trabajo responden a necesidades específicas del grupo experimental y no necesariamente coinciden con las configuraciones disponibles de manera predeterminada en la herramienta.
+Asimismo, las métricas, criterios de filtrado y categorías de movimiento utilizadas en este trabajo responden a necesidades específicas de esta línea experimental y no necesariamente coinciden con las configuraciones disponibles de manera predeterminada en la herramienta.
 
 \subsection{CellProfiler}
 
@@ -376,7 +376,7 @@ Aunque permite automatizar el análisis de grandes conjuntos de imágenes, la re
 
 Las herramientas analizadas muestran que existen diferentes estrategias para obtener información cuantitativa a partir de imágenes y videos científicos. Tracker permite realizar un seguimiento con supervisión directa; TrackMate integra detección o segmentación, seguimiento y análisis de trayectorias; y CellProfiler proporciona flujos automatizados para la identificación y medición de objetos en imágenes biológicas.
 
-Por este motivo, la contribución de esta tesis no se fundamenta en la ausencia de herramientas capaces de automatizar estas tareas. El problema específico se encuentra en la necesidad de disponer de un flujo adaptado y evaluado para los videos experimentales del Grupo de Física de la Atmósfera.
+Por este motivo, la contribución de esta tesis no se fundamenta en la ausencia de herramientas capaces de automatizar estas tareas. El problema específico se encuentra en la necesidad de disponer de un flujo adaptado y evaluado para los videos de esta línea experimental del GFA.
 
 La propuesta integra detección, seguimiento, filtrado de trayectorias, cálculo de métricas y clasificación de patrones dentro de un procedimiento orientado a las características de estos videos. Esta adaptación permite además definir explícitamente los criterios de análisis utilizados y evaluar cada una de las etapas sobre los datos disponibles.
 

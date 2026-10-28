@@ -1,7 +1,7 @@
 \chapter{Detección de microorganismos}
 \label{chap:deteccion}
 
-Este capítulo describe la obtención del detector y su uso en el procesamiento de videos microscópicos. Se presentan la preparación de los datos, la adaptación del modelo y la transformación de sus resultados en observaciones que pueden incorporarse a las trayectorias.
+Este capítulo describe la obtención del detector y su uso en el procesamiento de videos adquiridos mediante microscopía óptica. Se presentan la preparación de los datos, la adaptación del modelo y la transformación de sus resultados en observaciones que pueden incorporarse a las trayectorias.
 
 \section{Rol de la detección dentro del sistema}
 
@@ -17,7 +17,7 @@ El sistema desarrollado integra ambas operaciones mediante la interfaz de Ultral
     box/.style={thesisflow,text width=6.2cm,minimum height=0.75cm},
     every node/.style={outer sep=0pt}
   ]
-    \node[box] (video) at (0,0) {Video microscópico};
+    \node[box] (video) at (0,0) {Video adquirido mediante microscopía óptica};
     \node[box] (frame) at (0,-1.1) {Cuadro del video};
     \node[box] (detector) at (0,-2.2) {Detector con pesos adaptados};
     \node[box] (boxes) at (0,-3.3) {Cajas delimitadoras, clase y confianza};
@@ -35,7 +35,7 @@ El sistema desarrollado integra ambas operaciones mediante la interfaz de Ultral
 
 \section{Modelo de detección utilizado}
 
-El detector utilizado es YOLO11x de Ultralytics \cite{jocher2024}. Los dos entrenamientos utilizaron los pesos preentrenados \texttt{yolo11x.pt}. El modelo utilizado en las pruebas corresponde a la segunda corrida conservada, identificada como \texttt{train2}, cuyos pesos se almacenan en \texttt{best.pt}. La primera versión funcional se entrenó con \nolinkurl{Micro.v2-poc_morg_v1.yolov11}. Se utilizó una sola clase: la exportación inicial la denomina \texttt{Morg}, mientras que las posteriores emplean \texttt{E}, denominación asignada por el Grupo de Física de la Atmósfera en referencia a la forma esférica de los microorganismos. Esta clase constituye una categoría visual, no una identificación taxonómica.
+El detector utilizado es YOLO11x de Ultralytics \cite{jocher2024}. Los dos entrenamientos utilizaron los pesos preentrenados \texttt{yolo11x.pt}. El modelo utilizado en las pruebas corresponde a la segunda corrida conservada, identificada como \texttt{train2}, cuyos pesos se almacenan en \texttt{best.pt}. La primera versión funcional se entrenó con \nolinkurl{Micro.v2-poc_morg_v1.yolov11}. Se utilizó una sola clase: la exportación inicial la denomina \texttt{Morg}, mientras que las posteriores emplean \texttt{E}, denominación utilizada en esta línea experimental del GFA en referencia a la forma esférica de los microorganismos. Esta clase constituye una categoría visual, no una identificación taxonómica.
 
 La elección se apoyó en la disponibilidad de pesos preentrenados, la facilidad de adaptación y la integración de detección y seguimiento en una misma biblioteca. Estos fueron criterios prácticos para desarrollar la prueba de concepto; no se realizó una comparación exhaustiva que permita afirmar que la variante elegida sea la más adecuada para cualquier configuración de microscopía.
 
@@ -114,13 +114,13 @@ El parámetro \texttt{iou} se transmite a la biblioteca para el posprocesamiento
 
 Durante el procesamiento se dispone de cajas, clases y valores de confianza. La asociación temporal añade identificadores. La aplicación conserva por cada ID únicamente observaciones $(\texttt{frame\_idx},x,y)$, compatibles con la representación de trayectorias del capítulo 5. El ancho y el alto de la caja, la clase y la confianza no forman parte de la representación canónica almacenada.
 
-Esta separación permite distinguir la información necesaria para localizar un objeto de la utilizada para analizar su movimiento. Una caja sin identificador no se incorpora como trayectoria, y el registro conserva solamente las posiciones observadas, sin interpolar las ausencias. Las coordenadas se almacenan en píxeles; su conversión a distancia física requiere la calibración espacial descrita en la metodología.
+Esta separación permite distinguir la información necesaria para localizar un objeto de la utilizada para analizar su movimiento. Una caja sin identificador no se incorpora como trayectoria, y el registro conserva solamente las posiciones observadas, sin interpolar las ausencias. Las coordenadas se almacenan en píxeles; la calibración del sistema óptico y la conversión a unidades físicas corresponden a una etapa externa al alcance de esta tesis.
 
 \IfFileExists{figures/chapter06/fig06_02_deteccion_real.png}{%
   \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.48\textwidth,height=0.24\textheight,keepaspectratio]{figures/chapter06/fig06_02_deteccion_real.png}
-    \caption{Ejemplo real de localización de microorganismos en un cuadro microscópico. Las cajas corresponden a detecciones; los identificadores, cuando se muestran, pertenecen al seguimiento temporal.}
+    \caption{Ejemplo real de localización de microorganismos en un cuadro de un video adquirido mediante microscopía óptica. Las cajas corresponden a detecciones; los identificadores, cuando se muestran, pertenecen al seguimiento temporal.}
     \label{fig:deteccion-real}
   \end{figure}
 }{}

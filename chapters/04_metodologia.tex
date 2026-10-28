@@ -1,6 +1,6 @@
 \chapter{Diseño metodológico}
 
-Este capítulo presenta el diseño metodológico utilizado para desarrollar y evaluar el sistema. Se describen la organización de los datos experimentales, las unidades de análisis y los criterios empleados para obtener mediciones cuantitativas reproducibles.
+Este capítulo presenta el diseño metodológico del sistema: la organización de los datos, las unidades de análisis y el protocolo propuesto para su evaluación. Se distinguen los criterios previstos de las verificaciones efectivamente documentadas en los capítulos~\ref{chap:implementacion-pruebas} y~\ref{chap:evaluacion-resultados}.
 
 A diferencia del capítulo anterior, centrado en los fundamentos conceptuales, aquí se especifican las decisiones que vinculan los videos experimentales con el procesamiento automático, la evaluación mediante referencias manuales y la interpretación de las mediciones.
 
@@ -12,11 +12,11 @@ El trabajo se desarrolló como una investigación aplicada, de enfoque principal
 
 Como resume la Figura~\ref{fig:metodologia-general}, el diseño comprende dos componentes: el procesamiento automático de los videos —detección, seguimiento, reconstrucción de trayectorias, cálculo de métricas y clasificación— y la evaluación de los resultados mediante pruebas y referencias manuales.
 
-Las etapas son dependientes: los errores de detección o seguimiento pueden propagarse a las trayectorias y a las métricas derivadas. Por ello, la evaluación considera tanto los componentes individuales como el flujo integrado.
+Las etapas son dependientes: los errores de detección o seguimiento pueden propagarse a las trayectorias y a las métricas derivadas. Por ello, el protocolo contempla los componentes individuales y el flujo integrado.
 
 La comparación con Tracker se utiliza como referencia experimental. Cuando el ground truth es parcial, solo se consideran pares aquellas trayectorias cuya correspondencia fue revisada y registrada; un seguimiento automático sin referencia manual no se interpreta por sí solo como un falso positivo.
 
-Para favorecer la reproducibilidad, cada ejecución relevante conserva la identidad del video, el modelo, la configuración y los parámetros efectivos utilizados.
+El protocolo requiere conservar la identidad del video, el modelo, la configuración y los parámetros efectivos. El registro histórico disponible es incompleto: no conserva el commit exacto de inferencia ni todas las versiones del entorno. La reconstrucción posterior sí fija una revisión del software, como se documenta en el capítulo~\ref{chap:evaluacion-resultados}.
 
 \begin{figure}[H]
   \centering
@@ -69,7 +69,7 @@ Para favorecer la reproducibilidad, cada ejecución relevante conserva la identi
 
     \draw[arr] (eval) -- (trace);
   \end{tikzpicture}
-  \caption{Esquema general del diseño metodológico. El procesamiento automático y la construcción de la referencia manual convergen en la evaluación experimental, cuyos resultados se conservan junto con la información necesaria para su trazabilidad y reproducibilidad.}
+  \caption{Esquema general del diseño metodológico. El procesamiento automático y la construcción de la referencia manual convergen en la evaluación experimental, para la que se prevé conservar los resultados y su información de procedencia.}
   \label{fig:metodologia-general}
 \end{figure}
 
@@ -193,7 +193,7 @@ La conversión a micrómetros requiere una calibración del sistema óptico real
 
 \section{Procedimiento general}
 
-El procedimiento general se resume en la Figura~\ref{fig:procedimiento-general}. El flujo distingue el procesamiento automático de la construcción de la referencia manual y reúne ambos en la etapa de validación. Cada ejecución conserva el video, el modelo, el FPS, los parámetros efectivos y la información del entorno necesarios para reproducir los resultados.
+El procedimiento general se resume en la Figura~\ref{fig:procedimiento-general}. El flujo distingue el procesamiento automático de la construcción de la referencia manual y reúne ambos en la etapa de validación. Para reproducir una ejecución se requiere archivar las entradas, el FPS, los parámetros y el entorno; los metadatos generados no garantizan por sí solos la conservación completa de esos elementos.
 
 \begin{figure}[H]
   \centering
@@ -330,7 +330,9 @@ Las posiciones y distancias se conservan en px, la rapidez en px/s y su variaci�
 
 \section{Protocolo y criterios de evaluación}
 
-La evaluación se organiza por niveles para distinguir errores de detección, seguimiento y análisis. El protocolo contempla ampliar la evaluación a videos con distinta dificultad, considerando densidad, cruces, oclusiones, entradas o salidas del campo visual y fragmentaciones. La evidencia experimental presentada se limita a una trayectoria con referencia manual parcial, como se detalla en el capítulo~\ref{chap:evaluacion-resultados}. Antes de comparar resultados se verifica que el video, el FPS, la resolución y el sistema de coordenadas sean compatibles entre Tracker y el procesamiento automático.
+El protocolo se organiza por niveles para distinguir errores de detección, seguimiento y análisis (Cuadro~\ref{tab:criterios-evaluacion}). Prevé comprobar la compatibilidad de video, FPS, resolución y coordenadas antes de comparar resultados. En el caso histórico, la identidad del video se apoya en los metadatos y la confirmación del autor; la transformación de coordenadas y sus límites se documentan en el capítulo~\ref{chap:evaluacion-resultados}.
+
+Las verificaciones realizadas comprenden pruebas controladas de cálculos e integración, registros de dos entrenamientos y la reconstrucción de una trayectoria automática comparada con una referencia manual parcial. Quedan pendientes la evaluación global de identidades y fragmentación en varios individuos y videos, la validación independiente de categorías, las mediciones de eficiencia y la agregación entre videos. El protocolo conserva esos criterios para futuras evaluaciones, incluidas distintas densidades, cruces y oclusiones.
 
 \begingroup
 \footnotesize
@@ -339,7 +341,7 @@ La evaluación se organiza por niveles para distinguir errores de detección, se
 \setlength{\LTleft}{0pt}
 \setlength{\LTright}{\fill}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.43\textwidth}@{}}
-\caption{Criterios utilizados para evaluar los distintos niveles del sistema.}
+\caption{Criterios previstos en el protocolo de evaluación; su inclusión no implica que todos hayan sido ejecutados.}
 \label{tab:criterios-evaluacion}\\
 \toprule
 \textbf{Nivel} & \textbf{Qué se evalúa} & \textbf{Criterios principales} \\
@@ -379,7 +381,7 @@ Resumir primero por trayectoria, luego por video y finalmente de forma global; n
 \end{longtable}
 \endgroup
 
-Cuando el \textit{ground truth} es parcial, una trayectoria automática sin referencia manual no se considera por sí sola un falso positivo; los pares utilizados como evidencia deben quedar revisados y documentados. Las métricas se resumen primero por trayectoria y luego por video, conservando como no calculables aquellas magnitudes que no estén definidas.
+Cuando el \textit{ground truth} es parcial, una trayectoria automática sin referencia manual no se considera por sí sola un falso positivo; los pares utilizados como evidencia deben quedar revisados y documentados. Para una evaluación ampliada, el protocolo prevé resumir las métricas primero por trayectoria y luego por video, conservando las magnitudes no calculables como tales; esa agregación poblacional no se realizó aquí.
 
 Los umbrales de confianza, filtrado, inactividad, variación de rapidez y cambios de régimen se consideran parámetros operativos mientras no exista una validación experimental que permita tratarlos como valores óptimos.
 
@@ -408,7 +410,7 @@ Las principales amenazas metodológicas se resumen en la Tabla~\ref{tab:amenazas
 \endfoot
 
 Validez de medición &
-Diferencia entre el centro de la caja automática y el punto marcado manualmente; errores en FPS o escala. &
+Diferencia entre el centro de la caja automática y el punto manual, cuyo criterio histórico no se conservó; errores en FPS o coordenadas. &
 Puede introducir error espacial o temporal aun cuando ambas observaciones correspondan al mismo individuo. \\
 
 Validez interna &

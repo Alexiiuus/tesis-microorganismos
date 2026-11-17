@@ -19,7 +19,7 @@ jobs:
           echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | sudo debconf-set-selections
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             latexmk lmodern biber texlive-luatex texlive-latex-extra texlive-pictures \
-            texlive-science texlive-bibtex-extra texlive-lang-spanish texlive-fonts-extra \
+            texlive-science texlive-bibtex-extra texlive-lang-spanish \
             ttf-mscorefonts-installer
           fc-cache -f
           if ! fc-list -f '%{family}\n' | grep -Eiq '(^|,)Times New Roman(,|$)|(^|,)Arial(,|$)'; then

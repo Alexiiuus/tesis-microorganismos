@@ -14,12 +14,14 @@
 
 % El Anexo II exige el logo Creative Commons, la denominación de la
 % licencia seleccionada por el autor y el enlace a su página.
-% NO se asigna una licencia sin la elección expresa del autor.
-\newcommand{\ThesisLicenseName}{NOMBRE DE LICENCIA CC PENDIENTE}
-\newcommand{\ThesisLicenseURL}{URL DE LA LICENCIA PENDIENTE}
-% Pasar a true SOLO después de completar ambos campos y confirmar la licencia.
+% Licencia propuesta por el autor para consultar con su directora ANTES de la entrega.
+% No publicar ni depositar una version con esta licencia sin la conformidad institucional.
+\newcommand{\ThesisLicenseName}{Atribución 4.0 Internacional (CC BY 4.0)}
+\newcommand{\ThesisLicenseURL}{https://creativecommons.org/licenses/by/4.0/}
+% True indica que los campos de la caratula estan completos; NO implica
+% aprobacion de la directora ni de la Biblioteca.
 \newif\ifThesisLicenseConfirmed
-\ThesisLicenseConfirmedfalse
+\ThesisLicenseConfirmedtrue
 \newcommand{\ThesisLicense}{%
   \ifThesisLicenseConfirmed
     Este trabajo se distribuye bajo una licencia Creative Commons\par

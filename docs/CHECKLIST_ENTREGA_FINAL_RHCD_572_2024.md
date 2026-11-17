@@ -8,13 +8,14 @@ Base normativa: RHCD-2024-572-E-UNC-DEC#FAMAF, arts. 1 a 5 y Anexo II. Este docu
 - [x] Resumen en castellano y abstract en inglés.
 - [x] Portada con logos UNC/FAMAF, título, autor, grado, Facultad, Universidad y dirección.
 - [x] Icono Creative Commons presente en portada.
-- [ ] Confirmar mes y año oficial de defensa en `config/metadata.tex` y activar `\ThesisDateConfirmedtrue`.
-- [ ] Elegir licencia compatible con el criterio de la Oficina de Conocimiento Abierto; completar denominación, enlace y activar `\ThesisLicenseConfirmedtrue`. **La licencia no fue elegida automáticamente.**
+- [x] Confirmar mes y año oficial de defensa en `config/metadata.tex` y activar `\ThesisDateConfirmedtrue` (diciembre de 2026).
+- [x] Cargar provisionalmente CC BY 4.0 con su denominación y enlace oficial, y activar `\ThesisLicenseConfirmedtrue` para permitir la compilación.
+- [ ] **Consultar con la directora y verificar con la institución** que CC BY 4.0 es aceptada para la versión definitiva. No depositar ni publicar hasta confirmarlo.
 - [ ] Revisar nombres legales/académicos de autor y directora en `config/metadata.tex`.
 
 ## Modo de entrega y aval
 
-- [ ] Activar `\ThesisFinalLayouttrue` en `config/metadata.tex` (guardas en blanco inicial y final; inicio a recto).
+- [x] Activar `\ThesisFinalLayouttrue` en `config/metadata.tex` (guardas en blanco inicial y final; inicio a recto).
 - [ ] Compilar el PDF definitivo con LuaLaTeX + Biber y verificar A4, fuentes incrustadas, 12 pt, interlineado simple, carátula, referencias y ausencia de defectos visuales.
 - [ ] Obtener sobre la hoja de aval la firma de **al menos dos** integrantes del tribunal. El archivo `backmatter/aval_tribunal.tex` incorpora espacios para ellas.
 - [ ] Validar que la versión electrónica sea idéntica a la versión corregida, aprobada y presentada en papel, incluyendo las firmas donde corresponda.

@@ -1,0 +1,47 @@
+name: Compilar tesis (PDF)
+on:
+  push:
+    branches:
+      - build/main-pdf-20261117
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Obtener tesis
+        uses: actions/checkout@v4
+      - name: Instalar LaTeX y tipografía requerida
+        run: |
+          sudo add-apt-repository -y multiverse
+          sudo apt-get update -qq
+          echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | sudo debconf-set-selections
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            latexmk lmodern biber texlive-luatex texlive-latex-extra texlive-pictures \
+            texlive-science texlive-bibtex-extra texlive-lang-spanish texlive-fonts-extra \
+            ttf-mscorefonts-installer
+          fc-cache -f
+          if ! fc-list -f '%{family}\n' | grep -Eiq '(^|,)Times New Roman(,|$)|(^|,)Arial(,|$)'; then
+            echo 'No se instalaron Times New Roman ni Arial: abortando para respetar la resolución.'
+            exit 1
+          fi
+      - name: Compilar LuaLaTeX y Biber
+        run: |
+          latexmk -lualatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+          test -s main.pdf
+          pdfinfo main.pdf | grep -E 'Pages:|Page size:|File size:'
+          pdffonts main.pdf | head -25
+      - name: Publicar PDF compilado en la rama auxiliar
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f main.pdf
+          git commit -m 'Generar main.pdf compilado [skip ci]' || true
+          git push origin HEAD:build/main-pdf-20261117
+      - name: Guardar PDF como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: tesis-main-pdf
+          path: main.pdf
+          if-no-files-found: error

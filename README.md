@@ -1,10 +1,10 @@
 # Tesis — Microorganismos
 
-Código LaTeX del Trabajo Especial de Licenciatura en Ciencias de la Computación. La rama `feature/latex-initial-migration` contiene el borrador con resumen, abstract y capítulos 1 a 12 y un apéndice. El capítulo 11 integra la evaluación experimental, los resultados y su discusión; el 12 reúne las conclusiones y el trabajo futuro. El Apéndice A documenta ejecución, inspección, formatos y reproducción de resultados. La evaluación se realiza en px, px/s y px/s². La calibración óptica y la conversión a unidades físicas corresponden a una etapa externa al alcance de esta tesis.
+Código LaTeX del Trabajo Especial de Licenciatura en Ciencias de la Computación. La rama `main` contiene el borrador con resumen, abstract y capítulos 1 a 12 y un apéndice. El capítulo 11 integra la evaluación experimental, los resultados y su discusión; el 12 reúne las conclusiones y el trabajo futuro. El Apéndice A documenta ejecución, inspección, formatos y reproducción de resultados. La evaluación se realiza en px, px/s y px/s². La calibración óptica y la conversión a unidades físicas corresponden a una etapa externa al alcance de esta tesis.
 
 ## Compilación
 
-Requiere LuaLaTeX, Biber, BibLaTeX, soporte de español (incluidos sus patrones de separación de palabras), siunitx y Times New Roman o Arial instaladas legalmente en el sistema. Se prioriza Times New Roman. La compilación falla si faltan ambas fuentes, para evitar una sustitución que incumpla la RHCD 572/2024.
+Requiere LuaLaTeX, Biber, BibLaTeX, soporte de español (incluidos sus patrones de separación de palabras), siunitx, ccicons y Times New Roman o Arial instaladas legalmente en el sistema. Se prioriza Times New Roman. La compilación falla si faltan ambas fuentes, para evitar una sustitución que incumpla la RHCD 572/2024.
 
 ```bash
 latexmk -lualatex -interaction=nonstopmode -halt-on-error main.tex
@@ -14,7 +14,17 @@ En Windows puede usarse MiKTeX, VS Code y LaTeX Workshop con la receta **LuaLaTe
 
 ## Formato y entrega
 
-A4, cuerpo de 12 pt, espacio simple y preparación a doble cara. El borrador incluye la carátula del Anexo II y una hoja de aval pendiente de firma, sin guardas ni páginas de separación en blanco. Para preparar la entrega final, cambiar `\ThesisFinalLayoutfalse` por `\ThesisFinalLayouttrue` en `config/metadata.tex`; esto incorpora las guardas y restablece los inicios en recto. La fecha de defensa y la licencia se completan en `config/metadata.tex` antes de la entrega final. El borrador no acredita aprobación del tribunal ni autorización para su depósito.
+A4, cuerpo de 12 pt, espacio simple y preparación a doble cara. La carátula sigue el Anexo II e incluye el icono de Creative Commons, sin atribuir una licencia no elegida. El borrador incluye la hoja de aval pendiente de firma, sin guardas ni páginas de separación en blanco.
+
+Para preparar la entrega final en `config/metadata.tex`:
+
+1. Reemplazar `\ThesisDate` por el mes y año oficial de defensa y activar `\ThesisDateConfirmedtrue`.
+2. Elegir personalmente una licencia Creative Commons admitida por la institución, completar `\ThesisLicenseName` y `\ThesisLicenseURL`, y activar `\ThesisLicenseConfirmedtrue`. El logo CC ya está dispuesto en la carátula con `ccicons`; **no se eligió una licencia por el autor**.
+3. Activar `\ThesisFinalLayouttrue` para incorporar una hoja de guarda física (dos carillas) al comienzo y otra al final. La compilación de este modo se detiene si faltan las confirmaciones de fecha o licencia.
+4. Obtener las firmas de al menos dos integrantes del tribunal sobre la hoja de aval; la declaración jurada y la autorización para el repositorio se tramitan por separado.
+5. Compilar y revisar el PDF definitivo, imprimirlo a doble cara con el anillado requerido y entregar una versión electrónica idéntica a la impresa y aprobada.
+
+El borrador no acredita aprobación del tribunal ni autorización para su depósito.
 
 La matriz de requisitos, cambios y pendientes está en [docs/REVISION_FORMATO_RHCD_572_2024.md](docs/REVISION_FORMATO_RHCD_572_2024.md).
 

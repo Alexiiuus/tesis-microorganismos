@@ -77,3 +77,16 @@ Se incorporaron el capítulo 12 y el Apéndice A. La indicación inicial de cali
 Verificación de esta redacción: compilación LuaLaTeX/Biber de 97 páginas, sin advertencias, referencias pendientes, caracteres faltantes ni cajas desbordadas; sin páginas en blanco. Revisión visual de los capítulos nuevos, índice y referencias cruzadas. Los bloques de código se mantienen completos entre páginas y el encabezado identifica «Apéndice A».
 
 Los argumentos del ejemplo de procesamiento se contrastaron con la firma real, sin ejecutar inferencia sobre videos. Los ejemplos de inspección y exportación se ejecutaron sobre las 929 observaciones conservadas de Track_145: cuatro gráficos y un CSV con correspondencia de filas verificada. Los tres scripts de figuras se ejecutaron en una copia temporal de los datos, con Python 3.12.14, NumPy 2.3.5, Matplotlib 3.10.8 y Pandas 2.2.3; las huellas de los módulos coinciden con la revisión documentada. La reconstrucción reprodujo el error medio de posición, las discrepancias de rapidez y la categoría informados en el capítulo 11. No se modificaron las entradas, resultados ni figuras ya versionados de ese capítulo.
+
+
+## Actualización del 17/11/2026 — Preparación editorial de la entrega
+
+Tras revertir el commit `cce95c6`, la rama `main` recuperó `main.tex` con 12 pt, 12 capítulos, apéndice, aval y modo de guardas. Esta actualización se realizó sobre la rama `main`.
+
+- Se incorporó `ccicons` y el icono Creative Commons a la carátula, conforme al Anexo II.
+- Se separaron los campos de nombre y URL de licencia y se conservó la selección de licencia como decisión exclusiva del autor.
+- Se incorporaron indicadores explícitos para confirmar la fecha oficial de defensa y la licencia; el modo final detiene la compilación mientras estos campos no estén confirmados.
+- El texto de advertencia del borrador en la hoja de aval no se imprime en el modo final, que mantiene los campos para las firmas obligatorias.
+- El borrador sigue sin guardas por decisión anterior; la configuración final las incorpora mediante `ThesisFinalLayouttrue`.
+- No se completaron datos aún desconocidos (fecha oficial, licencia elegida, firmas, declaración jurada, autorización RDU). Son requisitos pendientes y no se debe declarar que la tesis está lista para depósito hasta cumplirlos.
+- Revisión estática del código LaTeX de los archivos modificados. La compilación y revisión visual del PDF final debe realizarse con la fuente tipográfica obligatoria instalada.

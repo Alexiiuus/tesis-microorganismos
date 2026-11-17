@@ -4,6 +4,17 @@
 \input{config/packages}
 \input{config/commands}
 
+% Evitar generar por error una versión de entrega con datos obligatorios
+% pendientes. Los avales, autorizaciones y declaraciones se obtienen fuera de LaTeX.
+\ifThesisFinalLayout
+  \ifThesisDateConfirmed\else
+    \PackageError{tesis}{Falta confirmar la fecha oficial de defensa}{Complete ThesisDate y active ThesisDateConfirmedtrue en config/metadata.tex.}
+  \fi
+  \ifThesisLicenseConfirmed\else
+    \PackageError{tesis}{Falta elegir la licencia Creative Commons}{Complete nombre y URL de la licencia elegida y active ThesisLicenseConfirmedtrue en config/metadata.tex.}
+  \fi
+\fi
+
 % El borrador no incorpora páginas de guarda ni separadores en blanco.
 \ifThesisFinalLayout\else
   \let\cleardoublepage\clearpage

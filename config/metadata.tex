@@ -5,15 +5,31 @@
 \newcommand{\ThesisFaculty}{Facultad de Matemática, Astronomía, Física y Computación}
 \newcommand{\ThesisUniversity}{Universidad Nacional de Córdoba}
 
-% Completar antes de la entrega final:
+% Datos oficiales: confirmar antes de preparar la versión aprobada.
 \newcommand{\ThesisAdvisor}{Directora: Debora Analia Pedernera}
 \newcommand{\ThesisDate}{Mes y año oficial de defensa: pendientes}
+% Pasar a true únicamente cuando ThesisDate contenga el mes y año oficiales.
+\newif\ifThesisDateConfirmed
+\ThesisDateConfirmedfalse
 
+% El Anexo II exige el logo Creative Commons, la denominación de la
+% licencia seleccionada por el autor y el enlace a su página.
+% NO se asigna una licencia sin la elección expresa del autor.
+\newcommand{\ThesisLicenseName}{NOMBRE DE LICENCIA CC PENDIENTE}
+\newcommand{\ThesisLicenseURL}{URL DE LA LICENCIA PENDIENTE}
+% Pasar a true SOLO después de completar ambos campos y confirmar la licencia.
+\newif\ifThesisLicenseConfirmed
+\ThesisLicenseConfirmedfalse
+\newcommand{\ThesisLicense}{%
+  \ifThesisLicenseConfirmed
+    Este trabajo se distribuye bajo una licencia Creative Commons\par
+    \ThesisLicenseName\par
+    \url{\ThesisLicenseURL}%
+  \else
+    \textit{Licencia Creative Commons pendiente de elección por el autor.}%
+  \fi
+}
 
-% Completar con la licencia elegida por el autor antes de la entrega.
-% La Biblioteca publica CC Atribución 4.0 Internacional como referencia.
-\newcommand{\ThesisLicense}{\textit{Licencia Creative Commons pendiente de definición por el autor.}}
-
-% Activar solo al preparar la entrega final con guardas y separación a recto.
+% Borrador: sin guardas ni separadores. Entrega final: activar las guardas.
 \newif\ifThesisFinalLayout
 \ThesisFinalLayoutfalse

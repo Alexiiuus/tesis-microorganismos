@@ -26,6 +26,13 @@ jobs:
             echo 'No se instalaron Times New Roman ni Arial: abortando para respetar la resolución.'
             exit 1
           fi
+      - name: Instalar iconos Creative Commons (CTAN)
+        run: |
+          curl -fL --retry 3 --retry-delay 2 -o /tmp/ccicons.tds.zip https://mirrors.ctan.org/install/fonts/ccicons.tds.zip
+          mkdir -p "$HOME/texmf"
+          unzip -q -o /tmp/ccicons.tds.zip -d "$HOME/texmf"
+          mktexlsr "$HOME/texmf"
+          kpsewhich ccicons.sty
       - name: Compilar LuaLaTeX y Biber
         run: |
           latexmk -lualatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex

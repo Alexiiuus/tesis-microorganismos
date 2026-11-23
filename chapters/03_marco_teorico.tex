@@ -18,7 +18,7 @@ Este criterio permite relacionar trabajos con objetivos biológicos o experiment
 
 La microscopía combinada con adquisición de video permite observar el desplazamiento de microorganismos a lo largo del tiempo y convertir esa observación en secuencias de posiciones. Esta representación hace posible reconstruir trayectorias individuales y obtener magnitudes cuantitativas del movimiento. Las técnicas concretas dependen del tamaño y contraste de los organismos, del tipo de microscopía, de la frecuencia de adquisición y del método empleado para localizar y asociar los objetos entre cuadros \cite{dubay2023}.
 
-Bente et al. estudiaron bacterias magnetotácticas mediante videomicroscopía de alta velocidad y reconstrucción de trayectorias tridimensionales, utilizando el seguimiento para cuantificar características de una motilidad particularmente rápida \cite{bente2020}. Este trabajo muestra que el análisis de trayectorias puede utilizarse no solo para visualizar recorridos, sino también para estudiar cuantitativamente la rapidez y la geometría del movimiento. Al mismo tiempo, evidencia que una trayectoria observada en dos dimensiones constituye una proyección del movimiento real cuando este se desarrolla en tres dimensiones, aspecto que debe considerarse al interpretar resultados obtenidos sobre el plano de la imagen.
+Bente et al. estudiaron bacterias magnetotácticas mediante videomicroscopía de alta velocidad y reconstrucción de trayectorias tridimensionales, utilizando el seguimiento para cuantificar características de una motilidad particularmente rápida \cite{bente2020}. Este trabajo muestra que el análisis de trayectorias puede utilizarse no solo para visualizar recorridos, sino también para estudiar cuantitativamente la rapidez y la geometría del movimiento. Al mismo tiempo, evidencia que una trayectoria observada en dos dimensiones constituye una proyección del movimiento real cuando éste se desarrolla en tres dimensiones, aspecto que debe considerarse al interpretar resultados obtenidos sobre el plano de la imagen.
 
 Un antecedente metodológicamente más próximo al presente trabajo es el de Shunmugam et al., quienes analizaron el movimiento de Paramecium aurelia mediante videos de microscopía y un algoritmo de seguimiento de objetos \cite{shunmugam2021}. A partir de las posiciones registradas para cada organismo reconstruyeron trayectorias individuales y calcularon magnitudes como la distancia recorrida y la rapidez media. Estas mediciones fueron utilizadas posteriormente para comparar el comportamiento de los organismos bajo distintas condiciones del medio. El estudio constituye un ejemplo de cómo el seguimiento automático puede transformar videos adquiridos mediante microscopía óptica en datos cuantitativos utilizables para realizar comparaciones experimentales.
 
@@ -44,15 +44,15 @@ La contribución de esta tesis se sitúa en esa primera etapa. El sistema automa
 
 \section{Visión por computadora}
 
-% TODO: el borrador fuente salta de la sección 3.2 a la 3.4; revisar si debe existir una sección 3.3.
-
 La visión por computadora es un área de la informática orientada al desarrollo de métodos capaces de analizar e interpretar imágenes y videos digitales. Su objetivo es transformar la información visual en datos que puedan ser procesados computacionalmente para reconocer objetos, determinar su ubicación y estudiar sus variaciones espaciales o temporales \cite{szeliski2022}.
 
-Entre sus tareas principales se encuentran la detección, la segmentación y el seguimiento de objetos. La detección permite identificar y localizar instancias de determinadas categorías presentes en una imagen, generalmente mediante una clase, una caja delimitadora y un valor de confianza asociado con la predicción \cite{ren2015}.
+Entre sus tareas principales se encuentran:
 
-La segmentación busca determinar qué píxeles pertenecen a cada objeto y permite representar con mayor precisión su forma mediante máscaras \cite{he2017}. Este tipo de representación resulta útil cuando se requiere analizar propiedades como el área, el contorno o la morfología. Sin embargo, no constituye una etapa central del sistema desarrollado en esta tesis, que utiliza cajas delimitadoras para localizar los microorganismos.
-
-El seguimiento de objetos incorpora la dimensión temporal del video y tiene como finalidad asociar las detecciones obtenidas en cuadros sucesivos para conservar la identidad de un mismo objeto a lo largo del tiempo \cite{bewley2016}. De esta manera, las observaciones correspondientes a un mismo microorganismo pueden organizarse temporalmente y utilizarse posteriormente para reconstruir su movimiento.
+\begin{itemize}
+  \item La detección permite identificar y localizar instancias de determinadas categorías presentes en una imagen, generalmente mediante una clase, una caja delimitadora y un valor de confianza asociado con la predicción \cite{ren2015}.
+  \item La segmentación busca determinar qué píxeles pertenecen a cada objeto y permite representar con mayor precisión su forma mediante máscaras \cite{he2017}. Este tipo de representación resulta útil cuando se requiere analizar propiedades como el área, el contorno o la morfología. Sin embargo, no constituye una etapa central del sistema desarrollado en esta tesis, que utiliza cajas delimitadoras para localizar los microorganismos.
+  \item El seguimiento de objetos incorpora la dimensión temporal del video y tiene como finalidad asociar las detecciones obtenidas en cuadros sucesivos para conservar la identidad de un mismo objeto a lo largo del tiempo \cite{bewley2016}. De esta manera, las observaciones correspondientes a un mismo microorganismo pueden organizarse temporalmente y utilizarse posteriormente para reconstruir su movimiento.
+\end{itemize}
 
 En el presente trabajo, la visión por computadora proporciona el marco necesario para transformar videos adquiridos mediante microscopía óptica en datos estructurados. La detección permite localizar los microorganismos en cada cuadro, mientras que el seguimiento permite vincular esas observaciones a lo largo del tiempo. A partir de los datos obtenidos mediante ambas etapas se realiza posteriormente el análisis cuantitativo del movimiento.
 
@@ -70,11 +70,9 @@ Una caja delimitadora, o bounding box, es una región rectangular que aproxima l
 B=(x_{\min},y_{\min},x_{\max},y_{\max}).
 \]
 
-\begin{itemize}
-\item $(x_{\min},y_{\min})$ corresponde a la esquina superior izquierda y $(x_{\max},y_{\max})$ a la esquina inferior derecha.
-\end{itemize}
+En las coordenadas de imagen utilizadas en este trabajo, el origen se ubica en la esquina superior izquierda, el eje $x$ crece hacia la derecha y el eje $y$ hacia abajo. Con esta convención, $(x_{\min},y_{\min})$ corresponde a la esquina superior izquierda y $(x_{\max},y_{\max})$ a la esquina inferior derecha. En una convención cartesiana con $y$ creciente hacia arriba, los mínimos y máximos corresponderían, respectivamente, a las esquinas inferior izquierda y superior derecha.
 
-Otra representación frecuente utiliza el centro de la caja, su ancho y su alto:
+Otra representación frecuente utiliza el centro de la caja, su ancho $w$ y su alto $h$:
 
 \[
 B=(x_c,y_c,w,h).
@@ -92,7 +90,14 @@ y_c=\frac{y_{\min}+y_{\max}}{2}.
 
 En el sistema desarrollado, este centro se utiliza como una posición representativa del microorganismo. Los centroides obtenidos en cuadros sucesivos conforman los puntos de las trayectorias.
 
-Las cajas delimitadoras constituyen una aproximación rectangular y no representan necesariamente el contorno exacto del objeto. Por lo tanto, resultan adecuadas para localizar los microorganismos y seguir su desplazamiento, pero no para estudiar con precisión propiedades como su forma o área.
+Las cajas delimitadoras constituyen una aproximación rectangular y no representan necesariamente el contorno exacto del objeto. Por lo tanto, resultan adecuadas para localizar los microorganismos y seguir su desplazamiento, pero no para estudiar con precisión propiedades como su forma o área. La Figura~\ref{fig:cajas-delimitadoras} ilustra esta diferencia en una captura del material del trabajo.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.25\textwidth]{figures/chapter03/fig03_01_cajas_delimitadoras.png}
+  \caption{Detalle de una captura de detecciones conservada como material de apoyo del trabajo. Las cajas azules aproximan la localización y extensión de los objetos visibles; sus bordes no reproducen el contorno de cada objeto. La imagen tiene un propósito ilustrativo y no constituye una evaluación cuantitativa adicional.}
+  \label{fig:cajas-delimitadoras}
+\end{figure}
 
 Cada detección posee además un valor de confianza, que representa el grado de seguridad asignado por el modelo a la predicción. Este valor permite ordenar los resultados y descartar aquellos que no superan un umbral mínimo \cite{redmon2016}.
 
@@ -100,9 +105,9 @@ La elección del umbral implica un compromiso. Un valor demasiado bajo puede con
 
 \subsection{Correspondencia entre predicciones y anotaciones}
 
-Para evaluar el detector, las cajas predichas se comparan con anotaciones de referencia realizadas manualmente. Una de las medidas utilizadas para determinar la correspondencia espacial entre ambas es la intersección sobre unión, conocida como IoU por Intersection over Union \cite{everingham2010}.
+Para evaluar el detector, las cajas predichas se comparan con anotaciones de referencia realizadas manualmente. Una de las medidas utilizadas para determinar la correspondencia espacial entre ambas es la intersección sobre unión, conocida como $IoU$ por Intersection over Union \cite{everingham2010}.
 
-Sean $B_p$ la caja predicha y $B_r$ la caja de referencia, la IoU se calcula como:
+Sean $B_p$ la caja predicha y $B_r$ la caja de referencia, la $IoU$ se calcula como:
 
 \[
 IoU(B_p,B_r)=\frac{|B_p\cap B_r|}{|B_p\cup B_r|}.
@@ -112,10 +117,10 @@ donde $|B_p\cap B_r|$ representa el área compartida por ambas cajas y $|B_p\cup
 
 El resultado se encuentra entre cero y uno. El resultado toma valores entre 0 y 1: un valor de 0 indica ausencia de superposición y valores cercanos a 1 indican una elevada coincidencia espacial.
 
-Para determinar si una detección coincide correctamente con una anotación se establece un umbral mínimo de IoU. A partir de esta correspondencia pueden distinguirse tres casos principales:
+Para determinar si una detección coincide correctamente con una anotación se establece un umbral mínimo de $IoU$. A partir de esta correspondencia pueden distinguirse tres casos principales:
 
 \begin{itemize}
-  \item \textbf{Verdadero positivo (TP):} una predicción identifica correctamente un objeto y satisface el criterio de correspondencia establecido.
+  \item \textbf{Verdadero positivo (TP, por sus siglas en inglés):} una predicción identifica correctamente un objeto y satisface el criterio de correspondencia establecido. La expresión inglesa es \textit{true positive}.
   \item \textbf{Falso positivo (FP):} el modelo informa una detección que no puede asociarse correctamente con una anotación de referencia.
   \item \textbf{Falso negativo (FN):} existe un objeto anotado que no fue detectado correctamente por el modelo.
 \end{itemize}
@@ -136,33 +141,33 @@ Precision=\frac{TP}{TP+FP}.
 
 Una precisión elevada indica que el sistema produce pocos falsos positivos. En el contexto de esta tesis, significa que la mayoría de los objetos identificados como microorganismos corresponden con las anotaciones de referencia.
 
-El recall, también denominado sensibilidad o exhaustividad, indica qué proporción de los objetos existentes fue detectada correctamente:
+El \textit{recall}, también denominado sensibilidad o exhaustividad, indica qué proporción de los objetos existentes fue detectada correctamente:
 
 \[
 Recall=\frac{TP}{TP+FN}.
 \]
 
-Un valor elevado indica que el sistema omite pocos microorganismos. La precisión y el recall deben analizarse conjuntamente, ya que una modificación del umbral de confianza puede mejorar una de estas métricas y reducir la otra \cite{powers2011}.
+Un valor elevado de \textit{recall} indica que el sistema omite pocos microorganismos. La precisión y el \textit{recall} deben analizarse conjuntamente, ya que una modificación del umbral de confianza puede mejorar una de estas métricas y reducir la otra \cite{powers2011}.
 
-La medida F1 combina la precisión y el recall mediante su media armónica:
+La medida F1 combina la precisión y el \textit{recall} mediante su media armónica:
 
 \[
 F_1=2\,\frac{Precision\cdot Recall}{Precision+Recall}.
 \]
 
-Esta métrica alcanza valores elevados únicamente cuando tanto la precisión como el recall son altos. Resulta útil para resumir en un solo valor el equilibrio entre las detecciones incorrectas y los objetos no detectados \cite{powers2011}.
+Esta métrica alcanza valores elevados únicamente cuando tanto la precisión como el \textit{recall} son altos. Resulta útil para resumir en un solo valor el equilibrio entre las detecciones incorrectas y los objetos no detectados \cite{powers2011}.
 
-La precisión promedio, o $AP$ por Average Precision, resume el comportamiento del detector para una clase a partir de la curva precisión–recall. Esta curva se construye variando el umbral de confianza y observando cómo cambian ambas métricas.
+La precisión promedio, o $AP$ por Average Precision, resume el comportamiento del detector para una clase a partir de la curva precisión–\textit{recall}. Esta curva se construye variando el umbral de confianza y observando cómo cambian ambas métricas.
 
-De forma general, la AP puede interpretarse como el área bajo la curva de precisión en función del recall:
+De forma general, la $AP$ puede interpretarse como el área bajo la curva de precisión en función del \textit{recall}:
 
 \[
 AP=\int_0^1 P(R)\,dR.
 \]
 
-donde $P(R)$ representa la precisión obtenida para un determinado nivel de recall. En la práctica, los protocolos de evaluación calculan esta magnitud mediante procedimientos discretos o interpolados \cite{everingham2010}.
+donde $P(R)$ representa la precisión obtenida para un determinado nivel de \textit{recall}. En la práctica, los protocolos de evaluación calculan esta magnitud mediante procedimientos discretos o interpolados \cite{everingham2010}.
 
-La media de la precisión promedio, o $mAP$, se obtiene promediando los valores de AP correspondientes a las diferentes clases:
+La media de la precisión promedio, o $mAP$, se obtiene promediando los valores de $AP$ correspondientes a las diferentes clases:
 
 \[
 mAP=\frac{1}{C}\sum_{c=1}^{C}AP_c.
@@ -170,9 +175,9 @@ mAP=\frac{1}{C}\sum_{c=1}^{C}AP_c.
 
 donde $C$ representa la cantidad de clases evaluadas.
 
-El valor de mAP depende del criterio de superposición utilizado durante la evaluación. Por ejemplo, mAP@0.5 considera un umbral de IoU de 0,5, mientras que mAP@0.5:0.95 resume los resultados obtenidos para distintos umbrales comprendidos entre 0,5 y 0,95 \cite{lin2014}, \cite{cocoapi2015}.
+El valor de $mAP$ depende del criterio de superposición utilizado durante la evaluación. Por ejemplo, $mAP$@0.5 considera un umbral de $IoU$ de 0,5, mientras que $mAP$@0.5:0.95 resume los resultados obtenidos para distintos umbrales comprendidos entre 0,5 y 0,95 \cite{lin2014}, \cite{cocoapi2015}.
 
-Por esta razón, los valores de mAP deben informarse junto con el criterio de IoU empleado. El protocolo específico utilizado para evaluar los modelos desarrollados en esta tesis se describe posteriormente en el capítulo metodológico.
+Por esta razón, los valores de $mAP$ deben informarse junto con el criterio de $IoU$ empleado. El protocolo específico utilizado para evaluar los modelos desarrollados en esta tesis se describe posteriormente en el capítulo metodológico.
 
 \section{Modelos YOLO}
 
@@ -182,7 +187,7 @@ Desde su aparición, la familia YOLO ha evolucionado mediante distintas arquitec
 
 \subsection{Detectores de una etapa}
 
-Los modelos YOLO se clasifican generalmente como detectores de una etapa, o one-stage detectors. En este tipo de enfoque, la localización de los objetos y la predicción de sus clases se realizan directamente a partir de las características extraídas de la imagen \cite{redmon2016}.
+Los modelos YOLO se clasifican generalmente como detectores de una etapa, o \textit{one-stage detectors}. En este tipo de enfoque, la localización de los objetos y la predicción de sus clases se realizan directamente a partir de las características extraídas de la imagen \cite{redmon2016}.
 
 Esto los diferencia de los detectores de dos etapas, que primero generan regiones candidatas y posteriormente realizan su clasificación y ajuste. El enfoque utilizado por YOLO permite integrar estas operaciones dentro de un mismo flujo de inferencia, lo que resulta especialmente conveniente cuando deben procesarse grandes cantidades de imágenes.
 
@@ -206,9 +211,9 @@ Los detalles relacionados con la construcción del conjunto de datos, el procedi
 
 \section{Seguimiento de múltiples objetos}
 
-El seguimiento de múltiples objetos, denominado habitualmente Multiple Object Tracking (MOT), consiste en localizar distintos objetos a lo largo de una secuencia de video y conservar su identidad a medida que transcurren los cuadros. A diferencia de la detección, que identifica objetos de manera independiente en cada imagen, el seguimiento busca determinar cuáles de las detecciones obtenidas en diferentes instantes corresponden al mismo individuo.
+El seguimiento de múltiples objetos, denominado habitualmente \textit{Multiple Object Tracking} (MOT), consiste en localizar distintos objetos a lo largo de una secuencia de video y conservar su identidad a medida que transcurren los cuadros. A diferencia de la detección, que identifica objetos de manera independiente en cada imagen, el seguimiento busca determinar cuáles de las detecciones obtenidas en diferentes instantes corresponden al mismo individuo.
 
-Una estrategia ampliamente utilizada es el seguimiento basado en detecciones, o tracking-by-detection. En este enfoque, un detector localiza los objetos presentes en cada cuadro y un algoritmo de seguimiento utiliza posteriormente esas detecciones para establecer asociaciones temporales y mantener las identidades a lo largo del video \cite{bewley2016}, \cite{zhang2022}.
+Una estrategia ampliamente utilizada es el seguimiento basado en detecciones, o \textit{tracking-by-detection}. En este enfoque, un detector localiza los objetos presentes en cada cuadro y un algoritmo de seguimiento utiliza posteriormente esas detecciones para establecer asociaciones temporales y mantener las identidades a lo largo del video \cite{bewley2016}, \cite{zhang2022}.
 
 En esta tesis, el seguimiento constituye el vínculo entre la detección de microorganismos y el análisis posterior de su movimiento. Las observaciones asociadas con un mismo individuo permiten construir los datos temporales necesarios para reconstruir y analizar su trayectoria.
 
@@ -216,9 +221,9 @@ En esta tesis, el seguimiento constituye el vínculo entre la detección de micr
 
 La asociación temporal consiste en determinar si una detección obtenida en un cuadro corresponde con un objeto observado previamente. Para establecer esta correspondencia pueden utilizarse diferentes tipos de información, entre ellos la proximidad espacial, la superposición entre cajas delimitadoras, la estimación del movimiento y las características visuales del objeto.
 
-Cuando una detección inicia un nuevo seguimiento, se le asigna un identificador o track ID. Este identificador se conserva mientras el algoritmo determine que las detecciones posteriores corresponden al mismo objeto. De esta manera, las observaciones realizadas en diferentes cuadros pueden vincularse temporalmente.
+Cuando una detección inicia un nuevo seguimiento, se le asigna un identificador o \textit{track ID}. Este identificador se conserva mientras el algoritmo determine que las detecciones posteriores corresponden al mismo objeto. De esta manera, las observaciones realizadas en diferentes cuadros pueden vincularse temporalmente.
 
-El track ID constituye una etiqueta computacional y no una propiedad intrínseca del microorganismo. Su finalidad es mantener la correspondencia entre las detecciones obtenidas a lo largo del video. Por este motivo, la calidad de las asociaciones realizadas por el algoritmo determina directamente la coherencia de los datos utilizados posteriormente para analizar el movimiento.
+El \textit{track ID} constituye una etiqueta computacional y no una propiedad intrínseca del microorganismo. Su finalidad es mantener la correspondencia entre las detecciones obtenidas a lo largo del video. Por este motivo, la calidad de las asociaciones realizadas por el algoritmo determina directamente la coherencia de los datos utilizados posteriormente para analizar el movimiento.
 
 Los criterios empleados para realizar la asociación dependen del método de seguimiento. Algunos algoritmos utilizan principalmente información geométrica, como la distancia entre posiciones o la superposición entre cajas, mientras que otros incorporan modelos de movimiento o características de apariencia para intentar conservar las identidades en situaciones más complejas.
 
@@ -230,7 +235,7 @@ Una pérdida de detección ocurre cuando un microorganismo presente en un cuadro
 
 Una oclusión se produce cuando un microorganismo queda oculto total o parcialmente por otro objeto o estructura de la imagen. Las oclusiones pueden dificultar tanto la detección como la asociación posterior cuando el objeto vuelve a ser visible.
 
-Un cambio de identidad o ID switch ocurre cuando el identificador asociado con un microorganismo es asignado incorrectamente a otro \cite{wojke2017}, \cite{dendorfer2021}. Este problema resulta especialmente relevante cuando dos microorganismos se aproximan, cruzan sus recorridos o poseen apariencias similares.
+Un cambio de identidad o \textit{ID switch} ocurre cuando el identificador asociado con un microorganismo es asignado incorrectamente a otro \cite{wojke2017}, \cite{dendorfer2021}. Este problema resulta especialmente relevante cuando dos microorganismos se aproximan, cruzan sus recorridos o poseen apariencias similares.
 
 La fragmentación ocurre cuando el seguimiento de un mismo individuo se interrumpe y posteriormente continúa mediante un nuevo identificador. Como consecuencia, un único recorrido real puede quedar representado mediante varias secuencias independientes, alterando su duración y las métricas calculadas posteriormente \cite{dendorfer2021}.
 
@@ -240,11 +245,11 @@ Estos problemas son particularmente importantes en videos adquiridos mediante mi
 
 Existen diferentes métodos de seguimiento basado en detecciones que utilizan estrategias distintas para conservar la identidad de los objetos.
 
-SORT combina un modelo de movimiento con la superposición entre cajas delimitadoras para asociar las detecciones obtenidas en cuadros consecutivos \cite{bewley2016}. Su diseño prioriza la simplicidad y la eficiencia, aunque puede presentar dificultades ante oclusiones o situaciones en las que varios objetos se encuentran próximos.
+\textit{SORT} combina un modelo de movimiento con la superposición entre cajas delimitadoras para asociar las detecciones obtenidas en cuadros consecutivos \cite{bewley2016}. Su diseño prioriza la simplicidad y la eficiencia, aunque puede presentar dificultades ante oclusiones o situaciones en las que varios objetos se encuentran próximos.
 
-Deep SORT extiende este enfoque incorporando características visuales de apariencia para complementar la información espacial y de movimiento \cite{wojke2017}. Estas características pueden contribuir a conservar las identidades cuando los objetos se cruzan o permanecen temporalmente ocultos. Sin embargo, su utilidad depende de que existan diferencias visuales suficientes entre los objetos observados.
+\textit{Deep SORT} extiende este enfoque incorporando características visuales de apariencia para complementar la información espacial y de movimiento \cite{wojke2017}. Estas características pueden contribuir a conservar las identidades cuando los objetos se cruzan o permanecen temporalmente ocultos. Sin embargo, su utilidad depende de que existan diferencias visuales suficientes entre los objetos observados.
 
-ByteTrack propone incorporar durante la asociación tanto detecciones de alta confianza como detecciones con valores menores de confianza \cite{zhang2022}. De esta forma, algunas observaciones que podrían ser descartadas inicialmente pueden utilizarse para mantener la continuidad de los seguimientos.
+\textit{ByteTrack} propone incorporar durante la asociación tanto detecciones de alta confianza como detecciones con valores menores de confianza \cite{zhang2022}. De esta forma, algunas observaciones que podrían ser descartadas inicialmente pueden utilizarse para mantener la continuidad de los seguimientos.
 
 Estos métodos constituyen antecedentes representativos de las estrategias disponibles para el seguimiento de múltiples objetos. Su desempeño depende de las características de los datos y del problema considerado. En el caso de los videos adquiridos mediante microscopía óptica de esta tesis, factores como el tamaño reducido de los microorganismos, su similitud visual y los cruces entre individuos hacen necesario evaluar el seguimiento específicamente sobre las condiciones experimentales disponibles.
 
@@ -272,13 +277,13 @@ Por este motivo, el análisis de trayectorias puede requerir criterios destinado
 
 Además de cuantificar la magnitud del desplazamiento, la geometría de una trayectoria permite describir cómo se distribuye espacialmente el recorrido.
 
-Una medida utilizada para este propósito es el índice de rectitud, definido mediante la relación entre la magnitud del desplazamiento neto y la distancia total recorrida:
+Una medida utilizada para este propósito es el índice de rectitud $S$, definido mediante el cociente entre la magnitud del desplazamiento neto $D_N$ y la distancia total recorrida $D_T$:
 
 \[
 S=\frac{D_N}{D_T}, \qquad D_T>0.
 \]
 
-Cuando $D_T>0$, este índice toma valores comprendidos entre 0 y 1. Un valor cercano a 1 indica que la distancia recorrida es aproximadamente igual a la separación entre los extremos de la trayectoria, lo que corresponde a un recorrido predominantemente recto. Valores menores indican que el objeto acumuló una distancia mayor que la necesaria para unir directamente las posiciones inicial y final.
+El índice $S$ toma valores entre 0 y 1. Un valor cercano a 1 indica que la distancia recorrida es aproximadamente igual a la separación entre los extremos de la trayectoria, lo que corresponde a un recorrido predominantemente recto. Valores menores indican que el objeto acumuló una distancia mayor que la necesaria para unir directamente las posiciones inicial y final.
 
 La tortuosidad describe, de manera más general, el grado en que un recorrido presenta curvas y cambios de dirección. Sin embargo, no existe una única medida de tortuosidad aplicable a todos los tipos de trayectorias. Dependiendo del problema pueden utilizarse relaciones entre distancias, cambios angulares, sinuosidad u otros indicadores geométricos \cite{benhamou2004}.
 
@@ -346,27 +351,27 @@ Por esta razón, la existencia de herramientas previas no implica que puedan apl
 
 \subsection{Tracker}
 
-Tracker es una herramienta gratuita y de código abierto orientada al análisis y modelado del movimiento a partir de videos, particularmente utilizada en contextos educativos y experimentales de física \cite{tracker2026}.
+\textit{Tracker} es una herramienta gratuita y de código abierto orientada al análisis y modelado del movimiento a partir de videos, particularmente utilizada en contextos educativos y experimentales de física \cite{tracker2026}.
 
 Permite definir sistemas de coordenadas, calibrar la escala espacial, registrar posiciones y obtener magnitudes como posición, velocidad y aceleración. El seguimiento puede realizarse manualmente o mediante la función Autotracker, que utiliza una plantilla visual para buscar características similares en cuadros sucesivos.
 
 La supervisión directa del usuario facilita la revisión y corrección de las posiciones cuando el seguimiento presenta errores. Sin embargo, cuando una grabación contiene numerosos microorganismos, el procedimiento debe repetirse para cada individuo y puede requerir una intervención considerable.
 
-En esta línea experimental del GFA, Tracker constituye la herramienta utilizada previamente para reconstruir las trayectorias de los microorganismos. Por este motivo, proporciona una referencia directa para analizar las ventajas y limitaciones del procedimiento automático desarrollado en esta tesis.
+En esta línea experimental del GFA, \textit{Tracker} constituye la herramienta utilizada previamente para reconstruir las trayectorias de los microorganismos. Por este motivo, proporciona una referencia directa para analizar las ventajas y limitaciones del procedimiento automático desarrollado en esta tesis.
 
 \subsection{TrackMate}
 
-TrackMate es una plataforma de código abierto distribuida como complemento de Fiji y orientada al seguimiento de partículas, células y otros objetos en secuencias de imágenes \cite{tinevez2017}.
+\textit{TrackMate} es una plataforma de código abierto distribuida como complemento de \textit{Fiji} y orientada al seguimiento de partículas, células y otros objetos en secuencias de imágenes \cite{tinevez2017}.
 
 Su arquitectura modular permite combinar diferentes métodos de detección o segmentación con algoritmos de asociación temporal. Además, ofrece funciones para visualizar, editar, analizar y exportar las trayectorias obtenidas \cite{tinevez2017}, \cite{ershov2022}.
 
-TrackMate constituye un antecedente cercano a la propuesta de esta tesis, ya que integra varias etapas del análisis dentro de un mismo flujo. Sin embargo, su aplicación a los videos considerados requeriría seleccionar y validar configuraciones adecuadas para microorganismos pequeños, visualmente similares y registrados bajo condiciones particulares de microscopía.
+\textit{TrackMate} constituye un antecedente cercano a la propuesta de esta tesis, ya que integra varias etapas del análisis dentro de un mismo flujo. Sin embargo, su aplicación a los videos considerados requeriría seleccionar y validar configuraciones adecuadas para microorganismos pequeños, visualmente similares y registrados bajo condiciones particulares de microscopía.
 
 Asimismo, las métricas, criterios de filtrado y categorías de movimiento utilizadas en este trabajo responden a necesidades específicas de esta línea experimental y no necesariamente coinciden con las configuraciones disponibles de manera predeterminada en la herramienta.
 
 \subsection{CellProfiler}
 
-CellProfiler es una plataforma de código abierto orientada al análisis automatizado y cuantitativo de imágenes biológicas \cite{carpenter2006}. Permite construir flujos de procesamiento mediante módulos destinados a identificar objetos, medir sus propiedades y exportar los resultados obtenidos.
+\textit{CellProfiler} es una plataforma de código abierto orientada al análisis automatizado y cuantitativo de imágenes biológicas \cite{carpenter2006}. Permite construir flujos de procesamiento mediante módulos destinados a identificar objetos, medir sus propiedades y exportar los resultados obtenidos.
 
 La herramienta se utiliza principalmente para tareas de segmentación y caracterización cuantitativa de objetos en imágenes, incluyendo propiedades como tamaño, forma, intensidad y textura.
 
@@ -374,7 +379,7 @@ Aunque permite automatizar el análisis de grandes conjuntos de imágenes, la re
 
 \subsection{Relación con la propuesta}
 
-Las herramientas analizadas muestran que existen diferentes estrategias para obtener información cuantitativa a partir de imágenes y videos científicos. Tracker permite realizar un seguimiento con supervisión directa; TrackMate integra detección o segmentación, seguimiento y análisis de trayectorias; y CellProfiler proporciona flujos automatizados para la identificación y medición de objetos en imágenes biológicas.
+Las herramientas analizadas muestran que existen diferentes estrategias para obtener información cuantitativa a partir de imágenes y videos científicos. \textit{Tracker} permite realizar un seguimiento con supervisión directa; \textit{TrackMate} integra detección o segmentación, seguimiento y análisis de trayectorias; y \textit{CellProfiler} proporciona flujos automatizados para la identificación y medición de objetos en imágenes biológicas.
 
 Por este motivo, la contribución de esta tesis no se fundamenta en la ausencia de herramientas capaces de automatizar estas tareas. El problema específico se encuentra en la necesidad de disponer de un flujo adaptado y evaluado para los videos de esta línea experimental del GFA.
 

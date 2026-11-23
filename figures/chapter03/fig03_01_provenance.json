@@ -1,0 +1,20 @@
+{
+  "figure": "fig03_01_cajas_delimitadoras.png",
+  "purpose": "Qualitative illustration of rectangular detection boxes, not new quantitative evidence.",
+  "source": {
+    "original_name": "image.png",
+    "library_file_id": "libfile_0c80b12a36608191b6f495b98a929a0e",
+    "file_id": "file_000000001f64820ea25d90bd939d3d00",
+    "description": "Author-provided image previously retained as poster support material.",
+    "original_video": null,
+    "frame_index": null,
+    "inference_commit": null
+  },
+  "sha256": "b6441f39173fd3b4c02847eb275bd41ec0fe956351f8113fbb44d9d5b6da9cbe",
+  "size_bytes": 28991,
+  "width_px": 147,
+  "height_px": 127,
+  "image_modified": false,
+  "scale_note": "Native 147 x 127 px capture embedded at 25% of the text width; no upscaling, interpolation or synthetic enhancement applied to the file.",
+  "limitations": "Original video, frame index and inference version are not identified in the retained image; no experimental claim is inferred from them."
+}

@@ -35,7 +35,7 @@ Los pesos del detector y los videos se suministran mediante rutas externas. Esta
 
 \section{Arquitectura general del sistema}
 
-El sistema se organiza como un pipeline cuyo punto de entrada coordina el procesamiento completo. La Figura~\ref{fig:arquitectura-sistema} muestra los componentes principales y sus dependencias. El video, el modelo y la configuración se reciben como entradas; a partir de ellos se obtienen tracks, métricas, clasificaciones y artefactos de salida.
+El sistema se organiza como un \textit{pipeline} cuyo punto de entrada coordina el procesamiento completo. La Figura~\ref{fig:arquitectura-sistema} muestra los componentes principales y sus dependencias. El video, el modelo y la configuración se reciben como entradas; a partir de ellos se obtienen tracks, métricas, clasificaciones y artefactos de salida.
 
 \begin{figure}[H]
   \centering
@@ -159,11 +159,11 @@ La implementación separa las responsabilidades principales en módulos específ
     \toprule
     \textbf{Componente} & \textbf{Responsabilidad principal} \\
     \midrule
-    Orquestación del pipeline & Recibir configuración, ejecutar el flujo y coordinar salidas. \\
+    Orquestación del \textit{pipeline} & Recibir configuración, ejecutar el flujo y coordinar salidas. \\
     Detección y seguimiento & Procesar el video y construir tracks a partir de detecciones asociadas temporalmente. \\
     Análisis temporal y geométrico & Calcular distancias, rapidez, variación de rapidez, continuidad e indicadores derivados. \\
     Inspección y visualización & Consultar una trayectoria individual y producir gráficos de trayectoria y comportamiento temporal. \\
-    Clasificación de movimiento & Calcular métricas interpretables, construir scores heurísticos y asignar una categoría de movimiento. \\
+    Clasificación de movimiento & Calcular métricas interpretables, construir \textit{scores} heurísticos y asignar una categoría de movimiento. \\
     Validación & Comparar trayectorias automáticas con referencias manuales revisadas y resumir errores y cobertura. \\
     Trazabilidad & Registrar video, modelo, parámetros, opciones y entorno asociados con la ejecución. \\
     \bottomrule
@@ -235,7 +235,7 @@ El filtrado puede omitirse, limitarse a una cantidad mínima de observaciones o 
 
 \section{Parámetros configurables}
 
-Los parámetros se agrupan según su función. La Tabla~\ref{tab:parametros-sistema} presenta los principales valores expuestos por el pipeline actual. Los umbrales analíticos se consideran valores operativos y no valores científicamente óptimos.
+Los parámetros se agrupan según su función. La Tabla~\ref{tab:parametros-sistema} presenta los principales valores expuestos por el \textit{pipeline} actual. Los umbrales analíticos se consideran valores operativos y no valores científicamente óptimos.
 
 \begin{table}[H]
   \centering
@@ -260,7 +260,7 @@ Los parámetros se agrupan según su función. La Tabla~\ref{tab:parametros-sist
   \end{tabularx}
 \end{table}
 
-Además de estos valores, la ejecución permite activar o desactivar la generación de video, gráficos, clasificación y archivos de salida. Esta configuración hace posible utilizar el mismo pipeline tanto para inspecciones exploratorias como para ejecuciones destinadas a la evaluación experimental.
+Además de estos valores, la ejecución permite activar o desactivar la generación de video, gráficos, clasificación y archivos de salida. Esta configuración hace posible utilizar el mismo \textit{pipeline} tanto para inspecciones exploratorias como para ejecuciones destinadas a la evaluación experimental.
 
 \section{Salidas generadas}
 
@@ -280,7 +280,7 @@ La salida principal es el conjunto de tracks, que puede reutilizarse programáti
     Tracks & Secuencias de cuadro y posición asociadas con cada identificador. \\
     Trayectoria gráfica & Recorrido bidimensional del track en coordenadas de imagen. \\
     Análisis temporal & Rapidez suavizada, inactividad, gaps y cambios de comportamiento. \\
-    Clasificación & Categoría asignada, score de compatibilidad, métricas y justificación textual. \\
+    Clasificación & Categoría asignada, \textit{score} de compatibilidad, métricas y justificación textual. \\
     Metadatos de ejecución & Video, modelo, FPS, parámetros, opciones y entorno de procesamiento. \\
     Reporte de validación & Errores espaciales, cobertura y comparación con referencias manuales cuando se ejecuta la evaluación. \\
     \bottomrule

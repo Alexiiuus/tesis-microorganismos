@@ -8,7 +8,7 @@ El trabajo se delimita al desarrollo y evaluación del sistema para procesar vid
 
 El problema computacional combina la localización de varios microorganismos con la asociación de sus detecciones entre cuadros. La asociación debe representar a un mismo individuo a lo largo del seguimiento, incluso cuando se producen pérdidas temporales de detección. La calidad de estas dos etapas condiciona las mediciones posteriores.
 
-La temperatura se conserva como información contextual de cada grabación. La evaluación presentada comprende los registros de entrenamiento, pruebas controladas y una comparación de trayectoria con una referencia manual parcial; no incluye una comparación del movimiento entre condiciones térmicas. Los resultados corresponden al material y las configuraciones documentados, cuya resolución, frecuencia de cuadros, iluminación y contraste condicionan el desempeño.
+La temperatura se conserva como información contextual de cada grabación. La evaluación presentada comprende los registros de entrenamiento, pruebas controladas y una comparación de trayectoria con una referencia manual parcial; no incluye una comparación del movimiento entre condiciones térmicas. Los resultados corresponden al material y a las configuraciones documentados, cuya resolución, frecuencia de cuadros, iluminación y contraste condicionan el desempeño.
 
 \section{Unidad de análisis}
 
@@ -29,6 +29,8 @@ El video registra muestras discretas de ese recorrido. Su representación comput
 \subsection{Unidad experimental}
 
 La unidad experimental es cada video adquirido mediante microscopía óptica bajo una determinada condición de observación. El video contiene la secuencia de imágenes sobre la que se ejecutan las etapas de detección, seguimiento y análisis de trayectorias.
+
+La temperatura del medio acuoso se registraba oralmente en el audio del video, sin una indicación visual de su valor. Por ello, el procesamiento de imágenes implementado no recupera automáticamente esa información.
 
 Cada grabación se encuentra asociada con una muestra, una temperatura y determinadas condiciones de adquisición. Dentro de un mismo video pueden detectarse y seguirse varios microorganismos, por lo que es posible obtener métricas individuales y posteriormente construir indicadores generales para la grabación.
 
@@ -109,7 +111,15 @@ Para cada identificador de seguimiento, el sistema almacena una secuencia ordena
 \qquad \vec{p}_i=(x_i,y_i).
 \]
 
-Cada elemento contiene el número de cuadro y la posición estimada del microorganismo. Esta secuencia constituye la representación computacional directamente obtenida del proceso de seguimiento.
+Cada elemento contiene el número de cuadro y la posición estimada del microorganismo. Esta secuencia constituye la representación computacional directamente obtenida del proceso de seguimiento. La Figura~\ref{fig:observaciones-id} muestra una salida visual de inspección individual con su identificador.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{figures/chapter02/fig02_02_seguimiento_id145.png}
+  \caption{Captura de una salida de inspección del seguimiento individual. El encabezado identifica el track 145 y la estela coloreada muestra parte de las posiciones asociadas a ese identificador. Los demás objetos visibles no están identificados en esta vista. El ID es una etiqueta computacional; esta imagen aislada no demuestra la conservación de identidad durante toda la secuencia.}
+  \label{fig:observaciones-id}
+\end{figure}
+
 
 Los cuadros registrados no necesariamente son consecutivos. Las pérdidas temporales de detección o las dificultades de asociación pueden producir intervalos sin observaciones, denominados gaps.
 
@@ -167,7 +177,7 @@ o, expresada en coordenadas:
 d_i=\sqrt{(x_{i+1}-x_i)^2+(y_{i+1}-y_i)^2}.
 \]
 
-Para una trayectoria formada por n posiciones observadas, la distancia total recorrida se obtiene sumando las distancias de los n-1 segmentos consecutivos:
+Para una trayectoria formada por $n$ posiciones observadas, la distancia total recorrida se obtiene sumando las distancias de los $n - 1$ segmentos consecutivos:
 
 \[
 D_T=\sum_{i=1}^{n-1}d_i
@@ -218,7 +228,7 @@ v_{y,i}=\frac{y_{i+1}-y_i}{\Delta t_i}.
 
 El signo de cada componente depende del sentido del desplazamiento y de la orientación de los ejes. En las coordenadas de imagen utilizadas por el sistema, el eje vertical crece hacia abajo.
 
-La rapidez no conserva la dirección. Es una magnitud escalar que indica únicamente cuánto se desplaza el microorganismo por unidad de tiempo.
+La rapidez es una magnitud escalar que indica únicamente cuánto se desplaza el microorganismo por unidad de tiempo.
 
 Se obtiene calculando el módulo de la velocidad:
 
@@ -252,7 +262,7 @@ Por otra parte, la rapidez media se calcula utilizando la distancia total recorr
 \overline{v}=\frac{D_T}{t_n-t_1}.
 \]
 
-La diferencia fundamental es que la velocidad media depende únicamente de las posiciones inicial y final, mientras que la rapidez media considera todo el recorrido realizado entre ambas.
+La velocidad media es una magnitud vectorial, mientras que la rapidez media es una magnitud escalar.
 
 Por ejemplo, un microorganismo que describe una trayectoria aproximadamente circular y termina cerca de su posición inicial puede presentar un desplazamiento neto reducido y, por lo tanto, una velocidad media de magnitud cercana a cero. Sin embargo, si durante ese intervalo recorrió una distancia considerable, su rapidez media puede ser elevada.
 
@@ -321,7 +331,7 @@ El tipo de movimiento es una variable categórica asignada a partir de las carac
   \item movimiento circular u oscilatorio.
 \end{itemize}
 
-El sistema también contempla las salidas datos insuficientes, cuando la trayectoria no contiene información suficiente para ser analizada, y desconocido, cuando las métricas no permiten asignar claramente una de las clases principales.
+El sistema también contempla las salidas \textit{datos insuficientes}, cuando la trayectoria no contiene información suficiente para ser analizada, y \textit{desconocido}, cuando las métricas no permiten asignar claramente una de las clases principales.
 
 La clasificación constituye una descripción computacional simplificada del recorrido y no equivale a una clasificación física o biológica del movimiento.
 
@@ -330,6 +340,8 @@ La clasificación constituye una descripción computacional simplificada del rec
 \subsubsection{Temperatura del medio}
 
 La temperatura constituye una condición experimental asociada con cada video o muestra. En el contexto de esta línea experimental del GFA, los microorganismos son observados dentro de un rango aproximado de 0 °C a 15 °C.
+
+El valor se registraba oralmente durante la grabación y no se extrae mediante el procesamiento de imágenes del sistema.
 
 La temperatura permite contextualizar los registros y podría utilizarse en comparaciones posteriores entre condiciones térmicas. El sistema procesa videos previamente adquiridos; el control de temperatura y la evaluación de sus efectos sobre el movimiento quedan fuera del alcance de esta tesis.
 
@@ -359,7 +371,7 @@ También debe considerarse al comparar grabaciones diferentes, ya que una misma 
 
 \subsubsection{Escala espacial}
 
-La escala espacial establece la relación entre las distancias medidas en píxeles y su equivalente en una unidad física, como micrómetros. Si se dispone de un factor de calibración (s), expresado en micrómetros por píxel, una distancia puede convertirse mediante:
+La escala espacial establece la relación entre las distancias medidas en píxeles y su equivalente en una unidad física, como micrómetros. Si se dispone de un factor de calibración $s$, expresado en micrómetros por píxel, una distancia puede convertirse mediante:
 
 \[
 D_{\mu m}=s\,D_{px}.

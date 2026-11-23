@@ -14,7 +14,7 @@ El sistema desarrollado integra ambas operaciones mediante la interfaz de Ultral
   \begin{tikzpicture}[
     x=1cm,
     y=1cm,
-    box/.style={thesisflow,text width=6.2cm,minimum height=0.75cm},
+    box/.style={thesisflow,text width=6.2cm,minimum height=0.75cm,font=\small,execute at begin node={\hyphenpenalty=10000\relax\exhyphenpenalty=10000\relax}},
     every node/.style={outer sep=0pt}
   ]
     \node[box] (video) at (0,0) {Video adquirido mediante microscopía óptica};

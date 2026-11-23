@@ -35,7 +35,7 @@ Los pesos del detector y los videos se suministran mediante rutas externas. Esta
 
 \section{Arquitectura general del sistema}
 
-El sistema se organiza como un \textit{pipeline} cuyo punto de entrada coordina el procesamiento completo. La Figura~\ref{fig:arquitectura-sistema} muestra los componentes principales y sus dependencias. El video, el modelo y la configuración se reciben como entradas; a partir de ellos se obtienen tracks, métricas, clasificaciones y artefactos de salida.
+El sistema se organiza como un \textit{pipeline} cuyo punto de entrada coordina el procesamiento completo. La Figura~\ref{fig:arquitectura-sistema} muestra los componentes principales y sus dependencias. El video, el modelo y la configuración se reciben como entradas; a partir de ellos se obtienen tracks, métricas, clasificaciones y productos de salida.
 
 \begin{figure}[H]
   \centering
@@ -49,7 +49,7 @@ El sistema se organiza como un \textit{pipeline} cuyo punto de entrada coordina 
       text width=5.8cm,
       minimum height=0.95cm,
       inner sep=4pt,
-      font=\footnotesize
+      font=\footnotesize,execute at begin node={\hyphenpenalty=10000\relax\exhyphenpenalty=10000\relax}
     },
     side/.style={
       draw,
@@ -58,7 +58,7 @@ El sistema se organiza como un \textit{pipeline} cuyo punto de entrada coordina 
       text width=3.6cm,
       minimum height=0.95cm,
       inner sep=4pt,
-      font=\footnotesize
+      font=\footnotesize,execute at begin node={\hyphenpenalty=10000\relax\exhyphenpenalty=10000\relax}
     },
     arr/.style={
       -{Latex[length=2mm]},
@@ -116,7 +116,7 @@ donde $f_i$ es el número de cuadro y $(x_i,y_i)$ es la posición del centro de 
       text width=4.4cm,
       minimum height=0.95cm,
       inner sep=4pt,
-      font=\footnotesize
+      font=\footnotesize,execute at begin node={\hyphenpenalty=10000\relax\exhyphenpenalty=10000\relax}
     },
     arr/.style={
       -{Latex[length=2mm]},
@@ -188,7 +188,7 @@ El procesamiento completo se inicia con la carga del modelo y del video. Durante
       text width=5.4cm,
       minimum height=0.9cm,
       inner sep=4pt,
-      font=\footnotesize
+      font=\footnotesize,execute at begin node={\hyphenpenalty=10000\relax\exhyphenpenalty=10000\relax}
     },
     side/.style={
       draw,
@@ -197,7 +197,7 @@ El procesamiento completo se inicia con la carga del modelo y del video. Durante
       text width=3.7cm,
       minimum height=0.9cm,
       inner sep=4pt,
-      font=\footnotesize
+      font=\footnotesize,execute at begin node={\hyphenpenalty=10000\relax\exhyphenpenalty=10000\relax}
     },
     arr/.style={
       -{Latex[length=2mm]},
@@ -287,7 +287,7 @@ La salida principal es el conjunto de tracks, que puede reutilizarse programáti
   \end{tabularx}
 \end{table}
 
-Para evitar aumentar innecesariamente la extensión del capítulo, los gráficos de resultados reales no se incorporan de forma exhaustiva aquí. Sin embargo, resultan especialmente útiles tres ejemplos visuales: una trayectoria individual, la rapidez en función del tiempo y un gráfico que muestre inactividad o cambios de comportamiento. Estos artefactos se utilizarán preferentemente en los capítulos dedicados al análisis de métricas y a la evaluación experimental.
+Para evitar aumentar innecesariamente la extensión del capítulo, los gráficos de resultados reales no se incorporan de forma exhaustiva aquí. Sin embargo, resultan especialmente útiles tres ejemplos visuales: una trayectoria individual, la rapidez en función del tiempo y un gráfico que muestre inactividad o cambios de comportamiento. Estos productos se utilizarán preferentemente en los capítulos dedicados al análisis de métricas y a la evaluación experimental.
 
 % -------------------------------------------------------------------------
 % FIGURAS OPCIONALES CON SALIDAS REALES

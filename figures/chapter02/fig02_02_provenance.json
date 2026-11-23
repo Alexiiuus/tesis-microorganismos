@@ -1,0 +1,21 @@
+{
+  "source_library_file_id": "libfile_481b7d30b2a48191b356167a17f17488",
+  "source_name": "media_detecciones.mp4.base64.txt",
+  "decoded_video_sha256": "ac3edb2ccd73b069c0348c8d223e18734b248445763e4978ef61bf497fdce3d5",
+  "source_frame_index": 0,
+  "source_fps": 30,
+  "source_time_seconds": 0,
+  "image_sha256": "674dde35013c8ae9362d5f0be12ff6d003f31e7a148b4eb3286a892e0efc93bd",
+  "dimensions": [
+    1080,
+    650
+  ],
+  "image_modified": false,
+  "visible_identifier": 145,
+  "identifier_location": "original video header",
+  "purpose": "Illustration of an individual tracking inspection, not a multi-object detection screenshot or quantitative evaluation",
+  "limitations": [
+    "Exact original video frame and inference commit are not retained; index 0 refers to this presentation excerpt.",
+    "The capture shows one identified track, not IDs for all visible objects."
+  ]
+}

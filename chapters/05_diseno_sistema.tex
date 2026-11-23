@@ -31,7 +31,7 @@ Los requerimientos se derivan del problema planteado: transformar videos adquiri
   \end{tabularx}
 \end{table}
 
-Los pesos del detector y los videos se suministran mediante rutas externas. Esta separación evita acoplar el código a un conjunto experimental específico y permite repetir el procesamiento con diferentes entradas conservando la misma lógica de análisis.
+Los parámetros que el detector aprende durante el entrenamiento se denominan pesos y se conservan en un archivo. Ese archivo y los videos se suministran mediante rutas externas. Esta separación evita acoplar el código a un conjunto experimental específico y permite repetir el procesamiento con diferentes entradas conservando la misma lógica de análisis.
 
 \section{Arquitectura general del sistema}
 
@@ -102,7 +102,7 @@ La estructura central del sistema es la trayectoria. Cada track se representa me
 T_j=\left[(f_1,x_1,y_1),\ldots,(f_n,x_n,y_n)\right],
 \]
 
-donde $f_i$ es el número de cuadro y $(x_i,y_i)$ es la posición del centro de la detección en píxeles. En la implementación, el conjunto completo equivale a un diccionario que asocia cada identificador con su lista de observaciones.
+donde $f_i$ es el número de cuadro y $(x_i,y_i)$ es la posición del centro de la detección en píxeles. En la implementación, el conjunto completo se organiza como un diccionario, una estructura de datos que asocia una clave con un valor. En este caso, la clave es el identificador de seguimiento y el valor es su lista de observaciones.
 
 \begin{figure}[H]
   \centering
@@ -140,7 +140,7 @@ donde $f_i$ es el número de cuadro y $(x_i,y_i)$ es la posición del centro de 
   \label{fig:representacion-track}
 \end{figure}
 
-Los números de cuadro deben ser estrictamente crecientes. Si dos observaciones consecutivas están separadas por más de un cuadro, esa separación se conserva como un \textit{gap} temporal válido; el sistema no reordena, deduplica ni interpola observaciones automáticamente. Esta decisión permite que las magnitudes temporales utilicen el intervalo realmente transcurrido.
+Los números de cuadro deben ser estrictamente crecientes. Si dos observaciones consecutivas están separadas por más de un cuadro, esa separación se conserva como un \textit{gap} temporal válido; el sistema no reordena las observaciones, no elimina registros duplicados ni estima posiciones intermedias automáticamente. Esta decisión permite que las magnitudes temporales utilicen el intervalo realmente transcurrido.
 
 El identificador del track es computacional y no se interpreta como una identidad biológica permanente. Una misma entidad observada puede quedar fragmentada en más de un identificador si el seguimiento se interrumpe.
 

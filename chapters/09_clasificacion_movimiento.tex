@@ -17,13 +17,15 @@ Se reutilizan la distancia acumulada $D_T$, la distancia neta $D_N$ y el índice
 
 \subsection{Orientaciones y cambios angulares}
 
-Para cada desplazamiento entre posiciones registradas se calcula su orientación mediante la función $\operatorname{atan2}$. Se excluyen los vectores cuya norma no supera $10^{-8}$ px, porque no proporcionan una orientación utilizable. Sean $\theta_1,\ldots,\theta_q$ las orientaciones restantes y $m=\max(q-1,0)$. Los cambios entre orientaciones sucesivas se expresan como
+La función $\operatorname{atan2}(y,x)$ obtiene, en radianes, el ángulo principal de un vector no nulo con componentes $(x,y)$ respecto del eje horizontal, considerando los signos de ambas componentes para determinar su cuadrante. Para cada desplazamiento entre posiciones registradas se aplica a sus componentes vertical y horizontal, en ese orden, para calcular su orientación. Se excluyen los vectores cuya norma no supera $10^{-8}$ px, porque no proporcionan una orientación utilizable.
+
+Sean $\theta_1,\ldots,\theta_q$ las orientaciones restantes y $m=\max(q-1,0)$. Cada cambio angular $\phi_j$ es una magnitud escalar con signo, expresada en radianes. El subíndice $j$ enumera los cambios entre orientaciones sucesivas:
 \begin{equation}
   \phi_j=\operatorname{atan2}\bigl(\sin(\theta_{j+1}-\theta_j),
                                     \cos(\theta_{j+1}-\theta_j)\bigr),
   \qquad j=1,\ldots,m.
 \end{equation}
-La expresión conserva el cambio angular principal y evita que el paso entre $-\pi$ y $\pi$ se interprete como un giro cercano a una vuelta completa. Al excluir desplazamientos casi nulos, las orientaciones comparadas pueden corresponder a segmentos que no eran adyacentes en la lista original.
+En esta expresión, $\operatorname{atan2}$ se aplica al seno y al coseno de la diferencia de orientaciones para obtener un cambio angular principal entre $-\pi$ y $\pi$ radianes. Así se evita que el paso entre esos límites se interprete como un giro cercano a una vuelta completa. Al excluir desplazamientos casi nulos, las orientaciones comparadas pueden corresponder a segmentos que no eran adyacentes en la lista original.
 
 Sobre estos cambios se obtienen la media de sus magnitudes $\mu_{|\phi|}$, la desviación estándar de sus magnitudes $\sigma_{|\phi|}$ y la desviación estándar de los valores con signo $\sigma_\phi$. Las dos desviaciones son diferentes: una describe la dispersión de la magnitud de los giros y la otra también refleja la alternancia de su sentido. Se utilizan desviaciones poblacionales, con divisor $m$.
 
@@ -31,16 +33,16 @@ El número $K$ de cambios de dirección cuenta los casos con $|\phi_j|>\alpha$, 
 
 \subsection{Proximidad y distribución espacial}
 
-El indicador denominado \textit{tasa de retorno} utiliza un radio proporcional a la diagonal de la caja que contiene las posiciones. Si esa diagonal es $L$ y la fracción configurada es $\rho$, el radio es $r=\rho L$. Para las posiciones $\mathbf p_i=(x_i,y_i)$, el indicador se calcula como
+El indicador denominado \textit{tasa de retorno} utiliza un radio de proximidad proporcional a la diagonal $L$ de la caja que contiene todas las posiciones de la trayectoria. El parámetro adimensional $\rho$ fija la proporción de esa diagonal utilizada como radio: $r=\rho L$. Su valor predeterminado es $\rho=0{,}10$, por lo que el radio equivale al 10\% de la diagonal. Para las posiciones $\mathbf p_i=(x_i,y_i)$, el indicador se calcula como
 \begin{equation}
  R=\frac{1}{n}\sum_{i=1}^{n}
  \mathbf{1}\!\left[\exists j:\ 0<\|\mathbf p_i-\mathbf p_j\|<r\right].
 \end{equation}
-Por tanto, mide la fracción de posiciones que tienen alguna otra posición a distancia positiva e inferior a $r$. No exige que esta sea posterior, no impone una separación temporal mínima y excluye coincidencias espaciales exactas. Incluso posiciones consecutivas de un recorrido rectilíneo pueden contribuir. Su nombre en la salida no debe interpretarse como un conteo de retornos temporales. Si $L<10^{-8}$ px, devuelve cero.
+Por tanto, $R$ mide la fracción de posiciones que tienen alguna otra posición a distancia positiva e inferior a $r$. No exige que ésta sea posterior, no impone una separación temporal mínima y excluye coincidencias espaciales exactas. Incluso posiciones consecutivas de un recorrido rectilíneo pueden contribuir. Su nombre en la salida no debe interpretarse como un conteo de retornos temporales. Si $L<10^{-8}$ px, devuelve cero.
 
 La dispersión radial se obtiene respecto del centroide $\bar{\mathbf p}$. Si $r_i=\|\mathbf p_i-\bar{\mathbf p}\|$, se calcula el coeficiente $C_r=\operatorname{std}(r_i)/\operatorname{mean}(r_i)$. Una dispersión baja indica distancias similares al centroide, aunque por sí sola no demuestra un recorrido circular. Si la media radial es inferior a $10^{-8}$ px, el indicador devuelve cero.
 
-La cobertura angular $A$ utiliza los ángulos polares de las posiciones respecto del mismo centroide. Se ordenan y se determina el mayor intervalo angular vacío $G_{\max}$, incluido el que cierra la vuelta. Se calcula $A=1-G_{\max}/(2\pi)$. Esta cobertura describe la distribución espacial de los ángulos: no utiliza el orden de visita ni mide el número de vueltas realizadas.
+La cobertura angular $A$ utiliza los ángulos polares de las posiciones respecto del mismo centroide. Se ordenan y se determina el mayor intervalo angular vacío $G_{\max}$, incluido el que cierra la vuelta. Se calcula $A=1-G_{\max}/(2\pi)$. Esta cobertura describe la distribución espacial de los ángulos; no utiliza el orden de visita ni mide el número de vueltas realizadas.
 
 \subsection{Características complementarias}
 
@@ -61,7 +63,7 @@ Los indicadores se combinan mediante medias de términos limitados al intervalo 
  z&=C(\sigma_\phi/\pi).
 \end{aligned}
 \end{equation}
-El subíndice de $r_s$ distingue la proximidad normalizada del radio espacial $r$. Las tres puntuaciones son
+El subíndice de $r_s$ distingue la proximidad normalizada del radio espacial $r$. A continuación se definen tres puntuaciones: la puntuación direccional $Q_D$, la puntuación errática $Q_E$ y la puntuación circular u oscilatoria $Q_C$.
 \begin{equation}
 \begin{aligned}
  Q_D&=\frac{S+(1-a)+(1-b)+(1-r_s)}{4},\\[0.3em]

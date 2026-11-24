@@ -99,7 +99,9 @@ La comparación utiliza coincidencia exacta de índice de cuadro. No se asigna u
 
 Tracker permite definir un origen, una orientación y una escala para transformar posiciones de imagen en coordenadas de análisis \cite{tracker2026}. Por eso, dos recorridos de forma semejante pueden conservar coordenadas numéricas distintas. En el caso estudiado, la coordenada vertical manual aumenta mientras que la coordenada de imagen del modelo disminuye. La semejanza visual se examinó mediante una inversión del sentido de Y y una traslación fijada con el primer par de observaciones.
 
-Para la referencia manual, las coordenadas iniciales son $(307{,}2;660{,}9)$. Para el modelo son $(307{,}889282;1667{,}827881)$. Se aplica a todas las anotaciones la transformación
+Los superíndices $\mathrm{man}$, $\mathrm{mod}$ y $\mathrm{al}$ identifican, respectivamente, las coordenadas de la referencia manual antes de la alineación, las coordenadas automáticas del modelo y las coordenadas manuales alineadas. Son etiquetas de procedencia y transformación, no exponentes.
+
+Se denomina anclaje al par de posiciones manual y automática correspondientes al cuadro 0, utilizado como referencia para fijar la alineación vertical. El subíndice $0$ identifica ese par inicial. Para la referencia manual, sus coordenadas son $(307{,}2;660{,}9)$; para el modelo, $(307{,}889282;1667{,}827881)$. A partir de sus coordenadas verticales se determina la constante $C$ y se aplica a todas las anotaciones la transformación
 \begin{equation}
  x^{\mathrm{al}}_k=x^{\mathrm{man}}_k,
  \qquad
@@ -225,7 +227,7 @@ Las diferencias temporales de la rapidez suavizada generan 908 valores de variac
 
 La rapidez depende de la resolución temporal con que se observan las posiciones. Para comparar cantidades equivalentes se utilizaron los mismos extremos de los 92 intervalos delimitados por los 93 cuadros comunes. En cada intervalo se calculó la distancia recta entre extremos dividida por el tiempo real, tanto para la referencia alineada como para las posiciones automáticas. En esta comparación no se aplica suavizado ni se suma el recorrido fino del modelo dentro de cada intervalo.
 
-Si $v^{\mathrm{mod}}_j$ y $v^{\mathrm{man}}_j$ son las rapideces del intervalo $j$, se calcularon
+Si $v^{\mathrm{mod}}_j$ y $v^{\mathrm{man}}_j$ son las rapideces del intervalo $j$, se calcularon el error absoluto medio, $\mathrm{MAE}_{v}$, y la raíz del error cuadrático medio, $\mathrm{RMSE}_{v}$, mediante
 \begin{equation}
  \mathrm{MAE}_{v}=\frac{1}{m}\sum_{j=1}^{m}
        \left|v^{\mathrm{mod}}_j-v^{\mathrm{man}}_j\right|,
@@ -235,7 +237,7 @@ Si $v^{\mathrm{mod}}_j$ y $v^{\mathrm{man}}_j$ son las rapideces del intervalo $
  \quad m=92.
 \end{equation}
 
-El error absoluto medio es de $14{,}0420$ px/s y el RMSE, de $17{,}2047$ px/s. La correlación lineal entre las dos series es de aproximadamente $0{,}8720$. La correlación describe su variación conjunta y no sustituye las medidas de discrepancia. A diferencia de la evaluación de posición, la estimación de los intervalos utiliza también el primer punto como extremo temporal. La inversión y la traslación de Y conservan las distancias entre puntos manuales y, por tanto, sus rapideces; el valor de la constante de alineación no modifica este contraste.
+El subíndice $v$ identifica los errores de rapidez. El error absoluto medio, $\mathrm{MAE}_{v}$, es de $14{,}0420$ px/s y la raíz del error cuadrático medio, $\mathrm{RMSE}_{v}$, es de $17{,}2047$ px/s. La correlación lineal entre las dos series es de aproximadamente $0{,}8720$. La correlación describe su variación conjunta y no sustituye las medidas de discrepancia. A diferencia de la evaluación de posición, la estimación de los intervalos utiliza también el primer punto como extremo temporal. La inversión y la traslación de Y conservan las distancias entre puntos manuales y, por tanto, sus rapideces; el valor de la constante de alineación no modifica este contraste.
 
 La comparación muestra que la semejanza espacial no implica idéntica precisión al derivar rapidez. Las diferencias entre posiciones de ambos extremos contribuyen al error del desplazamiento y se dividen por un intervalo que suele ser de un tercio de segundo. Además, omitir posiciones intermedias modifica la distancia acumulada: sobre los 93 cuadros comunes, la poligonal automática tiene aproximadamente $1146{,}76$ px, mientras que la referencia manual tiene $1300{,}70$ px. Estos valores corresponden a un tramo y un muestreo diferentes de los 929 puntos del Cuadro~\ref{tab:movimiento-experimental}. No se concluye, a partir de este caso, que la rapidez automática tenga exactitud física suficiente para cualquier uso experimental.
 
@@ -279,6 +281,6 @@ Los registros de entrenamiento aportan evidencia sobre el detector en las evalua
 
 La clasificación produce resultados inspeccionables, pero su adecuación científica permanece pendiente de comparación con categorías independientes. Los umbrales de inactividad y de cambios de rapidez requieren asimismo una evaluación experimental de su significado, más allá de que el cálculo reproduzca las reglas implementadas.
 
-Para esta línea experimental del GFA, disponer de posiciones, métricas y visualizaciones vinculadas con una misma ejecución ofrece una base para revisar trayectorias y organizar su análisis con criterios explícitos. En relación con Tracker, TrackMate y CellProfiler, revisados en el capítulo 3, el aporte específico se sitúa en la adaptación del flujo y de sus productos al material de esta línea experimental. Esa comparación es conceptual; evaluar ventajas de precisión o eficiencia entre herramientas requeriría procesar casos equivalentes bajo condiciones documentadas. La posible reducción de la intervención manual permanece como una utilidad por cuantificar mediante mediciones que incluyan la preparación, el procesamiento y la revisión de resultados.
+Para esta línea experimental del GFA, disponer de posiciones, métricas y visualizaciones vinculadas con una misma ejecución ofrece una base para revisar trayectorias, para organizar su análisis con criterios explícitos y para reformular el protocolo de filmación a fin de mejorar la calidad de los productos a obtener. En relación con Tracker, TrackMate y CellProfiler, revisados en el capítulo 3, el aporte específico se sitúa en la adaptación del flujo y de sus productos al material de esta línea experimental. Esa comparación es conceptual; evaluar ventajas de precisión o eficiencia entre herramientas requeriría procesar casos equivalentes bajo condiciones documentadas. La posible reducción de la intervención manual permanece como una utilidad por cuantificar mediante mediciones que incluyan la preparación, el procesamiento y la revisión de resultados.
 
 Las magnitudes se mantienen en px, px/s y px/s$^2$. La alineación con Tracker no determina una escala física. La calibración óptica y la conversión a micrómetros son externas al alcance de esta tesis y no se aplican a las cifras presentadas. Los resultados disponibles permiten documentar la ejecución, su consistencia numérica y una comparación experimental acotada; no justifican todavía generalizaciones a otras condiciones de adquisición o a toda la población de microorganismos.
